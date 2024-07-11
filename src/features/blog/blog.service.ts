@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BlogInputModel } from './DTOs/input/BlogInputModel';
 import { BlogRepository } from './blog.repository';
+import { BlogPostInputModel } from './DTOs/input/BlogPostInputModel';
 
 @Injectable()
 export class BlogService {
@@ -12,6 +13,14 @@ export class BlogService {
 
   getByIdBlog(id: string) {
     return this.blogRepository.getByIdBlog(id);
+  }
+
+  getBlogPosts(blogId: string) {
+    return this.blogRepository.getBlogPosts(blogId);
+  }
+
+  createBlogPost(blogId: string, data: BlogPostInputModel) {
+    return this.blogRepository.createBlogPost(blogId, data);
   }
 
   createBlog(data: BlogInputModel) {
