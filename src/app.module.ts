@@ -10,18 +10,23 @@ import { BlogController } from './features/blog/blog.controller';
 import { PostController } from './features/post/post.controller';
 import { PostService } from './features/post/post.service';
 import { PostRepository } from './features/post/post.repository';
+import { CommentService } from './features/comment/comment.service';
+import { CommentRepository } from './features/comment/comment.repository';
+import { CommentController } from './features/comment/comment.controller';
 
 @Module({
   imports: [],
-  controllers: [AppController, UserController, BlogController, PostController],
+  controllers: [AppController, UserController, BlogController, PostController, CommentController],
   providers: [
     AppService,
     UserService,
     BlogService,
     PostService,
+    CommentService,
     UserRepository,
     BlogRepository,
-    PostRepository
+    PostRepository,
+    CommentRepository
   ],
 })
 export class AppModule {}
