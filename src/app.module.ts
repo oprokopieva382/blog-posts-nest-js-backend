@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserController } from './features/user/user.controller';
 import { UserService } from './features/user/user.service';
 import { UserRepository } from './features/user/user.repository';
@@ -15,10 +15,26 @@ import { CommentRepository } from './features/comment/comment.repository';
 import { CommentController } from './features/comment/comment.controller';
 
 @Module({
-  imports: [],
-  controllers: [AppController, UserController, BlogController, PostController, CommentController],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_DB_ATLAS'),
+        dbName: configService.get<string>('DB_NAME'),
+      }),
+      inject: [ConfigService],
+    }),
+  ],
+  controllers: [
+    UserController,
+    BlogController,
+    PostController,
+    CommentController,
+  ],
   providers: [
-    AppService,
     UserService,
     BlogService,
     PostService,
@@ -26,7 +42,7 @@ import { CommentController } from './features/comment/comment.controller';
     UserRepository,
     BlogRepository,
     PostRepository,
-    CommentRepository
+    CommentRepository,
   ],
 })
 export class AppModule {}
