@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserController } from './features/user/user.controller';
-import { UserService } from './features/user/user.service';
-import { UserRepository } from './features/user/user.repository';
 import { BlogService } from './features/blog/blog.service';
 import { BlogRepository } from './features/blog/blog.repository';
 import { BlogController } from './features/blog/blog.controller';
@@ -13,11 +10,12 @@ import { PostRepository } from './features/post/post.repository';
 import { CommentService } from './features/comment/comment.service';
 import { CommentRepository } from './features/comment/comment.repository';
 import { CommentController } from './features/comment/comment.controller';
+import { UserModule } from './features/user/user.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -27,19 +25,14 @@ import { CommentController } from './features/comment/comment.controller';
       }),
       inject: [ConfigService],
     }),
+    UserModule,
   ],
-  controllers: [
-    UserController,
-    BlogController,
-    PostController,
-    CommentController,
-  ],
+  controllers: [BlogController, PostController, CommentController],
   providers: [
-    UserService,
     BlogService,
     PostService,
     CommentService,
-    UserRepository,
+
     BlogRepository,
     PostRepository,
     CommentRepository,
