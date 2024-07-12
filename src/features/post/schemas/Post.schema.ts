@@ -18,6 +18,15 @@ export class Post {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Blog', required: true })
   blog: Blog;
 
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Blog', required: true })
+  reactionInfo: Blog;
+
+  @Prop({ required: true, default: 0, min: 0 })
+  likesCount: number;
+
+  @Prop({ required: true, default: 0, min: 0 })
+  dislikesCount: number;
+
   @Prop({ default: new Date(), required: false })
   createdAt?: Date;
 }
