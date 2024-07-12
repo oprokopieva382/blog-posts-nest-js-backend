@@ -1,39 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { PostInputModel } from './DTOs/input/PostInputModel.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Post, PostDocument } from './schemas/Post.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class PostRepository {
-  getPosts() {
-    return 'Posts list';
+  constructor(@InjectModel(Post.name) private postModel: Model<PostDocument>) {}
+
+  async getPosts() {
+    return await this.postModel.find();
   }
 
-  getByIdPost(id: string) {
-    return `Post with ${id}`;
+  async getByIdPost(id: string) {
+    return await this.postModel.findById(id);
   }
 
-  getPostComments(postId: string) {
-    return `Post with ${postId} has Super comments`;
+  async getPostComments(postId: string) {
+    return await `Post with ${postId} has Super comments`;
   }
 
-  createPost(data: PostInputModel) {
-    return {
-      title: data.title,
-      shortDescription: data.shortDescription,
-      content: data.content,
-      blogId: data.blogId,
-    };
+  async createPost(newUser: PostDocument) {
+    return await newUser.save();
   }
 
-  updatePost(id: string, data: PostInputModel) {
-    return {
-      title: data.title,
-      shortDescription: data.shortDescription,
-      content: data.content,
-      blogId: data.blogId,
-    };
+  async updatePost(id: string, dto: PostInputModel) {
+    return await this.postModel.findByIdAndUpdate(id, dto, { new: true });
   }
 
-  deletePost(id: string) {
-    return `Post with ${id} removed`;
+  async deletePost(id: string) {
+    return await this.postModel.findByIdAndDelete(id);
   }
 }

@@ -4,13 +4,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BlogService } from './features/blog/blog.service';
 import { BlogRepository } from './features/blog/blog.repository';
 import { BlogController } from './features/blog/blog.controller';
-import { PostController } from './features/post/post.controller';
-import { PostService } from './features/post/post.service';
-import { PostRepository } from './features/post/post.repository';
 import { CommentService } from './features/comment/comment.service';
 import { CommentRepository } from './features/comment/comment.repository';
 import { CommentController } from './features/comment/comment.controller';
 import { UserModule } from './features/user/user.module';
+import { PostModule } from './features/post/post.module';
 
 @Module({
   imports: [
@@ -26,16 +24,9 @@ import { UserModule } from './features/user/user.module';
       inject: [ConfigService],
     }),
     UserModule,
+    PostModule,
   ],
-  controllers: [BlogController, PostController, CommentController],
-  providers: [
-    BlogService,
-    PostService,
-    CommentService,
-
-    BlogRepository,
-    PostRepository,
-    CommentRepository,
-  ],
+  controllers: [BlogController, CommentController],
+  providers: [BlogService, CommentService, BlogRepository, CommentRepository],
 })
 export class AppModule {}

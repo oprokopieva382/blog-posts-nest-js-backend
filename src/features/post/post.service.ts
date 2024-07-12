@@ -1,32 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { PostInputModel } from './DTOs/input/PostInputModel.dto';
 import { PostRepository } from './post.repository';
+import { InjectModel } from '@nestjs/mongoose';
+import { Post, PostDocument } from './schemas/Post.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class PostService {
-  constructor(protected postRepository: PostRepository) {}
+  constructor(
+    @InjectModel(Post.name) private postModel: Model<PostDocument>,
+    protected postRepository: PostRepository,
+  ) {}
 
-  getPosts() {
-    return this.postRepository.getPosts();
+  async getPosts() {
+    return await this.postRepository.getPosts();
   }
 
-  getByIdPost(id: string) {
-    return this.postRepository.getByIdPost(id);
+  async getByIdPost(id: string) {
+    return await this.postRepository.getByIdPost(id);
   }
 
-  getPostComments(postId: string) {
-    return this.postRepository.getPostComments(postId);
+  async getPostComments(postId: string) {
+    return await this.postRepository.getPostComments(postId);
   }
 
-  createPost(data: PostInputModel) {
-    return this.postRepository.createPost(data);
+  async createPost(dto: PostInputModel) {
+    const newPost = new this.postModel(dto);
+    return await this.postRepository.createPost(newPost);
   }
 
-  updatePost(id: string, data: PostInputModel) {
-    return this.postRepository.updatePost(id, data);
+  async updatePost(id: string, dto: PostInputModel) {
+    return await this.postRepository.updatePost(id, dto);
   }
 
-  deletePost(id: string) {
-    return this.postRepository.deletePost(id);
+  async deletePost(id: string) {
+    return await this.postRepository.deletePost(id);
   }
 }

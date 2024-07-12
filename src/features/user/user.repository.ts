@@ -12,10 +12,10 @@ export class UserRepository {
   }
 
   async createUser(newUser: UserDocument) {
-    return newUser.save();
+    return await newUser.save();
   }
 
   async deleteUser(id: string) {
-    return await this.userModel.findOneAndDelete({ _id: id });
+    return await this.userModel.findByIdAndDelete(id);
   }
 }

@@ -6,6 +6,8 @@ import {
   Param,
   Post,
   Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { PostInputModel } from './DTOs/input/PostInputModel.dto';
 import { PostService } from './post.service';
@@ -15,32 +17,34 @@ export class PostController {
   constructor(protected postService: PostService) {}
 
   @Get()
-  getPosts() {
-    return this.postService.getPosts();
+  async getPosts() {
+    return await this.postService.getPosts();
   }
 
   @Get(':id')
-  getByIdPost(@Param('id') id: string) {
-    return this.postService.getByIdPost(id);
+  async getByIdPost(@Param('id') id: string) {
+    return await this.postService.getByIdPost(id);
   }
 
   @Get(':postId/comments')
-  getPostComments(@Param('postId') postId: string) {
-    return this.postService.getPostComments(postId);
+  async getPostComments(@Param('postId') postId: string) {
+    return await this.postService.getPostComments(postId);
   }
 
   @Post()
-  createPost(@Body() data: PostInputModel) {
-    return this.postService.createPost(data);
+  @UsePipes(new ValidationPipe())
+  async createPost(@Body() dto: PostInputModel) {
+    return await this.postService.createPost(dto);
   }
 
   @Put(':id')
-  updatePost(@Param('id') id: string, @Body() data: PostInputModel) {
-    return this.postService.updatePost(id, data);
+  @UsePipes(new ValidationPipe())
+  async updatePost(@Param('id') id: string, @Body() dto: PostInputModel) {
+    return await this.postService.updatePost(id, dto);
   }
 
   @Delete(':id')
-  deletePost(@Param('id') id: string) {
-    return this.postService.deletePost(id);
+  async deletePost(@Param('id') id: string) {
+    return await this.postService.deletePost(id);
   }
 }
