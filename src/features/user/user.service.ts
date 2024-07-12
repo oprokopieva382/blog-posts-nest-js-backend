@@ -6,10 +6,6 @@ import { UserInputModel } from './DTOs/input/UserInputModel.dto';
 export class UserService {
   constructor(protected userRepository: UserRepository) {}
 
-  async getUsers() {
-    return await this.userRepository.getUsers();
-  }
-
   async createUser(dto: UserInputModel) {
     return await this.userRepository.createUser(dto);
   }

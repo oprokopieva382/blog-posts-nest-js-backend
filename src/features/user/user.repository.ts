@@ -8,10 +8,6 @@ import { UserInputModel } from './DTOs/input/UserInputModel.dto';
 export class UserRepository {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async getUsers() {
-    return await this.userModel.find();
-  }
-
   async createUser(dto: UserInputModel) {
     const newUser = new this.userModel(dto);
     return await newUser.save();
