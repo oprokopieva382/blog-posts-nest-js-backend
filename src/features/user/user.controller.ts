@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { UserInputModel } from './DTOs/input/UserInputModel';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { UserInputModel } from './DTOs/input/UserInputModel.dto';
 import { UserService } from './user.service';
 
 @Controller('users')
@@ -7,17 +7,19 @@ export class UserController {
   constructor(protected userService: UserService) {}
 
   @Get()
-  getUsers() {
-    return this.userService.getUsers();
+  async getUsers() {
+    return await this.userService.getUsers();
   }
 
   @Post()
-  createUser(@Body() data: UserInputModel) {
-    return this.userService.createUser(data);
+  @UsePipes(new ValidationPipe())
+  async createUser(@Body() dto: UserInputModel) {
+    return await this.userService.createUser(dto);
   }
 
   @Delete(':id')
-  deleteUser(@Param('id') id: string) {
-    return this.userService.deleteUser(id);
+  @HttpCode(204)
+  async deleteUser(@Param('id') id: string) {
+    return await this.userService.deleteUser(id);
   }
 }

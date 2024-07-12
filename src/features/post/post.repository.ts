@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PostInputModel } from './DTOs/input/PostInputModel';
+import { PostInputModel } from './DTOs/input/PostInputModel.dto';
 
 @Injectable()
 export class PostRepository {

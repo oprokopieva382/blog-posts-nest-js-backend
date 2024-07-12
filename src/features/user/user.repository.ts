@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { UserInputModel } from './DTOs/input/UserInputModel';
+import { User, UserDocument } from './schemas/User.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class UserRepository {
-  getUsers() {
-    return 'users list';
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+
+  async getUsers() {
+    return await this.userModel.find();
   }
 
-  createUser(data: UserInputModel) {
-    return {
-      login: data.login,
-      password: data.password,
-      email: data.email,
-    };
+  async createUser(newUser: UserDocument) {
+    return newUser.save();
   }
 
-  deleteUser(id: string) {
-    return `user with ${id} removed`;
+  async deleteUser(id: string) {
+    return await this.userModel.findOneAndDelete({ _id: id });
   }
 }

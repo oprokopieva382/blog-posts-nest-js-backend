@@ -7,9 +7,8 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { PostInputModel } from './DTOs/input/PostInputModel';
+import { PostInputModel } from './DTOs/input/PostInputModel.dto';
 import { PostService } from './post.service';
-
 
 @Controller('posts')
 export class PostController {
