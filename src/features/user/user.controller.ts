@@ -1,10 +1,25 @@
-import { Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { UserInputModel } from './DTOs/input/UserInputModel.dto';
+import { UserService } from './user.service';
 
-@Controller("users")
+@Controller('users')
 export class UserController {
-    @Get()
-    getUsers() {}
+  constructor(protected userService: UserService) {}
 
-    @Post()
-    createUser() {}
+  @Get()
+  async getUsers() {
+    return await this.userService.getUsers();
+  }
+
+  @Post()
+  @UsePipes(new ValidationPipe())
+  async createUser(@Body() dto: UserInputModel) {
+    return await this.userService.createUser(dto);
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  async deleteUser(@Param('id') id: string) {
+    return await this.userService.deleteUser(id);
+  }
 }
