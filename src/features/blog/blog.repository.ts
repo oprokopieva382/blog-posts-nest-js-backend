@@ -1,42 +1,39 @@
 import { Injectable } from '@nestjs/common';
-import { BlogInputModel } from './DTOs/input/BlogInputModel';
+import { BlogInputModel } from './DTOs/input/BlogInputModel.dto';
 import { BlogPostInputModel } from './DTOs/input/BlogPostInputModel';
+import { InjectModel } from '@nestjs/mongoose';
+import { Blog, BlogDocument } from './schemas/Blog.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class BlogRepository {
-  getBlogs() {
-    return 'Blogs list';
+  constructor(@InjectModel(Blog.name) private blogModel: Model<BlogDocument>) {}
+
+  async getBlogs() {
+    return await this.blogModel.find();
   }
 
-  getByIdBlog(id: string) {
-    return `Blog with ${id}`;
+  async getByIdBlog(id: string) {
+    return await this.blogModel.findById(id);
   }
 
-  getBlogPosts(blogId: string) {
-    return `Blog with ${blogId} has Super Posts`;
+  async getBlogPosts(blogId: string) {
+    return await `Blog with ${blogId} has Super Posts`;
   }
 
-  createBlogPost(blogId: string, data: BlogPostInputModel) {
-    return `Blog with ${blogId} created Super Posts with data ${data}`;
+  async createBlogPost(blogId: string, data: BlogPostInputModel) {
+    return await `Blog with ${blogId} created Super Posts with data ${data}`;
   }
 
-  createBlog(data: BlogInputModel) {
-    return {
-      name: data.name,
-      description: data.description,
-      websiteUrl: data.websiteUrl,
-    };
+  async createBlog(newBlog: BlogDocument) {
+    return await newBlog.save();
   }
 
-  updateBlog(id: string, data: BlogInputModel) {
-    return {
-      name: data.name,
-      description: data.description,
-      websiteUrl: data.websiteUrl,
-    };
+  async updateBlog(id: string, dto: BlogInputModel) {
+    return await this.blogModel.findByIdAndUpdate(id, dto, { new: true });
   }
 
-  deleteBlog(id: string) {
-    return `Blog with ${id} removed`;
+  async deleteBlog(id: string) {
+    return await this.blogModel.findByIdAndDelete(id);
   }
 }
