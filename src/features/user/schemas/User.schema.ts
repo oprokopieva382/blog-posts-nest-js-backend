@@ -15,6 +15,10 @@ export class User {
 
   @Prop({ default: new Date(), required: false })
   createdAt?: Date;
+
+  static createUser() {
+    
+  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

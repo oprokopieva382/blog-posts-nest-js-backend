@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CommentRepository {
-  getByIdComment(id: string) {
-    return `Comment with ${id}`;
+  async getByIdComment(id: string) {
+    return await `Comment with ${id}`;
   }
 }

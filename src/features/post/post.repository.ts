@@ -8,20 +8,13 @@ import { Model } from 'mongoose';
 export class PostRepository {
   constructor(@InjectModel(Post.name) private postModel: Model<PostDocument>) {}
 
-  async getPosts() {
-    return await this.postModel.find();
-  }
-
-  async getByIdPost(id: string) {
-    return await this.postModel.findById(id);
-  }
-
   async getPostComments(postId: string) {
     return await `Post with ${postId} has Super comments`;
   }
 
-  async createPost(newUser: PostDocument) {
-    return await newUser.save();
+  async createPost(dto: PostInputModel) {
+    const newPost = new this.postModel({...dto, blog: dto.blogId});
+    return (await newPost.save()).populate("blog");
   }
 
   async updatePost(id: string, dto: PostInputModel) {

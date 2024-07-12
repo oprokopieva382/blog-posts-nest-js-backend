@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserInputModel } from './DTOs/input/UserInputModel.dto';
 import { UserService } from './user.service';
 
@@ -7,7 +7,9 @@ export class UserController {
   constructor(protected userService: UserService) {}
 
   @Get()
-  async getUsers() {
+  async getUsers(
+     //@Query() query: PaginationDTO
+  ) {
     return await this.userService.getUsers();
   }
 

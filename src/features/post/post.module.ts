@@ -4,7 +4,7 @@ import { Post, PostSchema } from './schemas/Post.schema';
 import { PostController } from './post.controller';
 import { PostService } from './post.service';
 import { PostRepository } from './post.repository';
-
+import { PostQueryRepository } from './post.query.repository';
 
 @Module({
   imports: [
@@ -16,6 +16,6 @@ import { PostRepository } from './post.repository';
     ]),
   ],
   controllers: [PostController],
-  providers: [PostService, PostRepository],
+  providers: [PostService, PostRepository, PostQueryRepository],
 })
 export class PostModule {}

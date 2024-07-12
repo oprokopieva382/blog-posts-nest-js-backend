@@ -6,7 +6,7 @@ export class CommentController {
   constructor(protected commentService: CommentService) {}
 
   @Get(':id')
-  getByIdComment(@Param('id') id: string) {
-    return this.commentService.getByIdComment(id);
+  async getByIdComment(@Param('id') id: string) {
+    return await this.commentService.getByIdComment(id);
   }
 }

@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Blog } from 'src/features/blog/schemas/Blog.schema';
 
 export type PostDocument = HydratedDocument<Post>;
 
@@ -14,11 +15,8 @@ export class Post {
   @Prop({ required: true })
   content: string;
 
-  @Prop({ required: true})
-  blogId: string;
-
-  @Prop({ required: true })
-  blogName: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Blog', required: true })
+  blog: Blog;
 
   @Prop({ default: new Date(), required: false })
   createdAt?: Date;
