@@ -5,7 +5,7 @@ import { CommentRepository } from './comment.repository';
 export class CommentService {
   constructor(protected commentRepository: CommentRepository) {}
 
-  getByIdComment(id: string) {
-    return this.commentRepository.getByIdComment(id);
+  async getByIdComment(id: string) {
+    return await this.commentRepository.getByIdComment(id);
   }
 }

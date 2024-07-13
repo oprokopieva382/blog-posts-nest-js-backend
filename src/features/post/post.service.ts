@@ -7,26 +7,14 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class PostService {
-  constructor(
-    @InjectModel(Post.name) private postModel: Model<PostDocument>,
-    protected postRepository: PostRepository,
-  ) {}
-
-  async getPosts() {
-    return await this.postRepository.getPosts();
-  }
-
-  async getByIdPost(id: string) {
-    return await this.postRepository.getByIdPost(id);
-  }
+  constructor(protected postRepository: PostRepository) {}
 
   async getPostComments(postId: string) {
     return await this.postRepository.getPostComments(postId);
   }
 
   async createPost(dto: PostInputModel) {
-    const newPost = new this.postModel(dto);
-    return await this.postRepository.createPost(newPost);
+    return await this.postRepository.createPost(dto);
   }
 
   async updatePost(id: string, dto: PostInputModel) {

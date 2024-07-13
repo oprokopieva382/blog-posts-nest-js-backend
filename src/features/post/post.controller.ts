@@ -11,19 +11,23 @@ import {
 } from '@nestjs/common';
 import { PostInputModel } from './DTOs/input/PostInputModel.dto';
 import { PostService } from './post.service';
+import { PostQueryRepository } from './post.query.repository';
 
 @Controller('posts')
 export class PostController {
-  constructor(protected postService: PostService) {}
+  constructor(
+    protected postService: PostService,
+    protected postQueryRepository: PostQueryRepository,
+  ) {}
 
   @Get()
   async getPosts() {
-    return await this.postService.getPosts();
+    return await this.postQueryRepository.getPosts();
   }
 
   @Get(':id')
   async getByIdPost(@Param('id') id: string) {
-    return await this.postService.getByIdPost(id);
+    return await this.postQueryRepository.getByIdPost(id);
   }
 
   @Get(':postId/comments')

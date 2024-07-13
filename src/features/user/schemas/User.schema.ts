@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { UserViewModel } from '../DTOs/output/UserViewModel.dto';
 
 export type UserDocument = HydratedDocument<User>;
 @Schema()
@@ -15,6 +16,19 @@ export class User {
 
   @Prop({ default: new Date(), required: false })
   createdAt?: Date;
+
+  transformToView(this: UserDocument): UserViewModel {
+    return {
+      id: this._id.toString(),
+      login: this.login,
+      email: this.email,
+      createdAt: this.createdAt.toISOString(),
+    };
+  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.methods = {
+  transformToView: User.prototype.transformToView,
+};
