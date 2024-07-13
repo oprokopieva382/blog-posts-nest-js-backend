@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   NotFoundException,
   Param,
   Post,
@@ -36,7 +37,7 @@ export class BlogController {
     if (!result) {
       throw new NotFoundException();
     }
-    return result.transformToView()
+    return result.transformToView();
   }
 
   @Get(':blogId/posts')
@@ -60,9 +61,13 @@ export class BlogController {
   }
 
   @Put(':id')
+  @HttpCode(204)
   @UsePipes(new ValidationPipe())
   async updateBlog(@Param('id') id: string, @Body() dto: BlogInputModel) {
-    return await this.blogService.updateBlog(id, dto);
+    const result = await this.blogService.updateBlog(id, dto);
+    if (!result) {
+      throw new NotFoundException();
+    }
   }
 
   @Delete(':id')
