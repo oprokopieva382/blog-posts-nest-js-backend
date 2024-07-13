@@ -7,15 +7,7 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class BlogRepository {
-  constructor(@InjectModel(Blog.name) private blogModel: Model<BlogDocument>) {}
-
-  async getBlogs() {
-    return await this.blogModel.find();
-  }
-
-  async getByIdBlog(id: string) {
-    return await this.blogModel.findById(id);
-  }
+  constructor(@InjectModel(Blog.name) private BlogModel: Model<BlogDocument>) {}
 
   async getBlogPosts(blogId: string) {
     return await `Blog with ${blogId} has Super Posts`;
@@ -25,15 +17,16 @@ export class BlogRepository {
     return await `Blog with ${blogId} created Super Posts with data ${data}`;
   }
 
-  async createBlog(newBlog: BlogDocument) {
+  async createBlog(dto: BlogInputModel) {
+    const newBlog = new this.BlogModel(dto);
     return await newBlog.save();
   }
 
   async updateBlog(id: string, dto: BlogInputModel) {
-    return await this.blogModel.findByIdAndUpdate(id, dto, { new: true });
+    return await this.BlogModel.findByIdAndUpdate(id, dto, { new: true });
   }
 
   async deleteBlog(id: string) {
-    return await this.blogModel.findByIdAndDelete(id);
+    return await this.BlogModel.findByIdAndDelete(id);
   }
 }

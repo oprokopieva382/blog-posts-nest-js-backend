@@ -6,25 +6,32 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { BlogInputModel } from './DTOs/input/BlogInputModel.dto';
 import { BlogService } from './blog.service';
 import { BlogPostInputModel } from './DTOs/input/BlogPostInputModel';
+import { BlogQueryModel } from './DTOs/input/BlogQueryModel.dto';
+import { BlogQueryRepository } from './blog.query.repository';
+import { blogQueryFilter } from 'src/base/DTOs/utils/queryFilter';
 
 @Controller('blogs')
 export class BlogController {
-  constructor(protected blogService: BlogService) {}
+  constructor(
+    protected blogService: BlogService,
+    protected blogQueryRepository: BlogQueryRepository,
+  ) {}
 
   @Get()
-  async getBlogs() {
-    return await this.blogService.getBlogs();
+  async getBlogs(@Query() query: BlogQueryModel) {
+    return await this.blogQueryRepository.getBlogs(blogQueryFilter(query));
   }
 
   @Get(':id')
   async getByIdBlog(@Param('id') id: string) {
-    return await this.blogService.getByIdBlog(id);
+    return await this.blogQueryRepository.getByIdBlog(id);
   }
 
   @Get(':blogId/posts')

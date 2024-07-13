@@ -4,6 +4,7 @@ import { Blog, BlogSchema } from './schemas/Blog.schema';
 import { BlogController } from './blog.controller';
 import { BlogService } from './blog.service';
 import { BlogRepository } from './blog.repository';
+import { BlogQueryRepository } from './blog.query.repository';
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { BlogRepository } from './blog.repository';
     ]),
   ],
   controllers: [BlogController],
-  providers: [BlogService, BlogRepository],
+  providers: [BlogService, BlogRepository, BlogQueryRepository],
 })
 export class BlogModule {}
