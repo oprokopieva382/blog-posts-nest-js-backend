@@ -19,7 +19,7 @@ export class BlogRepository {
 
   async createBlog(dto: BlogInputModel) {
     const newBlog = new this.BlogModel(dto);
-    return await newBlog.save();
+    return (await newBlog.save()).transformToView();
   }
 
   async updateBlog(id: string, dto: BlogInputModel) {

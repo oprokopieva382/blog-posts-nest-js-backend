@@ -40,6 +40,7 @@ export class BlogController {
   }
 
   @Post(':blogId/posts')
+  @UsePipes(new ValidationPipe())
   async createBlogPost(
     @Param('blogId') blogId: string,
     @Body() dto: BlogPostInputModel,
