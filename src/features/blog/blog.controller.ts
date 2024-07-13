@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -31,7 +32,11 @@ export class BlogController {
 
   @Get(':id')
   async getByIdBlog(@Param('id') id: string) {
-    return await this.blogQueryRepository.getByIdBlog(id);
+    const result = await this.blogQueryRepository.getByIdBlog(id);
+    if (!result) {
+      throw new NotFoundException();
+    }
+    return result.transformToView()
   }
 
   @Get(':blogId/posts')
