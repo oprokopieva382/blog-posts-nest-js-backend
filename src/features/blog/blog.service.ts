@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { BlogInputModel } from './DTOs/input/BlogInputModel.dto';
 import { BlogRepository } from './blog.repository';
 import { BlogPostInputModel } from './DTOs/input/BlogPostInputModel';
@@ -7,11 +7,12 @@ import { BlogPostInputModel } from './DTOs/input/BlogPostInputModel';
 export class BlogService {
   constructor(protected blogRepository: BlogRepository) {}
 
-  async getBlogPosts(blogId: string) {
-    return await this.blogRepository.getBlogPosts(blogId);
-  }
-
   async createBlogPost(blogId: string, dto: BlogPostInputModel) {
+    const blog = this.blogRepository.getByIdBlog(blogId);
+    if (!blog) {
+      throw new NotFoundException();
+    }
+
     return await this.blogRepository.createBlogPost(blogId, dto);
   }
 

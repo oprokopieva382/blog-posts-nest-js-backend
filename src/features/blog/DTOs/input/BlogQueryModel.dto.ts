@@ -1,3 +1,4 @@
+import { OmitType } from '@nestjs/mapped-types';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class BlogQueryModel {
@@ -21,3 +22,7 @@ export class BlogQueryModel {
   @IsOptional()
   searchNameTerm?: string | null = null;
 }
+
+export class BlogPostQueryModel extends OmitType(BlogQueryModel, [
+  'searchNameTerm',
+] as const) {}

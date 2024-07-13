@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from './schemas/Blog.schema';
 import { Model } from 'mongoose';
-import { BlogQueryModel } from './DTOs/input/BlogQueryModel.dto';
+import { BlogPostQueryModel, BlogQueryModel } from './DTOs/input/BlogQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
 import { BlogViewModel } from './DTOs/output/BlogViewModel.dto';
+import { Post, PostDocument } from '../post/schemas/Post.schema';
 
 @Injectable()
 export class BlogQueryRepository {
-  constructor(@InjectModel(Blog.name) private BlogModel: Model<BlogDocument>) {}
+  constructor(
+    @InjectModel(Blog.name) private BlogModel: Model<BlogDocument>,
+    @InjectModel(Post.name) private PostModel: Model<PostDocument>,
+  ) {}
 
   async getBlogs(
     query: BlogQueryModel,
@@ -39,5 +43,29 @@ export class BlogQueryRepository {
 
   async getByIdBlog(id: string) {
     return await this.BlogModel.findById(id);
+  }
+
+  async getBlogPosts(blogId: string, query: BlogPostQueryModel) {
+    const totalPostsCount = await this.PostModel.countDocuments({
+      blog: blogId.toString(),
+    });
+
+    const posts= await this.PostModel.find({
+      blog: blogId.toString(),
+    })
+      .populate(['blog', 'reactionInfo'])
+      .skip((query.pageNumber - 1) * query.pageSize)
+      .limit(query.pageSize)
+      .sort({ [query.sortBy]: query.sortDirection })
+
+    const postsToView = {
+      pagesCount: Math.ceil(totalPostsCount / query.pageSize),
+      page: query.pageNumber,
+      pageSize: query.pageSize,
+      totalCount: totalPostsCount,
+      items: posts,
+    };
+
+    return postsToView;
   }
 }

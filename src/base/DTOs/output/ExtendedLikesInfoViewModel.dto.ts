@@ -16,5 +16,5 @@ export class ExtendedLikesInfoViewModel {
   myStatus: LikeStatus;
 
   @IsOptional()
-  newestLikes: LikeDetailsViewModel[];
+  newestLikes: LikeDetailsViewModel[] | [];
 }

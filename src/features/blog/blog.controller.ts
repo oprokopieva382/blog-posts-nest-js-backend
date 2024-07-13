@@ -15,7 +15,10 @@ import {
 import { BlogInputModel } from './DTOs/input/BlogInputModel.dto';
 import { BlogService } from './blog.service';
 import { BlogPostInputModel } from './DTOs/input/BlogPostInputModel';
-import { BlogQueryModel } from './DTOs/input/BlogQueryModel.dto';
+import {
+  BlogPostQueryModel,
+  BlogQueryModel,
+} from './DTOs/input/BlogQueryModel.dto';
 import { BlogQueryRepository } from './blog.query.repository';
 import { blogQueryFilter } from 'src/base/DTOs/utils/queryFilter';
 
@@ -41,8 +44,15 @@ export class BlogController {
   }
 
   @Get(':blogId/posts')
-  async getBlogPosts(@Param('blogId') blogId: string) {
-    return await this.blogService.getBlogPosts(blogId);
+  async getBlogPosts(
+    @Query() query: BlogPostQueryModel,
+    @Param('blogId') blogId: string,
+  ) {
+    const result = await this.blogQueryRepository.getBlogPosts(blogId, query);
+    if (!result) {
+      throw new NotFoundException();
+    }
+    return result;
   }
 
   @Post(':blogId/posts')
@@ -51,13 +61,14 @@ export class BlogController {
     @Param('blogId') blogId: string,
     @Body() dto: BlogPostInputModel,
   ) {
-    return await this.blogService.createBlogPost(blogId, dto);
+    const result = await this.blogService.createBlogPost(blogId, dto);
+    return result.transformToView();
   }
 
   @Post()
   @UsePipes(new ValidationPipe())
   async createBlog(@Body() dto: BlogInputModel) {
-    return await this.blogService.createBlog(dto);
+    return (await this.blogService.createBlog(dto)).transformToView();
   }
 
   @Put(':id')
