@@ -8,7 +8,7 @@ import { UserViewModel } from './DTOs/output/UserViewModel.dto';
 
 @Injectable()
 export class UserQueryRepository {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private UserModel: Model<UserDocument>) {}
 
   async getUsers(
     query: UserQueryModel,
@@ -21,14 +21,13 @@ export class UserQueryRepository {
       ? { email: { $regex: query.searchEmailTerm, $options: 'i' } }
       : {};
 
-    const totalUsersCount = await this.userModel.countDocuments({
+    const totalUsersCount = await this.UserModel.countDocuments({
       $or: [{ ...searchByLogin }, { ...searchByEmail }],
     });
 
-    const users = await this.userModel
-      .find({
-        $or: [{ ...searchByLogin }, { ...searchByEmail }],
-      })
+    const users = await this.UserModel.find({
+      $or: [{ ...searchByLogin }, { ...searchByEmail }],
+    })
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize)
       .sort({ [query.sortBy]: query.sortDirection })
@@ -39,7 +38,7 @@ export class UserQueryRepository {
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalUsersCount,
-      items: users.map((u) => u.transformToView(u)),
+      items: users.map((u) => u.transformToView()),
     };
     return usersToView;
   }

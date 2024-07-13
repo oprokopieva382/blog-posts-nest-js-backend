@@ -6,14 +6,15 @@ import { UserInputModel } from './DTOs/input/UserInputModel.dto';
 
 @Injectable()
 export class UserRepository {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private UserModel: Model<UserDocument>) {}
 
   async createUser(dto: UserInputModel) {
-    const newUser = new this.userModel(dto);
-    return await newUser.save();
+    const newUser = new this.UserModel(dto);
+    const savedUser = await newUser.save();
+    return savedUser.transformToView();
   }
 
   async deleteUser(id: string) {
-    return await this.userModel.findByIdAndDelete(id);
+    return await this.UserModel.findByIdAndDelete(id);
   }
 }

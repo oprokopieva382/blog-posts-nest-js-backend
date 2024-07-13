@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  NotFoundException,
   Param,
   Post,
   Query,
@@ -26,7 +27,6 @@ export class UserController {
   @Get()
   async getUsers(@Query() query: UserQueryModel) {
     return await this.userQueryRepository.getUsers(userQueryFilter(query));
-
   }
 
   @Post()
@@ -38,6 +38,9 @@ export class UserController {
   @Delete(':id')
   @HttpCode(204)
   async deleteUser(@Param('id') id: string) {
-    return await this.userService.deleteUser(id);
+    const result = await this.userService.deleteUser(id);
+    if (!result) {
+      throw new NotFoundException();
+    }
   }
 }
