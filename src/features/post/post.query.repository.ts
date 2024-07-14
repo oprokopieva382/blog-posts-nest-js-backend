@@ -34,6 +34,6 @@ export class PostQueryRepository {
   }
 
   async getByIdPost(id: string) {
-    return await this.PostModel.findById(id);
+    return await this.PostModel.findById(id).populate('blog');
   }
 }

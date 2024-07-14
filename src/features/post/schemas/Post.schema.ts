@@ -39,6 +39,7 @@ export class Post {
 
   transformToView(this: PostDocument): PostViewModel {
     const blog = this.blog as PopulatedBlog;
+
     return {
       id: this._id.toString(),
       title: this.title,

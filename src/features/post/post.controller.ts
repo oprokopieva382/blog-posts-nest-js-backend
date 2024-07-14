@@ -30,7 +30,8 @@ export class PostController {
 
   @Get(':id')
   async getByIdPost(@Param('id') id: string) {
-    return await this.postQueryRepository.getByIdPost(id);
+    const result = await this.postQueryRepository.getByIdPost(id);
+    return result.transformToView();
   }
 
   @Get(':postId/comments')
@@ -41,7 +42,8 @@ export class PostController {
   @Post()
   @UsePipes(new ValidationPipe())
   async createPost(@Body() dto: PostInputModel) {
-    return await this.postService.createPost(dto);
+    const result = await this.postService.createPost(dto);
+    return result.transformToView();
   }
 
   @Put(':id')
