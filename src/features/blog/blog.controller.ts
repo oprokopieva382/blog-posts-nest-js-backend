@@ -52,10 +52,10 @@ export class BlogController {
       blogId,
       blogQueryFilter(query),
     );
-    if (!result) {
+    if (result.items.length === 0) {
       throw new NotFoundException();
     }
-    return result
+    return result;
   }
 
   @Post(':blogId/posts')

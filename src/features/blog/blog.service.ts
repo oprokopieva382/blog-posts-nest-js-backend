@@ -8,7 +8,7 @@ export class BlogService {
   constructor(protected blogRepository: BlogRepository) {}
 
   async createBlogPost(blogId: string, dto: BlogPostInputModel) {
-    const blog = this.blogRepository.getByIdBlog(blogId);
+    const blog = await this.blogRepository.getByIdBlog(blogId);
     if (!blog) {
       throw new NotFoundException();
     }
