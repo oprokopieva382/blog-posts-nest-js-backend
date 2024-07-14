@@ -5,13 +5,13 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class PostQueryRepository {
-  constructor(@InjectModel(Post.name) private postModel: Model<PostDocument>) {}
+  constructor(@InjectModel(Post.name) private PostModel: Model<PostDocument>) {}
 
   async getPosts() {
-    return await this.postModel.find();
+    return await this.PostModel.find();
   }
 
   async getByIdPost(id: string) {
-    return await this.postModel.findById(id);
+    return await this.PostModel.findById(id);
   }
 }
