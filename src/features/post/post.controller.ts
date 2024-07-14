@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -31,6 +33,9 @@ export class PostController {
   @Get(':id')
   async getByIdPost(@Param('id') id: string) {
     const result = await this.postQueryRepository.getByIdPost(id);
+    if (!result) {
+      throw new NotFoundException();
+    }
     return result.transformToView();
   }
 
@@ -47,9 +52,13 @@ export class PostController {
   }
 
   @Put(':id')
+  @HttpCode(204)
   @UsePipes(new ValidationPipe())
   async updatePost(@Param('id') id: string, @Body() dto: PostInputModel) {
-    return await this.postService.updatePost(id, dto);
+    const result = await this.postService.updatePost(id, dto);
+    if (!result) {
+      throw new NotFoundException();
+    }
   }
 
   @Delete(':id')
