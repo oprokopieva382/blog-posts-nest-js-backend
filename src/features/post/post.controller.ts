@@ -40,8 +40,18 @@ export class PostController {
   }
 
   @Get(':postId/comments')
-  async getPostComments(@Param('postId') postId: string) {
-    return await this.postService.getPostComments(postId);
+  async getPostComments(
+    @Query() query: PostQueryModel,
+    @Param('postId') postId: string,
+  ) {
+    const result = await this.postQueryRepository.getPostComments(
+      postId,
+      baseQueryFilter(query),
+    );
+    if (result.items.length === 0 || !result) {
+      throw new NotFoundException();
+    }
+    return result;
   }
 
   @Post()

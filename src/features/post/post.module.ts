@@ -9,6 +9,7 @@ import {
   PostReaction,
   PostReactionSchema,
 } from './schemas/PostReaction.schema';
+import { Comment, CommentSchema } from '../comment/schemas/Comment.schema';
 
 @Module({
   imports: [
@@ -16,6 +17,10 @@ import {
       {
         name: Post.name,
         schema: PostSchema,
+      },
+      {
+        name: Comment.name,
+        schema: CommentSchema,
       },
       {
         name: PostReaction.name,
