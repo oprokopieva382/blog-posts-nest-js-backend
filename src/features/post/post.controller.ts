@@ -6,12 +6,15 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { PostInputModel } from './DTOs/input/PostInputModel.dto';
 import { PostService } from './post.service';
 import { PostQueryRepository } from './post.query.repository';
+import { PostQueryModel } from './DTOs/input/PostQueryModel.dto';
+import { baseQueryFilter } from 'src/base/DTOs/utils/queryFilter';
 
 @Controller('posts')
 export class PostController {
@@ -21,8 +24,8 @@ export class PostController {
   ) {}
 
   @Get()
-  async getPosts() {
-    return await this.postQueryRepository.getPosts();
+  async getPosts(@Query() query: PostQueryModel) {
+    return await this.postQueryRepository.getPosts(baseQueryFilter(query));
   }
 
   @Get(':id')
