@@ -1,8 +1,11 @@
-import { Injectable} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from './schemas/Blog.schema';
 import { Model } from 'mongoose';
-import { BlogPostQueryModel, BlogQueryModel } from './DTOs/input/BlogQueryModel.dto';
+import {
+  BlogPostQueryModel,
+  BlogQueryModel,
+} from './DTOs/input/BlogQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
 import { BlogViewModel } from './DTOs/output/BlogViewModel.dto';
 import { Post, PostDocument } from '../post/schemas/Post.schema';
@@ -50,20 +53,20 @@ export class BlogQueryRepository {
       blog: blogId.toString(),
     });
 
-    const posts= await this.PostModel.find({
+    const posts = await this.PostModel.find({
       blog: blogId.toString(),
     })
-      .populate(['blog', 'reactionInfo'])
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize)
-      .sort({ [query.sortBy]: query.sortDirection })
+      .populate(['blog', 'reactionInfo'])
+      .sort({ [query.sortBy]: query.sortDirection });
 
     const postsToView = {
       pagesCount: Math.ceil(totalPostsCount / query.pageSize),
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalPostsCount,
-      items: posts,
+      items: posts.map((p) => p.transformToView()),
     };
 
     return postsToView;

@@ -48,11 +48,14 @@ export class BlogController {
     @Query() query: BlogPostQueryModel,
     @Param('blogId') blogId: string,
   ) {
-    const result = await this.blogQueryRepository.getBlogPosts(blogId, query);
+    const result = await this.blogQueryRepository.getBlogPosts(
+      blogId,
+      blogQueryFilter(query),
+    );
     if (!result) {
       throw new NotFoundException();
     }
-    return result;
+    return result
   }
 
   @Post(':blogId/posts')
