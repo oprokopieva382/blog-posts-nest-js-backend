@@ -3,57 +3,93 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  NotFoundException,
   Param,
   Post,
   Put,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { BlogInputModel } from './DTOs/input/BlogInputModel.dto';
 import { BlogService } from './blog.service';
 import { BlogPostInputModel } from './DTOs/input/BlogPostInputModel';
+import {
+  BlogPostQueryModel,
+  BlogQueryModel,
+} from './DTOs/input/BlogQueryModel.dto';
+import { BlogQueryRepository } from './blog.query.repository';
+import { blogQueryFilter } from 'src/base/DTOs/utils/queryFilter';
 
 @Controller('blogs')
 export class BlogController {
-  constructor(protected blogService: BlogService) {}
+  constructor(
+    protected blogService: BlogService,
+    protected blogQueryRepository: BlogQueryRepository,
+  ) {}
 
   @Get()
-  async getBlogs() {
-    return await this.blogService.getBlogs();
+  async getBlogs(@Query() query: BlogQueryModel) {
+    return await this.blogQueryRepository.getBlogs(blogQueryFilter(query));
   }
 
   @Get(':id')
   async getByIdBlog(@Param('id') id: string) {
-    return await this.blogService.getByIdBlog(id);
+    const result = await this.blogQueryRepository.getByIdBlog(id);
+    if (!result) {
+      throw new NotFoundException();
+    }
+    return result.transformToView();
   }
 
   @Get(':blogId/posts')
-  async getBlogPosts(@Param('blogId') blogId: string) {
-    return await this.blogService.getBlogPosts(blogId);
+  async getBlogPosts(
+    @Query() query: BlogPostQueryModel,
+    @Param('blogId') blogId: string,
+  ) {
+    const result = await this.blogQueryRepository.getBlogPosts(
+      blogId,
+      blogQueryFilter(query),
+    );
+    if (result.items.length === 0) {
+      throw new NotFoundException();
+    }
+    return result;
   }
 
   @Post(':blogId/posts')
+  @UsePipes(new ValidationPipe())
   async createBlogPost(
     @Param('blogId') blogId: string,
     @Body() dto: BlogPostInputModel,
   ) {
-    return await this.blogService.createBlogPost(blogId, dto);
+    const result = await this.blogService.createBlogPost(blogId, dto);
+    return result.transformToView();
   }
 
   @Post()
   @UsePipes(new ValidationPipe())
   async createBlog(@Body() dto: BlogInputModel) {
-    return await this.blogService.createBlog(dto);
+    return (await this.blogService.createBlog(dto)).transformToView();
   }
 
   @Put(':id')
+  @HttpCode(204)
   @UsePipes(new ValidationPipe())
   async updateBlog(@Param('id') id: string, @Body() dto: BlogInputModel) {
-    return await this.blogService.updateBlog(id, dto);
+    const result = await this.blogService.updateBlog(id, dto);
+    if (!result) {
+      throw new NotFoundException();
+    }
   }
 
   @Delete(':id')
+  @HttpCode(204)
   async deleteBlog(@Param('id') id: string) {
-    return await this.blogService.deleteBlog(id);
+    const result = await this.blogService.deleteBlog(id);
+    if (!result) {
+      throw new NotFoundException();
+    }
   }
 }

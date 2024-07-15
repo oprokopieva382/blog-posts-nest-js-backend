@@ -7,10 +7,10 @@ import { LikeStatus } from 'src/base/DTOs/enam/LikesStatus';
 //*LatestReaction Schema
 @Schema()
 export class LatestReaction {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
-  user: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false })
+  user?: string | null;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, default: new Date().toISOString() })
   addedAt: string;
 }
 
@@ -21,11 +21,11 @@ export type PostReactionDocument = HydratedDocument<PostReaction>;
 //*PostReaction Schema
 @Schema()
 export class PostReaction {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
-  user: User;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false })
+  user?: User;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true })
-  post: Post;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: false })
+  post?: Post;
 
   @Prop({
     type: String,

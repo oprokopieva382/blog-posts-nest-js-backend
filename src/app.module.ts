@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CommentService } from './features/comment/comment.service';
-import { CommentRepository } from './features/comment/comment.repository';
-import { CommentController } from './features/comment/comment.controller';
 import { UserModule } from './features/user/user.module';
 import { PostModule } from './features/post/post.module';
 import { BlogModule } from './features/blog/blog.module';
+import { CommentModule } from './features/comment/comment.module';
+import { TestingModule } from './features/testing/testing.module';
 
 @Module({
   imports: [
@@ -24,8 +23,10 @@ import { BlogModule } from './features/blog/blog.module';
     UserModule,
     PostModule,
     BlogModule,
+    CommentModule,
+    TestingModule,
   ],
-  controllers: [CommentController],
-  providers: [CommentService, CommentRepository],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

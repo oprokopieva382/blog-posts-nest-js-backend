@@ -10,8 +10,7 @@ export class UserRepository {
 
   async createUser(dto: UserInputModel) {
     const newUser = new this.UserModel(dto);
-    const savedUser = await newUser.save();
-    return savedUser.transformToView();
+    return (await newUser.save()).transformToView();
   }
 
   async deleteUser(id: string) {

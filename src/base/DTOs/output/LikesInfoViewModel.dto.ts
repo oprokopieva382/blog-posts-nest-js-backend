@@ -1,8 +1,7 @@
 import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { LikeStatus } from '../enam/LikesStatus';
-import { LikeDetailsViewModel } from './LikeDetailsViewModel.dto';
 
-export class ExtendedLikesInfoViewModel {
+export class LikesInfoViewModel {
   @IsNumber()
   @IsOptional()
   likesCount: number;
@@ -14,7 +13,4 @@ export class ExtendedLikesInfoViewModel {
   @IsEnum(LikeStatus)
   @IsOptional()
   myStatus: LikeStatus;
-
-  @IsOptional()
-  newestLikes: LikeDetailsViewModel[] | [];
 }
