@@ -34,8 +34,8 @@ export class Post {
   @Prop({ required: true, default: 0, min: 0 })
   dislikesCount: number;
 
-  @Prop({ default: new Date(), required: false })
-  createdAt?: Date;
+  @Prop({ required: true })
+  createdAt: Date;
 
   transformToView(this: PostDocument): PostViewModel {
     const blog = this.blog as PopulatedBlog;
@@ -59,10 +59,7 @@ export class Post {
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
-
-PostSchema.methods = {
-  transformToView: Post.prototype.transformToView,
-};
+PostSchema.loadClass(Post);
 
 //!save for later
 // @Prop({
