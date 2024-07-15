@@ -9,6 +9,7 @@ export class PostService {
   async createPost(dto: PostInputModel) {
      const postDto = {
        ...dto,
+       blog: dto.blogId,
        createdAt: new Date(),
      };
     return await this.postRepository.createPost(postDto);

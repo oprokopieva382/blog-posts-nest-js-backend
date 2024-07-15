@@ -12,12 +12,24 @@ export class BlogService {
     if (!blog) {
       throw new NotFoundException();
     }
+    const postDto = {
+      ...dto,
+      blog: blogId,
+      likesCount: 0,
+      dislikesCount: 0,
+      reactionInfo: [],
+      createdAt: new Date(),
+    };
 
-    return await this.blogRepository.createBlogPost(blogId, dto);
+    return await this.blogRepository.createBlogPost(postDto);
   }
 
   async createBlog(dto: BlogInputModel) {
-    return await this.blogRepository.createBlog(dto);
+    const blogDto = {
+      ...dto,
+      createdAt: new Date(),
+    };
+    return await this.blogRepository.createBlog(blogDto);
   }
 
   async updateBlog(id: string, dto: BlogInputModel) {

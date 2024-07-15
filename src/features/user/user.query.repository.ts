@@ -25,7 +25,7 @@ export class UserQueryRepository {
     const totalUsersCount = await this.UserModel.countDocuments({
       $or: [{ ...searchByLogin }, { ...searchByEmail }],
     });
-console.log('query in UserQueryRepository', query);
+
     const users = await this.UserModel.find({
       $or: [{ ...searchByLogin }, { ...searchByEmail }],
     })
@@ -37,7 +37,7 @@ console.log('query in UserQueryRepository', query);
             ? SortDirection.asc
             : SortDirection.desc,
       });
-   console.log('users after sort', users);
+   
     const usersToView = {
       pagesCount: Math.ceil(totalUsersCount / query.pageSize),
       page: query.pageNumber,

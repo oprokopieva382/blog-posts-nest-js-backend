@@ -17,18 +17,9 @@ export class BlogRepository {
     return await this.BlogModel.findById(id);
   }
 
-  async createBlogPost(blogId: string, dto: BlogPostInputModel) {
-    const newPost = new this.PostModel({
-      ...dto,
-      blog: blogId,
-      likesCount: 0,
-      dislikesCount: 0,
-      reactionInfo: [],
-    });
-    await newPost.save();
-    const populatedPost = await newPost.populate('blog');
-    //console.log(populatedPost);
-    return populatedPost;
+  async createBlogPost(dto: BlogPostInputModel) {
+    const newPost = new this.PostModel(dto);
+    return (await newPost.save()).populate('blog');
   }
 
   async createBlog(dto: BlogInputModel) {
