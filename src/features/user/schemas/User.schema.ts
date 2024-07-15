@@ -14,7 +14,7 @@ export class User {
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ default: new Date(), required: false })
+  @Prop({ required: false })
   createdAt?: Date;
 
   transformToView(this: UserDocument): UserViewModel {
