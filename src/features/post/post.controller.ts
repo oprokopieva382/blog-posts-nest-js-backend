@@ -26,6 +26,7 @@ export class PostController {
   ) {}
 
   @Get()
+  @UsePipes(new ValidationPipe({ transform: true }))
   async getPosts(@Query() query: PostQueryModel) {
     return await this.postQueryRepository.getPosts(baseQueryFilter(query));
   }
@@ -40,6 +41,7 @@ export class PostController {
   }
 
   @Get(':postId/comments')
+  @UsePipes(new ValidationPipe({ transform: true }))
   async getPostComments(
     @Query() query: PostQueryModel,
     @Param('postId') postId: string,

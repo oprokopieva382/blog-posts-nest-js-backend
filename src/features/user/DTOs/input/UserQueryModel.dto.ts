@@ -1,4 +1,5 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class UserQueryModel {
   @IsString()
@@ -9,11 +10,13 @@ export class UserQueryModel {
   @IsOptional()
   sortDirection?: 1 | -1;
 
-  @IsNumber()
+  @Type(() => Number)
+  @IsInt()
   @IsOptional()
   pageNumber?: number;
 
-  @IsNumber()
+  @Type(() => Number)
+  @IsInt()
   @IsOptional()
   pageSize?: number;
 
