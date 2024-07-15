@@ -22,7 +22,7 @@ export class BlogQueryRepository {
   async getBlogs(
     query: BlogQueryModel,
   ): Promise<PaginatorModel<BlogViewModel>> {
-    console.log("query in repository", query)
+    console.log('query in repository', query);
     const search = query.searchNameTerm
       ? { name: { $regex: query.searchNameTerm, $options: 'i' } }
       : {};
@@ -36,11 +36,8 @@ export class BlogQueryRepository {
       .limit(query.pageSize)
       .sort({
         [query.sortBy]:
-          query.sortDirection === '1'
-            ? SortDirection.asc
-            : SortDirection.desc,
+          query.sortDirection === '1' ? SortDirection.asc : SortDirection.desc,
       });
-      console.log(blogs);
 
     const blogsToView = {
       pagesCount: Math.ceil(totalBlogsCount / query.pageSize),
@@ -73,9 +70,7 @@ export class BlogQueryRepository {
       .populate(['blog', 'reactionInfo'])
       .sort({
         [query.sortBy]:
-          query.sortDirection === '1'
-            ? SortDirection.asc
-            : SortDirection.desc,
+          query.sortDirection === '1' ? SortDirection.asc : SortDirection.desc,
       });
 
     const postsToView = {
