@@ -9,6 +9,8 @@ import {
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
 import { BlogViewModel } from './DTOs/output/BlogViewModel.dto';
 import { Post, PostDocument } from '../post/schemas/Post.schema';
+import { SortDirection } from 'src/base/DTOs/enam/SortDirection';
+import { PostViewModel } from '../post/DTOs/output/PostViewModel.dto';
 
 @Injectable()
 export class BlogQueryRepository {
@@ -20,6 +22,7 @@ export class BlogQueryRepository {
   async getBlogs(
     query: BlogQueryModel,
   ): Promise<PaginatorModel<BlogViewModel>> {
+    console.log('query in repository', query);
     const search = query.searchNameTerm
       ? { name: { $regex: query.searchNameTerm, $options: 'i' } }
       : {};
@@ -31,7 +34,10 @@ export class BlogQueryRepository {
     const blogs = await this.BlogModel.find(search)
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize)
-      .sort({ [query.sortBy]: query.sortDirection });
+      .sort({
+        [query.sortBy]:
+          query.sortDirection === '1' ? SortDirection.asc : SortDirection.desc,
+      });
 
     const blogsToView = {
       pagesCount: Math.ceil(totalBlogsCount / query.pageSize),
@@ -48,7 +54,10 @@ export class BlogQueryRepository {
     return await this.BlogModel.findById(id);
   }
 
-  async getBlogPosts(blogId: string, query: BlogPostQueryModel) {
+  async getBlogPosts(
+    blogId: string,
+    query: BlogPostQueryModel,
+  ): Promise<PaginatorModel<PostViewModel>> {
     const totalPostsCount = await this.PostModel.countDocuments({
       blog: blogId.toString(),
     });
@@ -59,7 +68,10 @@ export class BlogQueryRepository {
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize)
       .populate(['blog', 'reactionInfo'])
-      .sort({ [query.sortBy]: query.sortDirection });
+      .sort({
+        [query.sortBy]:
+          query.sortDirection === '1' ? SortDirection.asc : SortDirection.desc,
+      });
 
     const postsToView = {
       pagesCount: Math.ceil(totalPostsCount / query.pageSize),

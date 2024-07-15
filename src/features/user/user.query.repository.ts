@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { UserQueryModel } from './DTOs/input/UserQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
 import { UserViewModel } from './DTOs/output/UserViewModel.dto';
+import { SortDirection } from 'src/base/DTOs/enam/SortDirection';
 
 @Injectable()
 export class UserQueryRepository {
@@ -30,9 +31,13 @@ export class UserQueryRepository {
     })
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize)
-      .sort({ [query.sortBy]: query.sortDirection })
-      .exec();
-
+     .sort({
+        [query.sortBy]:
+          query.sortDirection === '1'
+            ? SortDirection.asc
+            : SortDirection.desc,
+      });
+   
     const usersToView = {
       pagesCount: Math.ceil(totalUsersCount / query.pageSize),
       page: query.pageNumber,

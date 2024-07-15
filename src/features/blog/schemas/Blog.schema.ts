@@ -18,8 +18,8 @@ export class Blog {
   @Prop({ default: false, required: true })
   isMembership: string;
 
-  @Prop({ default: new Date(), required: false })
-  createdAt?: Date;
+  @Prop({ required: true })
+  createdAt: Date;
 
   transformToView(this: BlogDocument): BlogViewModel {
     return {
@@ -34,7 +34,4 @@ export class Blog {
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
-
-BlogSchema.methods = {
-  transformToView: Blog.prototype.transformToView,
-};
+BlogSchema.loadClass(Blog)

@@ -14,8 +14,8 @@ export class User {
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ default: new Date(), required: false })
-  createdAt?: Date;
+  @Prop({ required: true })
+  createdAt: Date;
 
   transformToView(this: UserDocument): UserViewModel {
     return {
@@ -28,7 +28,4 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
-UserSchema.methods = {
-  transformToView: User.prototype.transformToView,
-};
+UserSchema.loadClass(User);

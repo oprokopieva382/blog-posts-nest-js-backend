@@ -7,7 +7,11 @@ export class UserService {
   constructor(protected userRepository: UserRepository) {}
 
   async createUser(dto: UserInputModel) {
-    return await this.userRepository.createUser(dto);
+    const userDto = {
+      ...dto,
+      createdAt: new Date(),
+    };
+    return await this.userRepository.createUser(userDto);
   }
 
   async deleteUser(id: string) {

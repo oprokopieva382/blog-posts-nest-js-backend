@@ -9,7 +9,7 @@ export class PostRepository {
   constructor(@InjectModel(Post.name) private postModel: Model<PostDocument>) {}
 
   async createPost(dto: PostInputModel) {
-    const newPost = new this.postModel({...dto, blog: dto.blogId});
+    const newPost = new this.postModel(dto);
     return (await newPost.save()).populate("blog");
   }
 

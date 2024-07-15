@@ -1,22 +1,25 @@
 import { OmitType } from '@nestjs/mapped-types';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsInt,  IsOptional, IsString } from 'class-validator';
 
 export class BlogQueryModel {
   @IsString()
   @IsOptional()
-  sortBy?: string;
+  sortBy: string = 'createdAt';
 
   @IsString()
   @IsOptional()
-  sortDirection?: 1 | -1;
+  sortDirection: string = 'desc';
 
-  @IsNumber()
+  @Type(() => Number)
+  @IsInt()
   @IsOptional()
-  pageNumber?: number;
+  pageNumber: number = 1;
 
-  @IsNumber()
+  @Type(() => Number)
+  @IsInt()
   @IsOptional()
-  pageSize?: number;
+  pageSize: number = 10;
 
   @IsString()
   @IsOptional()

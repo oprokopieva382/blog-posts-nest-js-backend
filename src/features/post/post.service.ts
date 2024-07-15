@@ -7,7 +7,12 @@ export class PostService {
   constructor(protected postRepository: PostRepository) {}
 
   async createPost(dto: PostInputModel) {
-    return await this.postRepository.createPost(dto);
+    const postDto = {
+      ...dto,
+      blog: dto.blogId,
+      createdAt: new Date(),
+    };
+    return await this.postRepository.createPost(postDto);
   }
 
   async updatePost(id: string, dto: PostInputModel) {

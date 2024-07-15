@@ -29,8 +29,8 @@ export class Comment {
   @Prop({ required: true, default: 0, min: 0 })
   dislikesCount: number;
 
-  @Prop({ default: new Date(), required: false })
-  createdAt?: Date;
+  @Prop({ required: true })
+  createdAt: Date;
 
   transformToView(this: CommentDocument): CommentViewModel {
     return {
@@ -51,7 +51,4 @@ export class Comment {
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
-
-CommentSchema.methods = {
-  transformToView: Comment.prototype.transformToView,
-};
+CommentSchema.loadClass(Comment)
