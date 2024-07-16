@@ -21,6 +21,7 @@ import {
 } from './DTOs/input/BlogQueryModel.dto';
 import { BlogQueryRepository } from './blog.query.repository';
 import { blogQueryFilter } from 'src/base/DTOs/utils/queryFilter';
+import { transformToView } from '../post/DTOs/output/PostViewModel.dto';
 
 @Controller('blogs')
 export class BlogController {
@@ -51,8 +52,7 @@ export class BlogController {
     @Query() query: BlogPostQueryModel,
     @Param('blogId') blogId: string,
   ) {
-    console.log(query);
-    const result = await this.blogQueryRepository.getBlogPosts(
+     const result = await this.blogQueryRepository.getBlogPosts(
       blogId,
       blogQueryFilter(query),
     );
@@ -69,7 +69,7 @@ export class BlogController {
     @Body() dto: BlogPostInputModel,
   ) {
     const result = await this.blogService.createBlogPost(blogId, dto);
-    return result.transformToView();
+    return transformToView(result);
   }
 
   @Post()
