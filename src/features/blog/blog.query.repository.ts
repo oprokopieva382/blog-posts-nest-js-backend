@@ -55,16 +55,6 @@ export class BlogQueryRepository {
   async getByIdBlog(id: string) {
     return await this.BlogModel.findById(id);
   }
-  // const posts = await this.PostModel.find({
-  //   blog: blogId.toString(),
-  // })
-  //   .skip((query.pageNumber - 1) * query.pageSize)
-  //   .limit(query.pageSize)
-  //   .populate(['blog', 'reactionInfo'])
-  //   .sort({
-  //     [query.sortBy]:
-  //       query.sortDirection === '1' ? SortDirection.asc : SortDirection.desc,
-  //   });
 
   async getBlogPosts(
     blogId: string,
@@ -74,14 +64,11 @@ export class BlogQueryRepository {
       blog: blogId.toString(),
     });
 
-
     const sortDirection =
       query.sortDirection === '1' ? SortDirection.asc : SortDirection.desc;
 
     const sortField = query.sortBy === 'blogName' ? 'blog.name' : query.sortBy;
-    const ID = new mongoose.Types.ObjectId(blogId); 
-    console.log("ID", ID)
-  
+     
     const aggregationPipeline = [
       {
         $match: { blog: new mongoose.Types.ObjectId(blogId) },
@@ -111,7 +98,6 @@ export class BlogQueryRepository {
     ] as any;
 
     const posts = await this.PostModel.aggregate(aggregationPipeline);
-      console.log('posts in BLOG REPOSITORY', posts);
 
     const postsToView = {
       pagesCount: Math.ceil(totalPostsCount / query.pageSize),

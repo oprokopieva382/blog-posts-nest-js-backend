@@ -33,7 +33,6 @@ export class BlogController {
   @Get()
   @UsePipes(new ValidationPipe({ transform: true }))
   async getBlogs(@Query() query: BlogQueryModel) {
-    console.log(query);
     return await this.blogQueryRepository.getBlogs(blogQueryFilter(query));
   }
 

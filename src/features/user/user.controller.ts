@@ -27,7 +27,6 @@ export class UserController {
   @Get()
   @UsePipes(new ValidationPipe({ transform: true }))
   async getUsers(@Query() query: UserQueryModel) {
-    console.log("query in userController", query)
     return await this.userQueryRepository.getUsers(userQueryFilter(query));
   }
 

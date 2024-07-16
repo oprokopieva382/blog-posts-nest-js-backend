@@ -61,7 +61,6 @@ export class PostController {
   @UsePipes(new ValidationPipe())
   async createPost(@Body() dto: PostInputModel) {
     const result = await this.postService.createPost(dto);
-    console.log('result', result);
     return transformToView(result);
   }
 

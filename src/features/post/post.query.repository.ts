@@ -51,8 +51,7 @@ export class PostQueryRepository {
     ] as any;
 
     const posts = await this.PostModel.aggregate(aggregationPipeline);
-    console.log("posts in POST REPOSITORY", posts)
- 
+  
     const postsToView = {
       pagesCount: Math.ceil(totalPostsCount / query.pageSize),
       page: query.pageNumber,
@@ -76,6 +75,7 @@ export class PostQueryRepository {
     const comments = await this.CommentModel.find({
       post: postId.toString(),
     })
+    //update in future with aggregate as sort will not work
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize)
       .populate('post', '_id')
