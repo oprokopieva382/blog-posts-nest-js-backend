@@ -17,7 +17,7 @@ import { PostService } from './post.service';
 import { PostQueryRepository } from './post.query.repository';
 import { PostQueryModel } from './DTOs/input/PostQueryModel.dto';
 import { baseQueryFilter } from 'src/base/DTOs/utils/queryFilter';
-import { transformToView } from './DTOs/output/PostViewModel.dto';
+import { transformToViewPosts } from './DTOs/output/PostViewModel.dto';
 
 @Controller('posts')
 export class PostController {
@@ -38,7 +38,7 @@ export class PostController {
     if (!result) {
       throw new NotFoundException();
     }
-    return transformToView(result);
+    return transformToViewPosts(result);
   }
 
   @Get(':postId/comments')
@@ -61,7 +61,7 @@ export class PostController {
   @UsePipes(new ValidationPipe())
   async createPost(@Body() dto: PostInputModel) {
     const result = await this.postService.createPost(dto);
-    return transformToView(result);
+    return transformToViewPosts(result);
   }
 
   @Put(':id')

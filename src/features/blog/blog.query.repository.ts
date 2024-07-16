@@ -7,12 +7,13 @@ import {
   BlogQueryModel,
 } from './DTOs/input/BlogQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
-import { BlogViewModel } from './DTOs/output/BlogViewModel.dto';
+import { BlogViewModel, transformToViewBlogs } from './DTOs/output/BlogViewModel.dto';
 import { Post, PostDocument } from '../post/schemas/Post.schema';
 import { SortDirection } from 'src/base/DTOs/enam/SortDirection';
 import {
   PostViewModel,
-  transformToView,
+  transformToViewPosts,
+
 } from '../post/DTOs/output/PostViewModel.dto';
 
 @Injectable()
@@ -46,7 +47,7 @@ export class BlogQueryRepository {
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalBlogsCount,
-      items: blogs.map((b) => b.transformToView()),
+      items: blogs.map((b) => transformToViewBlogs(b)),
     };
 
     return blogsToView;
@@ -104,7 +105,7 @@ export class BlogQueryRepository {
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalPostsCount,
-      items: posts.map((p) => transformToView(p)),
+      items: posts.map((p) => transformToViewPosts(p)),
     };
 
     return postsToView;

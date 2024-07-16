@@ -44,7 +44,7 @@ export class PostViewModel {
   _id: mongoose.Types.ObjectId;
 }
 
-export const transformToView = (post: PostDocument): PostViewModel => {
+export const transformToViewPosts = (post: PostDocument): PostViewModel => {
   const blog = post.blog as PopulatedBlog;
 
   return {

@@ -4,9 +4,13 @@ import { Post, PostDocument } from './schemas/Post.schema';
 import { Model } from 'mongoose';
 import { PostQueryModel } from './DTOs/input/PostQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
-import { PostViewModel, transformToView } from './DTOs/output/PostViewModel.dto';
+import {
+  PostViewModel,
+  transformToViewPosts,
+} from './DTOs/output/PostViewModel.dto';
 import { Comment, CommentDocument } from '../comment/schemas/Comment.schema';
 import { SortDirection } from 'src/base/DTOs/enam/SortDirection';
+import { transformToViewComments } from '../comment/DTOs/output/CommentViewModel';
 
 @Injectable()
 export class PostQueryRepository {
@@ -51,13 +55,13 @@ export class PostQueryRepository {
     ] as any;
 
     const posts = await this.PostModel.aggregate(aggregationPipeline);
-  
+
     const postsToView = {
       pagesCount: Math.ceil(totalPostsCount / query.pageSize),
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalPostsCount,
-      items: posts.map((post) => transformToView(post)),
+      items: posts.map((post) => transformToViewPosts(post)),
     };
 
     return postsToView;
@@ -75,7 +79,7 @@ export class PostQueryRepository {
     const comments = await this.CommentModel.find({
       post: postId.toString(),
     })
-    //update in future with aggregate as sort will not work
+      //update in future with aggregate if sort will be needed
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize)
       .populate('post', '_id')
@@ -90,7 +94,7 @@ export class PostQueryRepository {
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalCommentsCount,
-      items: comments.map((c) => c.transformToView()),
+      items: comments.map((c) => transformToViewComments(c)),
     };
 
     return commentsToView;

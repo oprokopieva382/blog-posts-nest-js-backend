@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserQueryModel } from './DTOs/input/UserQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
-import { UserViewModel } from './DTOs/output/UserViewModel.dto';
+import { transformToViewUsers, UserViewModel } from './DTOs/output/UserViewModel.dto';
 import { SortDirection } from 'src/base/DTOs/enam/SortDirection';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class UserQueryRepository {
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalUsersCount,
-      items: users.map((u) => u.transformToView()),
+      items: users.map((u) => transformToViewUsers(u)),
     };
     return usersToView;
   }

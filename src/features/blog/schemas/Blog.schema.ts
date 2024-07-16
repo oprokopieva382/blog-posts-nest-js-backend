@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { BlogViewModel } from '../DTOs/output/BlogViewModel.dto';
 
 export type BlogDocument = HydratedDocument<Blog>;
 
@@ -20,18 +19,7 @@ export class Blog {
 
   @Prop({ required: true })
   createdAt: Date;
-
-  transformToView(this: BlogDocument): BlogViewModel {
-    return {
-      id: this._id.toString(),
-      name: this.name,
-      description: this.description,
-      websiteUrl: this.websiteUrl,
-      isMembership: false,
-      createdAt: this.createdAt.toISOString(),
-    };
-  }
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
-BlogSchema.loadClass(Blog)
+BlogSchema.loadClass(Blog);

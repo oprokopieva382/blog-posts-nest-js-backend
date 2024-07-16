@@ -3,6 +3,7 @@ import { User, UserDocument } from './schemas/User.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserInputModel } from './DTOs/input/UserInputModel.dto';
+import { transformToViewUsers } from './DTOs/output/UserViewModel.dto';
 
 @Injectable()
 export class UserRepository {
@@ -10,7 +11,8 @@ export class UserRepository {
 
   async createUser(dto: UserInputModel) {
     const newUser = new this.UserModel(dto);
-    return (await newUser.save()).transformToView();
+    const result = await newUser.save();
+    return transformToViewUsers(result);
   }
 
   async deleteUser(id: string) {
