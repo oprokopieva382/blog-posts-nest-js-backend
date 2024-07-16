@@ -1,4 +1,5 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { BlogDocument } from '../../schemas/Blog.schema';
 
 export class BlogViewModel {
   @IsNotEmpty()
@@ -25,3 +26,14 @@ export class BlogViewModel {
   @IsOptional()
   createdAt?: string;
 }
+
+export const transformToViewBlogs = (blog: BlogDocument): BlogViewModel => {
+  return {
+    id: blog._id.toString(),
+    name: blog.name,
+    description: blog.description,
+    websiteUrl: blog.websiteUrl,
+    isMembership: false,
+    createdAt: blog.createdAt.toISOString(),
+  };
+};

@@ -1,13 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Blog } from 'src/features/blog/schemas/Blog.schema';
-import { PostViewModel } from '../DTOs/output/PostViewModel.dto';
-import { LikeStatus } from 'src/base/DTOs/enam/LikesStatus';
-
-//!ask on support
-export interface PopulatedBlog extends Blog {
-  _id: mongoose.Types.ObjectId;
-}
 
 export type PostDocument = HydratedDocument<Post>;
 
@@ -37,27 +30,9 @@ export class Post {
   @Prop({ required: true })
   createdAt: Date;
 
-  transformToView(this: PostDocument): PostViewModel {
-    const blog = this.blog as PopulatedBlog;
-
-    return {
-      id: this._id.toString(),
-      title: this.title,
-      shortDescription: this.shortDescription,
-      content: this.content,
-      blogId: blog._id.toString(),
-      blogName: blog.name,
-      createdAt: this.createdAt.toISOString(),
-      extendedLikesInfo: {
-        likesCount: 0,
-        dislikesCount: 0,
-        myStatus: LikeStatus.None,
-        newestLikes: [],
-      },
-    };
-  }
 }
 
+//if need to add class methods in future
 export const PostSchema = SchemaFactory.createForClass(Post);
 PostSchema.loadClass(Post);
 

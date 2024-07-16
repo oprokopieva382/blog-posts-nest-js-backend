@@ -10,7 +10,7 @@ export class PostRepository {
 
   async createPost(dto: PostInputModel) {
     const newPost = new this.postModel(dto);
-    return (await newPost.save()).populate("blog");
+    return (await newPost.save()).populate('blog');
   }
 
   async updatePost(id: string, dto: PostInputModel) {

@@ -21,6 +21,8 @@ import {
 } from './DTOs/input/BlogQueryModel.dto';
 import { BlogQueryRepository } from './blog.query.repository';
 import { blogQueryFilter } from 'src/base/DTOs/utils/queryFilter';
+import { transformToViewBlogs } from './DTOs/output/BlogViewModel.dto';
+import { transformToViewPosts } from '../post/DTOs/output/PostViewModel.dto';
 
 @Controller('blogs')
 export class BlogController {
@@ -32,7 +34,6 @@ export class BlogController {
   @Get()
   @UsePipes(new ValidationPipe({ transform: true }))
   async getBlogs(@Query() query: BlogQueryModel) {
-    console.log(query);
     return await this.blogQueryRepository.getBlogs(blogQueryFilter(query));
   }
 
@@ -42,7 +43,7 @@ export class BlogController {
     if (!result) {
       throw new NotFoundException();
     }
-    return result.transformToView();
+    return transformToViewBlogs(result);
   }
 
   @Get(':blogId/posts')
@@ -51,7 +52,6 @@ export class BlogController {
     @Query() query: BlogPostQueryModel,
     @Param('blogId') blogId: string,
   ) {
-    console.log(query);
     const result = await this.blogQueryRepository.getBlogPosts(
       blogId,
       blogQueryFilter(query),
@@ -69,13 +69,14 @@ export class BlogController {
     @Body() dto: BlogPostInputModel,
   ) {
     const result = await this.blogService.createBlogPost(blogId, dto);
-    return result.transformToView();
+    return transformToViewPosts(result);
   }
 
   @Post()
   @UsePipes(new ValidationPipe())
   async createBlog(@Body() dto: BlogInputModel) {
-    return (await this.blogService.createBlog(dto)).transformToView();
+    const result = await this.blogService.createBlog(dto);
+    return transformToViewBlogs(result);
   }
 
   @Put(':id')
