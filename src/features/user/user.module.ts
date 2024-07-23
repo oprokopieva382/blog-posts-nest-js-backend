@@ -6,6 +6,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/User.schema';
 import { UserQueryRepository } from './user.query.repository';
 import { AdminAuthGuard } from 'src/base/DTOs/guards/admin-auth.guard';
+import { AuthModule } from '../auth/auth.module';
+
 
 @Module({
   imports: [
@@ -15,6 +17,7 @@ import { AdminAuthGuard } from 'src/base/DTOs/guards/admin-auth.guard';
         schema: UserSchema,
       },
     ]),
+    AuthModule,
   ],
   controllers: [UserController],
   providers: [UserService, UserRepository, UserQueryRepository, AdminAuthGuard],

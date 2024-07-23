@@ -6,6 +6,7 @@ import { PostModule } from './features/post/post.module';
 import { BlogModule } from './features/blog/blog.module';
 import { CommentModule } from './features/comment/comment.module';
 import { TestingModule } from './features/testing/testing.module';
+import { AuthModule } from './features/auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { TestingModule } from './features/testing/testing.module';
     PostModule,
     BlogModule,
     CommentModule,
+    AuthModule,
     TestingModule,
   ],
   controllers: [],
