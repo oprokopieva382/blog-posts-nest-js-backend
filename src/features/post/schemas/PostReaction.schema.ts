@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from 'src/features/user/schemas/User.schema';
 import { Post } from './Post.schema';
-import { LikeStatus } from 'src/base/DTOs/enam/LikesStatus';
+import { LikeStatus } from 'src/base/enam/LikesStatus';
 
 //*LatestReaction Schema
 @Schema()

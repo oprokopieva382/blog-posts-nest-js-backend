@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { ExtendedLikesInfoViewModel } from 'src/base/DTOs/output/ExtendedLikesInfoViewModel.dto';
 import { Blog } from 'src/features/blog/schemas/Blog.schema';
 import { PostDocument } from '../../schemas/Post.schema';
-import { LikeStatus } from 'src/base/DTOs/enam/LikesStatus';
+import { LikeStatus } from 'src/base/enam/LikesStatus';
 
 export class PostViewModel {
   @IsNotEmpty()
@@ -37,10 +37,9 @@ export class PostViewModel {
   @IsNotEmpty()
   @IsOptional()
   createdAt?: string;
+}
 
- }
-
- export interface PopulatedBlog extends Blog {
+export interface PopulatedBlog extends Blog {
   _id: mongoose.Types.ObjectId;
 }
 
@@ -63,5 +62,3 @@ export const transformToViewPosts = (post: PostDocument): PostViewModel => {
     },
   };
 };
-
-

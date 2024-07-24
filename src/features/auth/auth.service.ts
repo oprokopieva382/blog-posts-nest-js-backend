@@ -7,20 +7,30 @@ import { add } from 'date-fns/add';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly authRepository: AuthRepository,
-   ) {}
+  constructor(private readonly authRepository: AuthRepository) {}
 
   async createHash(password: string) {
     const salt = await bcrypt.genSalt(10);
     return bcrypt.hash(password, salt);
   }
 
+  async testPassword(password: string, hash: string) {
+    return bcrypt.compare(password, hash);
+  }
+
+  async validateUser(data: string, password: string): Promise<any> {
+    const user = await this.authRepository.getByLoginOrEmail(data);
+    const isPasswordCorrect = await this.testPassword(password, user.password);
+
+    if (user && isPasswordCorrect) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+
   async registerUser(dto: UserInputModel) {
-    const findUser = await this.authRepository.getByLoginOrEmail(
-      dto.login,
-      dto.email,
-    );
+    const findUser = await this.authRepository.getByLoginOrEmail(dto.login);
 
     if (findUser) {
       throw new BadRequestException();

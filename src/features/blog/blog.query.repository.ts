@@ -7,13 +7,15 @@ import {
   BlogQueryModel,
 } from './DTOs/input/BlogQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
-import { BlogViewModel, transformToViewBlogs } from './DTOs/output/BlogViewModel.dto';
+import {
+  BlogViewModel,
+  transformToViewBlogs,
+} from './DTOs/output/BlogViewModel.dto';
 import { Post, PostDocument } from '../post/schemas/Post.schema';
-import { SortDirection } from 'src/base/DTOs/enam/SortDirection';
+import { SortDirection } from 'src/base/enam/SortDirection';
 import {
   PostViewModel,
   transformToViewPosts,
-
 } from '../post/DTOs/output/PostViewModel.dto';
 
 @Injectable()
@@ -69,7 +71,7 @@ export class BlogQueryRepository {
       query.sortDirection === '1' ? SortDirection.asc : SortDirection.desc;
 
     const sortField = query.sortBy === 'blogName' ? 'blog.name' : query.sortBy;
-     
+
     const aggregationPipeline = [
       {
         $match: { blog: new mongoose.Types.ObjectId(blogId) },

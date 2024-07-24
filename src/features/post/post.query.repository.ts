@@ -9,7 +9,7 @@ import {
   transformToViewPosts,
 } from './DTOs/output/PostViewModel.dto';
 import { Comment, CommentDocument } from '../comment/schemas/Comment.schema';
-import { SortDirection } from 'src/base/DTOs/enam/SortDirection';
+import { SortDirection } from 'src/base/enam/SortDirection';
 import { transformToViewComments } from '../comment/DTOs/output/CommentViewModel';
 
 @Injectable()

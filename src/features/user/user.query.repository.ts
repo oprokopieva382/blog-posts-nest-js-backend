@@ -4,8 +4,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserQueryModel } from './DTOs/input/UserQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
-import { transformToViewUsers, UserViewModel } from './DTOs/output/UserViewModel.dto';
-import { SortDirection } from 'src/base/DTOs/enam/SortDirection';
+import {
+  transformToViewUsers,
+  UserViewModel,
+} from './DTOs/output/UserViewModel.dto';
+import { SortDirection } from 'src/base/enam/SortDirection';
 
 @Injectable()
 export class UserQueryRepository {
@@ -31,13 +34,11 @@ export class UserQueryRepository {
     })
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize)
-     .sort({
+      .sort({
         [query.sortBy]:
-          query.sortDirection === '1'
-            ? SortDirection.asc
-            : SortDirection.desc,
+          query.sortDirection === '1' ? SortDirection.asc : SortDirection.desc,
       });
-   
+
     const usersToView = {
       pagesCount: Math.ceil(totalUsersCount / query.pageSize),
       page: query.pageNumber,

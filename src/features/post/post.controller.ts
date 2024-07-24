@@ -16,7 +16,7 @@ import { PostInputModel } from './DTOs/input/PostInputModel.dto';
 import { PostService } from './post.service';
 import { PostQueryRepository } from './post.query.repository';
 import { PostQueryModel } from './DTOs/input/PostQueryModel.dto';
-import { baseQueryFilter } from 'src/base/DTOs/utils/queryFilter';
+import { baseQueryFilter } from 'src/base/utils/queryFilter';
 import { transformToViewPosts } from './DTOs/output/PostViewModel.dto';
 
 @Controller('posts')
