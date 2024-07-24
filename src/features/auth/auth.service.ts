@@ -4,10 +4,14 @@ import { AuthRepository } from './auth.repository';
 import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns/add';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly authRepository: AuthRepository) {}
+  constructor(
+    private readonly authRepository: AuthRepository,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async createHash(password: string) {
     const salt = await bcrypt.genSalt(10);
@@ -52,5 +56,12 @@ export class AuthService {
     };
 
     return await this.authRepository.registerUser(userDto);
+  }
+
+  async login(user: any) {
+    const payload = { username: user.username, sub: user.userId };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
