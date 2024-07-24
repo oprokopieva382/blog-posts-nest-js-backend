@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -16,8 +17,10 @@ import { UserService } from './user.service';
 import { UserQueryRepository } from './user.query.repository';
 import { UserQueryModel } from './DTOs/input/UserQueryModel.dto';
 import { userQueryFilter } from 'src/base/DTOs/utils/queryFilter';
+import { AdminAuthGuard } from 'src/base/DTOs/guards/admin-auth.guard';
 
 @Controller('users')
+@UseGuards(AdminAuthGuard)
 export class UserController {
   constructor(
     protected userService: UserService,
