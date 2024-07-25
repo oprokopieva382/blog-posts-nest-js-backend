@@ -10,6 +10,7 @@ import { randomUUID } from 'crypto';
 import { add } from 'date-fns/add';
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/base/application/email.service';
+import { RegistrationConfirmationCodeModel } from './DTOs/input/RegistrationConfirmationCodeModel.dto';
 
 @Injectable()
 export class AuthService {
@@ -60,7 +61,7 @@ export class AuthService {
         expirationDate: add(new Date(), {
           hours: 1,
         }),
-        isConfirmed: true,
+        isConfirmed: false,
       },
     };
 
@@ -72,6 +73,20 @@ export class AuthService {
     );
 
     return user;
+  }
+
+  async confirmRegistration(dto: RegistrationConfirmationCodeModel) {
+    const findUser = await this.authRepository.getByConfirmationCode(dto.code);
+    if (!findUser || findUser.emailConfirmation.isConfirmed === true) {
+      throw new BadRequestException([
+        {
+          message:
+            'Confirmation code is incorrect, expired or already been applied',
+          field: 'code',
+        },
+      ]);
+    }
+    return await this.authRepository.updateConfirmation(findUser._id);
   }
 
   async loginUser(user: any) {

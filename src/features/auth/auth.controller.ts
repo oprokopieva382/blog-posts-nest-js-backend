@@ -17,6 +17,7 @@ import { CurrentUserId } from './decorators/currentUserId.param.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LoginInputModel } from './DTOs/input/LoginInputModel.dto';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { RegistrationConfirmationCodeModel } from './DTOs/input/RegistrationConfirmationCodeModel.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -30,6 +31,13 @@ export class AuthController {
   @HttpCode(204)
   async registerUser(@Body() dto: UserInputModel) {
     return await this.authService.registerUser(dto);
+  }
+
+  @Post('registration-confirmation')
+  @UseGuards(ThrottlerGuard)
+  @HttpCode(204)
+  async confirmRegistration(@Body() dto: RegistrationConfirmationCodeModel) {
+    return await this.authService.confirmRegistration(dto);
   }
 
   @Post('login')
