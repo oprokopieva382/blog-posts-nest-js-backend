@@ -7,6 +7,7 @@ import {
   UsePipes,
   ValidationPipe,
   Get,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
@@ -24,12 +25,12 @@ export class AuthController {
   ) {}
 
   @Post('registration')
+  @HttpCode(204)
   async registerUser(@Body() dto: UserInputModel) {
     return await this.authService.registerUser(dto);
   }
 
   @Post('login')
-  @UsePipes(new ValidationPipe())
   @UseGuards(LocalAuthGuard)
   async loginUser(@Body() dto: LoginInputModel, @Request() req) {
     console.log('Req.user', req.user._doc._id);

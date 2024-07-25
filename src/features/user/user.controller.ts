@@ -28,13 +28,12 @@ export class UserController {
   ) {}
 
   @Get()
-  @UsePipes(new ValidationPipe({ transform: true }))
+  //@UsePipes(new ValidationPipe({ transform: true }))
   async getUsers(@Query() query: UserQueryModel) {
     return await this.userQueryRepository.getUsers(userQueryFilter(query));
   }
 
   @Post()
-  @UsePipes(new ValidationPipe())
   async createUser(@Body() dto: UserInputModel) {
     return await this.userService.createUser(dto);
   }

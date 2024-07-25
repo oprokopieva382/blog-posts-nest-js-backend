@@ -4,6 +4,7 @@ import {
   ArgumentsHost,
   HttpException,
   HttpStatus,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -28,10 +29,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
             field: m.field,
           }),
         );
+      } else {
+        response.sendStatus(status);
       }
       response.status(status).send(errorsResponse);
     } else {
-      response.status(status).json({
+      response.sendStatus(status).json({
         statusCode: status,
         timestamp: new Date().toISOString(),
         path: request.url,
