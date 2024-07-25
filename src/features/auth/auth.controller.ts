@@ -4,11 +4,11 @@ import {
   Request,
   Post,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
   Get,
   HttpCode,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
 import { LocalAuthGuard } from 'src/features/auth/guards/local-auth.guard';
@@ -74,8 +74,24 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  async loginUser(@Body() dto: LoginInputModel, @Request() req) {
-    console.log('Req.user', req.user._doc._id);
-    return await this.authService.loginUser(req.user);
+  async loginUser(
+    @Body() dto: LoginInputModel,
+    @Request() req,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    console.log('Req.user', req.user);
+    const { accessToken, refreshToken } = await this.authService.loginUser(
+      req.user,
+      req.ip,
+      req.headers,
+    );
+    console.log('accessToken', accessToken);
+    console.log('refreshToken', refreshToken);
+
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+    return { accessToken };
   }
 }

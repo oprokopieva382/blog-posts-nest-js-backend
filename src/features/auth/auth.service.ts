@@ -11,14 +11,26 @@ import { add } from 'date-fns/add';
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/base/application/email.service';
 import { NewPasswordRecoveryInputModel } from './DTOs/input/NewPasswordRecoveryInputModel.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
+  private readonly accessTokenSecret: string;
+  private readonly refreshTokenSecret: string;
+
   constructor(
     private readonly authRepository: AuthRepository,
     private readonly emailService: EmailService,
     private readonly jwtService: JwtService,
-  ) {}
+    private readonly configService: ConfigService,
+  ) {
+    this.accessTokenSecret = this.configService.get<string>(
+      'JWT_ACCESS_TOKEN_SECRET',
+    );
+    this.refreshTokenSecret = this.configService.get<string>(
+      'JWT_REFRESH_TOKEN_SECRET',
+    );
+  }
 
   async createHash(password: string) {
     const salt = await bcrypt.genSalt(10);
@@ -138,11 +150,27 @@ export class AuthService {
     await this.authRepository.setNewPassword(result.email, passwordHash);
   }
 
-  async loginUser(user: any) {
+  async loginUser(user: any, ip: string, headers: string) {
     //console.log('User in loginUser', user);
     const payload = { login: user._doc.login, sub: user._doc._id };
+
+    //later for sessions
+    const deviceId = randomUUID();
+    const IP = ip;
+    const deviceName = headers['user-agent'] || 'Unknown Device';
+
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.accessTokenSecret,
+      expiresIn: '5m',
+    });
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: this.refreshTokenSecret,
+      expiresIn: '20m',
+    });
+
     return {
-      accessToken: this.jwtService.sign(payload),
+      accessToken,
+      refreshToken,
     };
   }
 }
