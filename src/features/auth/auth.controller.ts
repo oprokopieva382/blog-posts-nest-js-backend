@@ -16,6 +16,7 @@ import { UserQueryRepository } from '../user/user.query.repository';
 import { CurrentUserId } from './decorators/currentUserId.param.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LoginInputModel } from './DTOs/input/LoginInputModel.dto';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -25,6 +26,7 @@ export class AuthController {
   ) {}
 
   @Post('registration')
+  @UseGuards(ThrottlerGuard)
   @HttpCode(204)
   async registerUser(@Body() dto: UserInputModel) {
     return await this.authService.registerUser(dto);

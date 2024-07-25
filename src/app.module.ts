@@ -7,6 +7,7 @@ import { BlogModule } from './features/blog/blog.module';
 import { CommentModule } from './features/comment/comment.module';
 import { TestingModule } from './features/testing/testing.module';
 import { AuthModule } from './features/auth/auth.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -27,6 +28,10 @@ import { AuthModule } from './features/auth/auth.module';
     CommentModule,
     AuthModule,
     TestingModule,
+    ThrottlerModule.forRoot([{
+      ttl: 10000, 
+      limit: 5, 
+    }]),
   ],
   controllers: [],
   providers: [],

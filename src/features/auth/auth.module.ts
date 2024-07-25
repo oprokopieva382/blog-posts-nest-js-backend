@@ -11,6 +11,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserQueryRepository } from '../user/user.query.repository';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { EmailService } from 'src/base/application/email.service';
+import { ApiCall, ApiCallSchema } from './schemas/Api.schema';
 
 @Module({
   imports: [
@@ -18,6 +19,10 @@ import { EmailService } from 'src/base/application/email.service';
       {
         name: User.name,
         schema: UserSchema,
+      },
+      {
+        name: ApiCall.name,
+        schema: ApiCallSchema,
       },
     ]),
     PassportModule,
