@@ -10,6 +10,7 @@ import { randomUUID } from 'crypto';
 import { add } from 'date-fns/add';
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/base/application/email.service';
+import { NewPasswordRecoveryInputModel } from './DTOs/input/NewPasswordRecoveryInputModel.dto';
 
 @Injectable()
 export class AuthService {
@@ -106,6 +107,35 @@ export class AuthService {
     this.emailService.sendRegistrationEmail(email, newCode);
 
     return findUser;
+  }
+
+  async passwordRecovery(email: string) {
+    const passwordRecoveryCodeDto = {
+      recoveryCode: randomUUID(),
+      email,
+      expirationDate: add(new Date(Date.now()).toISOString(), {
+        hours: 1,
+      }),
+      createdAt: new Date().toISOString(),
+    };
+
+    const { recoveryCode } = await this.authRepository.savePasswordRecoveryInfo(
+      passwordRecoveryCodeDto,
+    );
+
+    await this.emailService.sendPasswordRecoveryEmail(email, recoveryCode);
+  }
+
+  async setNewPassword(data: NewPasswordRecoveryInputModel) {
+    const { newPassword, recoveryCode } = data;
+    const result = await this.authRepository.getByRecoveryCode(recoveryCode);
+
+    if (!result || new Date(result.expirationDate) < new Date()) {
+      throw new BadRequestException();
+    }
+    const passwordHash = await this.createHash(newPassword);
+
+    await this.authRepository.setNewPassword(result.email, passwordHash);
   }
 
   async loginUser(user: any) {

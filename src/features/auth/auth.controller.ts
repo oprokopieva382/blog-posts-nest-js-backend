@@ -19,6 +19,8 @@ import { LoginInputModel } from './DTOs/input/LoginInputModel.dto';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { RegistrationConfirmationCodeModel } from './DTOs/input/RegistrationConfirmationCodeModel.dto';
 import { RegistrationEmailResendingModel } from './DTOs/input/RegistrationEmailResendingModel.dto';
+import { PasswordRecoveryInputModel } from './DTOs/input/PasswordRecoveryInputModel.dto';
+import { NewPasswordRecoveryInputModel } from './DTOs/input/NewPasswordRecoveryInputModel.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -26,6 +28,12 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userQueryRepository: UserQueryRepository,
   ) {}
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  async authMe(@CurrentUserId() currentUserId: string) {
+    return await this.userQueryRepository.getByIdUser(currentUserId);
+  }
 
   @Post('registration')
   @UseGuards(ThrottlerGuard)
@@ -50,16 +58,24 @@ export class AuthController {
     return await this.authService.registrationEmailResending(dto.email);
   }
 
+  @Post('password-recovery')
+  @UseGuards(ThrottlerGuard)
+  @HttpCode(204)
+  async passwordRecovery(@Body() dto: PasswordRecoveryInputModel) {
+    return await this.authService.passwordRecovery(dto.email);
+  }
+
+  @Post('new-password')
+  @UseGuards(ThrottlerGuard)
+  @HttpCode(204)
+  async setNewPassword(@Body() dto: NewPasswordRecoveryInputModel) {
+    return await this.authService.setNewPassword(dto);
+  }
+
   @Post('login')
   @UseGuards(LocalAuthGuard)
   async loginUser(@Body() dto: LoginInputModel, @Request() req) {
     console.log('Req.user', req.user._doc._id);
     return await this.authService.loginUser(req.user);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('me')
-  async authMe(@CurrentUserId() currentUserId: string) {
-    return await this.userQueryRepository.getByIdUser(currentUserId);
   }
 }
