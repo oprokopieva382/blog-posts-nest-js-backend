@@ -10,6 +10,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserQueryRepository } from '../user/user.query.repository';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { EmailService } from 'src/base/application/email.service';
+import { PasswordRecoveryCode, PasswordRecoveryCodeSchema } from './schemas/PasswordRecoveryCode.schema';
 
 @Module({
   imports: [
@@ -17,6 +19,10 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       {
         name: User.name,
         schema: UserSchema,
+      },
+      {
+        name: PasswordRecoveryCode.name,
+        schema: PasswordRecoveryCodeSchema,
       },
     ]),
     PassportModule,
@@ -36,6 +42,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     LocalStrategy,
     JwtStrategy,
     UserQueryRepository,
+    EmailService,
   ],
   exports: [AuthService],
 })
