@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber, IsOptional } from 'class-validator';
-import { LikeStatus } from '../enam/LikesStatus';
+import { LikeStatus } from '../../enam/LikesStatus';
 import { LikeDetailsViewModel } from './LikeDetailsViewModel.dto';
 
 export class ExtendedLikesInfoViewModel {

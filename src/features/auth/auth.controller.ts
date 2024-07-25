@@ -1,28 +1,45 @@
 import {
   Body,
   Controller,
-  HttpCode,
+  Request,
   Post,
+  UseGuards,
   UsePipes,
   ValidationPipe,
+  Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
+import { LocalAuthGuard } from 'src/features/auth/guards/local-auth.guard';
+import { UserQueryRepository } from '../user/user.query.repository';
+import { CurrentUserId } from './decorators/currentUserId.param.decorator';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { LoginInputModel } from './DTOs/input/LoginInputModel.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(protected authService: AuthService) {}
-
-  // @Get()
-  // @UsePipes(new ValidationPipe({ transform: true }))
-  // async getUsers(@Query() query: UserQueryModel) {
-  //   return await this.userQueryRepository.getUsers(userQueryFilter(query));
-  // }
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userQueryRepository: UserQueryRepository,
+  ) {}
 
   @Post('registration')
-  @HttpCode(204)
   @UsePipes(new ValidationPipe())
   async registerUser(@Body() dto: UserInputModel) {
     return await this.authService.registerUser(dto);
+  }
+
+  @Post('login')
+  @UsePipes(new ValidationPipe())
+  @UseGuards(LocalAuthGuard)
+  async loginUser(@Body() dto: LoginInputModel, @Request() req) {
+    console.log('Req.user', req.user._doc._id);
+    return await this.authService.loginUser(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async authMe(@CurrentUserId() currentUserId: string) {
+    return await this.userQueryRepository.getByIdUser(currentUserId);
   }
 }

@@ -20,7 +20,7 @@ import {
   BlogQueryModel,
 } from './DTOs/input/BlogQueryModel.dto';
 import { BlogQueryRepository } from './blog.query.repository';
-import { blogQueryFilter } from 'src/base/DTOs/utils/queryFilter';
+import { blogQueryFilter } from 'src/base/utils/queryFilter';
 import { transformToViewBlogs } from './DTOs/output/BlogViewModel.dto';
 import { transformToViewPosts } from '../post/DTOs/output/PostViewModel.dto';
 

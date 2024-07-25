@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { LikeStatus } from 'src/base/DTOs/enam/LikesStatus';
+import { LikeStatus } from 'src/base/enam/LikesStatus';
 import { Post } from 'src/features/post/schemas/Post.schema';
 
 export type CommentDocument = HydratedDocument<Comment>;
@@ -33,4 +33,4 @@ export class Comment {
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
-CommentSchema.loadClass(Comment)
+CommentSchema.loadClass(Comment);

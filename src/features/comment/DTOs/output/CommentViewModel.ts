@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { LikesInfoViewModel } from 'src/base/DTOs/output/LikesInfoViewModel.dto';
 import { CommentDocument } from '../../schemas/Comment.schema';
-import { LikeStatus } from 'src/base/DTOs/enam/LikesStatus';
+import { LikeStatus } from 'src/base/enam/LikesStatus';
 
 class CommentatorInfo {
   @IsNotEmpty()

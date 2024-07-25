@@ -9,9 +9,9 @@ import { transformToViewUsers } from '../user/DTOs/output/UserViewModel.dto';
 export class AuthRepository {
   constructor(@InjectModel(User.name) private UserModel: Model<UserDocument>) {}
 
-  async getByLoginOrEmail(login: string, email: string) {
+  async getByLoginOrEmail( data: string) {
     return await this.UserModel.findOne({
-      $or: [{ email }, { login }],
+      $or: [{ email: data }, { login: data }],
     });
   }
 
