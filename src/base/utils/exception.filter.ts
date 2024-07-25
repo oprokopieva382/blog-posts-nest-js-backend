@@ -19,15 +19,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const errorsResponse = { errorsMessages: [] };
 
       const responseBody: any = exception.getResponse();
+
       if (Array.isArray(responseBody.message)) {
-        responseBody.message.map((e) =>
+        responseBody.message.map((m: any) =>
           // @ts-ignore
-          errorsResponse.errorsMessages.push(e),
+          errorsResponse.errorsMessages.push({
+            message: m.message,
+            field: m.field,
+          }),
         );
-      } else {
-        // @ts-ignore
-        response.status(status).send(errorsResponse);
       }
+      response.status(status).send(errorsResponse);
     } else {
       response.status(status).json({
         statusCode: status,
