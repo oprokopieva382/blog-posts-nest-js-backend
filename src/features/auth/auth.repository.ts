@@ -29,6 +29,17 @@ export class AuthRepository {
     );
   }
 
+  async updateCode(_id: Types.ObjectId, newCode: string) {
+    await this.UserModel.findByIdAndUpdate(
+      { _id },
+      {
+        $set: {
+          'emailConfirmation.confirmationCode': newCode,
+        },
+      },
+    );
+  }
+
   async registerUser(dto: UserInputModel) {
     const newUser = new this.UserModel(dto);
     const result = await newUser.save();

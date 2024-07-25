@@ -18,6 +18,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LoginInputModel } from './DTOs/input/LoginInputModel.dto';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { RegistrationConfirmationCodeModel } from './DTOs/input/RegistrationConfirmationCodeModel.dto';
+import { RegistrationEmailResendingModel } from './DTOs/input/RegistrationEmailResendingModel.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -37,7 +38,16 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @HttpCode(204)
   async confirmRegistration(@Body() dto: RegistrationConfirmationCodeModel) {
-    return await this.authService.confirmRegistration(dto);
+    return await this.authService.confirmRegistration(dto.code);
+  }
+
+  @Post('registration-email-resending')
+  @UseGuards(ThrottlerGuard)
+  @HttpCode(204)
+  async registrationEmailResending(
+    @Body() dto: RegistrationEmailResendingModel,
+  ) {
+    return await this.authService.registrationEmailResending(dto.email);
   }
 
   @Post('login')

@@ -10,7 +10,6 @@ import { randomUUID } from 'crypto';
 import { add } from 'date-fns/add';
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/base/application/email.service';
-import { RegistrationConfirmationCodeModel } from './DTOs/input/RegistrationConfirmationCodeModel.dto';
 
 @Injectable()
 export class AuthService {
@@ -75,8 +74,8 @@ export class AuthService {
     return user;
   }
 
-  async confirmRegistration(dto: RegistrationConfirmationCodeModel) {
-    const findUser = await this.authRepository.getByConfirmationCode(dto.code);
+  async confirmRegistration(code: string) {
+    const findUser = await this.authRepository.getByConfirmationCode(code);
     if (!findUser || findUser.emailConfirmation.isConfirmed === true) {
       throw new BadRequestException([
         {
@@ -89,8 +88,28 @@ export class AuthService {
     return await this.authRepository.updateConfirmation(findUser._id);
   }
 
+  async registrationEmailResending(email: string) {
+    const findUser = await this.authRepository.getByLoginOrEmail(email);
+
+    if (!findUser) {
+      throw new BadRequestException([
+        {
+          message: 'Incorrect input value',
+          field: 'email',
+        },
+      ]);
+    }
+
+    const newCode = randomUUID();
+    await this.authRepository.updateCode(findUser._id, newCode);
+
+    this.emailService.sendRegistrationEmail(email, newCode);
+
+    return findUser;
+  }
+
   async loginUser(user: any) {
-    console.log('User in loginUser', user);
+    //console.log('User in loginUser', user);
     const payload = { login: user._doc.login, sub: user._doc._id };
     return {
       accessToken: this.jwtService.sign(payload),
