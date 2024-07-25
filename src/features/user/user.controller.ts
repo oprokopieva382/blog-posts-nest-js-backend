@@ -17,7 +17,7 @@ import { UserService } from './user.service';
 import { UserQueryRepository } from './user.query.repository';
 import { UserQueryModel } from './DTOs/input/UserQueryModel.dto';
 import { userQueryFilter } from 'src/base/utils/queryFilter';
-import { AdminAuthGuard } from 'src/base/guards/admin-auth.guard';
+import { AdminAuthGuard } from 'src/features/auth/guards/admin-auth.guard';
 
 @Controller('users')
 @UseGuards(AdminAuthGuard)

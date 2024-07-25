@@ -9,6 +9,7 @@ import {
   UserViewModel,
 } from './DTOs/output/UserViewModel.dto';
 import { SortDirection } from 'src/base/enam/SortDirection';
+import { transformToViewUser } from '../auth/DTOs/output/UserViewModel.dto';
 
 @Injectable()
 export class UserQueryRepository {
@@ -47,5 +48,10 @@ export class UserQueryRepository {
       items: users.map((u) => transformToViewUsers(u)),
     };
     return usersToView;
+  }
+
+  async getByIdUser(id: string) {
+    const user = await this.UserModel.findById(id);
+    return transformToViewUser(user)
   }
 }

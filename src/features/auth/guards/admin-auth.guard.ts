@@ -33,7 +33,7 @@ export class AdminAuthGuard implements CanActivate {
 
     const bytes = Buffer.from(tokenSecondPart, 'base64').toString('utf8');
 
-    if (bytes !== this.configService.get('ADMIN_AUTH')) {
+    if (bytes !== this.configService.get<string>('ADMIN_AUTH')) {
       throw new UnauthorizedException();
     }
     return true;

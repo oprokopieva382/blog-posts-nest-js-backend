@@ -58,10 +58,11 @@ export class AuthService {
     return await this.authRepository.registerUser(userDto);
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+  async loginUser(user: any) {
+    console.log("User in loginUser", user)
+    const payload = { login: user._doc.login, sub: user._doc._id };
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
     };
   }
 }
