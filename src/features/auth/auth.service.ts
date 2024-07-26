@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   async validateUser(data: string, password: string): Promise<any> {
-    const user = await this.authRepository.getByLoginOrEmail(data);
+    const user = await this.authRepository.getByLogin(data);
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -55,10 +55,18 @@ export class AuthService {
   }
 
   async registerUser(dto: UserInputModel) {
-    const findUser = await this.authRepository.getByLoginOrEmail(dto.login);
+    const userL = await this.authRepository.getByLogin(dto.login);
+    const userE = await this.authRepository.getByEmail(dto.email);
 
-    if (findUser) {
-      throw new BadRequestException([{ message: 'User already exist' }]);
+    if (userL) {
+      throw new BadRequestException([
+        { message: 'User already exist', field: 'login' },
+      ]);
+    }
+    if (userE) {
+      throw new BadRequestException([
+        { message: 'User already exist', field: 'email' },
+      ]);
     }
 
     const hashedPassword = await this.createHash(dto.password);
@@ -102,7 +110,7 @@ export class AuthService {
   }
 
   async registrationEmailResending(email: string) {
-    const findUser = await this.authRepository.getByLoginOrEmail(email);
+    const findUser = await this.authRepository.getByEmail(email);
 
     if (!findUser) {
       throw new BadRequestException([

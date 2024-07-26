@@ -17,10 +17,18 @@ export class AuthRepository {
     private readonly PasswordRecoveryCodeModel: Model<PasswordRecoveryCodeDocument>,
   ) {}
 
-  async getByLoginOrEmail(data: string) {
+  async getByLoginOrEmail(login: string, email: string) {
     return await this.UserModel.findOne({
-      $or: [{ email: data }, { login: data }],
+      $or: [{ email }, { login }],
     });
+  }
+
+  async getByLogin(login: string) {
+    return await this.UserModel.findOne({ login });
+  }
+
+  async getByEmail(email: string) {
+    return await this.UserModel.findOne({ email });
   }
 
   async getByConfirmationCode(code: string) {
@@ -69,6 +77,6 @@ export class AuthRepository {
       { email },
       { $set: { password: newPassword } },
       { new: true },
-    ); 
+    );
   }
 }
