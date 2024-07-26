@@ -15,7 +15,6 @@ import { LocalAuthGuard } from 'src/features/auth/guards/local-auth.guard';
 import { UserQueryRepository } from '../user/user.query.repository';
 import { CurrentUserId } from './decorators/currentUserId.param.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { LoginInputModel } from './DTOs/input/LoginInputModel.dto';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { RegistrationConfirmationCodeModel } from './DTOs/input/RegistrationConfirmationCodeModel.dto';
 import { RegistrationEmailResendingModel } from './DTOs/input/RegistrationEmailResendingModel.dto';
@@ -74,19 +73,18 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(LocalAuthGuard)
+  @HttpCode(200)
   async loginUser(
-    @Body() dto: LoginInputModel,
+    //@Body() dto: LoginInputModel,
     @Request() req,
     @Res({ passthrough: true }) response: Response,
   ) {
-    console.log('Req.user', req.user);
+    //console.log('Req.user', req.user);
     const { accessToken, refreshToken } = await this.authService.loginUser(
       req.user,
       req.ip,
       req.headers,
     );
-    console.log('accessToken', accessToken);
-    console.log('refreshToken', refreshToken);
 
     response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
