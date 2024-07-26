@@ -15,8 +15,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
-
+    console.log(status, ' status');
     if (status === HttpStatus.BAD_REQUEST) {
+      console.log(1);
       const errorsResponse = { errorsMessages: [] };
 
       const responseBody: any = exception.getResponse();
@@ -30,15 +31,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
           }),
         );
       } else {
-        response.sendStatus(status);
+        return response.sendStatus(status);
       }
-      response.status(status).send(errorsResponse);
+      return response.status(status).send(errorsResponse);
     } else {
-      response.sendStatus(status).json({
-        statusCode: status,
-        timestamp: new Date().toISOString(),
-        path: request.url,
-      });
+      return response.sendStatus(status);
     }
   }
 }

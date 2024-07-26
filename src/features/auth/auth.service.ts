@@ -49,7 +49,7 @@ export class AuthService {
     const isPasswordCorrect = await this.testPassword(password, user.password);
 
     if (user && isPasswordCorrect) {
-      const { password, ...result } = user;
+      const { password, ...result } = user.toObject();
       return result;
     }
   }
@@ -151,8 +151,7 @@ export class AuthService {
   }
 
   async loginUser(user: any, ip: string, headers: string) {
-    //console.log('User in loginUser', user);
-    const payload = { login: user._doc.login, sub: user._doc._id };
+    const payload = { login: user.login, sub: user._id };
 
     //later for sessions
     const deviceId = randomUUID();
