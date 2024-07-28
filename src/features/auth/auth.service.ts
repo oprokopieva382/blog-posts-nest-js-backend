@@ -87,7 +87,7 @@ export class AuthService {
 
     const user = await this.authRepository.registerUser(userDto);
 
-    this.emailService.sendRegistrationEmail(
+    await this.emailService.sendRegistrationEmail(
       userDto.email,
       userDto.emailConfirmation.confirmationCode,
     );
@@ -124,7 +124,7 @@ export class AuthService {
     const newCode = randomUUID();
     await this.authRepository.updateCode(findUser._id, newCode);
 
-    this.emailService.sendRegistrationEmail(email, newCode);
+    await this.emailService.sendRegistrationEmail(email, newCode);
 
     return findUser;
   }
