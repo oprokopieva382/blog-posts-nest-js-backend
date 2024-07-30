@@ -8,29 +8,14 @@ import { AuthRepository } from './auth.repository';
 import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns/add';
-import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/base/application/email.service';
-import { NewPasswordRecoveryInputModel } from './DTOs/input/NewPasswordRecoveryInputModel.dto';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  private readonly accessTokenSecret: string;
-  private readonly refreshTokenSecret: string;
-
   constructor(
     private readonly authRepository: AuthRepository,
     private readonly emailService: EmailService,
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
-  ) {
-    this.accessTokenSecret = this.configService.get<string>(
-      'JWT_ACCESS_TOKEN_SECRET',
-    );
-    this.refreshTokenSecret = this.configService.get<string>(
-      'JWT_REFRESH_TOKEN_SECRET',
-    );
-  }
+  ) {}
 
   async createHash(password: string) {
     const salt = await bcrypt.genSalt(10);
@@ -146,38 +131,38 @@ export class AuthService {
     await this.emailService.sendPasswordRecoveryEmail(email, recoveryCode);
   }
 
-  async setNewPassword(data: NewPasswordRecoveryInputModel) {
-    const { newPassword, recoveryCode } = data;
-    const result = await this.authRepository.getByRecoveryCode(recoveryCode);
+  // async setNewPassword(data: NewPasswordRecoveryInputModel) {
+  //   const { newPassword, recoveryCode } = data;
+  //   const result = await this.authRepository.getByRecoveryCode(recoveryCode);
 
-    if (!result || new Date(result.expirationDate) < new Date()) {
-      throw new BadRequestException();
-    }
-    const passwordHash = await this.createHash(newPassword);
+  //   if (!result || new Date(result.expirationDate) < new Date()) {
+  //     throw new BadRequestException();
+  //   }
+  //   const passwordHash = await this.createHash(newPassword);
 
-    await this.authRepository.setNewPassword(result.email, passwordHash);
-  }
+  //   await this.authRepository.setNewPassword(result.email, passwordHash);
+  // }
 
-  async loginUser(user: any, ip: string, headers: string) {
-    const payload = { login: user.login, sub: user._id };
+  // async loginUser(user: any, ip: string, headers: string) {
+  //   const payload = { login: user.login, sub: user._id };
 
-    //later for sessions
-    const deviceId = randomUUID();
-    const IP = ip;
-    const deviceName = headers['user-agent'] || 'Unknown Device';
+  //   //later for sessions
+  //   const deviceId = randomUUID();
+  //   const IP = ip;
+  //   const deviceName = headers['user-agent'] || 'Unknown Device';
 
-    const accessToken = this.jwtService.sign(payload, {
-      secret: this.accessTokenSecret,
-      expiresIn: '5m',
-    });
-    const refreshToken = this.jwtService.sign(payload, {
-      secret: this.refreshTokenSecret,
-      expiresIn: '20m',
-    });
+  //   const accessToken = this.jwtService.sign(payload, {
+  //     secret: this.accessTokenSecret,
+  //     expiresIn: '5m',
+  //   });
+  //   const refreshToken = this.jwtService.sign(payload, {
+  //     secret: this.refreshTokenSecret,
+  //     expiresIn: '20m',
+  //   });
 
-    return {
-      accessToken,
-      refreshToken,
-    };
-  }
+  //   return {
+  //     accessToken,
+  //     refreshToken,
+  //   };
+  // }
 }

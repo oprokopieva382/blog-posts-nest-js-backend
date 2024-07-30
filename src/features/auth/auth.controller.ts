@@ -20,12 +20,16 @@ import { RegistrationConfirmationCodeModel } from './DTOs/input/RegistrationConf
 import { RegistrationEmailResendingModel } from './DTOs/input/RegistrationEmailResendingModel.dto';
 import { PasswordRecoveryInputModel } from './DTOs/input/PasswordRecoveryInputModel.dto';
 import { NewPasswordRecoveryInputModel } from './DTOs/input/NewPasswordRecoveryInputModel.dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { SetNewPasswordCommand } from './use-cases/setNewPassword-use-case';
+import { LoginUserCommand } from './use-cases/loginUser-use-case';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userQueryRepository: UserQueryRepository,
+    private readonly commandBus: CommandBus,
   ) {}
 
   @Get('me')
@@ -68,7 +72,7 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @HttpCode(204)
   async setNewPassword(@Body() dto: NewPasswordRecoveryInputModel) {
-    return await this.authService.setNewPassword(dto);
+    return await this.commandBus.execute(new SetNewPasswordCommand(dto));
   }
 
   @Post('login')
@@ -80,10 +84,8 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     //console.log('Req.user', req.user);
-    const { accessToken, refreshToken } = await this.authService.loginUser(
-      req.user,
-      req.ip,
-      req.headers,
+    const { accessToken, refreshToken } = await this.commandBus.execute(
+      new LoginUserCommand(req.user, req.ip, req.headers),
     );
 
     response.cookie('refreshToken', refreshToken, {
