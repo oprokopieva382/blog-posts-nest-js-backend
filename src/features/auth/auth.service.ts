@@ -112,7 +112,7 @@ export class AuthService {
   async registrationEmailResending(email: string) {
     const findUser = await this.authRepository.getByEmail(email);
 
-    if (!findUser) {
+    if (!findUser || findUser.emailConfirmation.isConfirmed === true) {
       throw new BadRequestException([
         {
           message: 'Incorrect input value',
