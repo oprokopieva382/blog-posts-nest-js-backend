@@ -23,6 +23,7 @@ import { NewPasswordRecoveryInputModel } from './DTOs/input/NewPasswordRecoveryI
 import { CommandBus } from '@nestjs/cqrs';
 import { SetNewPasswordCommand } from './use-cases/setNewPassword-use-case';
 import { LoginUserCommand } from './use-cases/loginUser-use-case';
+import { RegisterUserCommand } from './use-cases/registerUser-use-case';
 
 @Controller('auth')
 export class AuthController {
@@ -42,7 +43,7 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @HttpCode(204)
   async registerUser(@Body() dto: UserInputModel) {
-    return await this.authService.registerUser(dto);
+    return await this.commandBus.execute(new RegisterUserCommand(dto));
   }
 
   @Post('registration-confirmation')

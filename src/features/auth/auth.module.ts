@@ -15,6 +15,7 @@ import { PasswordRecoveryCode, PasswordRecoveryCodeSchema } from './schemas/Pass
 import { SetNewPasswordUseCase } from './use-cases/setNewPassword-use-case';
 import { CqrsModule } from '@nestjs/cqrs';
 import { LoginUserUseCase } from './use-cases/loginUser-use-case';
+import { RegisterUserUseCase } from './use-cases/registerUser-use-case';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { LoginUserUseCase } from './use-cases/loginUser-use-case';
     EmailService,
     SetNewPasswordUseCase,
     LoginUserUseCase,
+    RegisterUserUseCase,
   ],
   exports: [AuthService],
 })

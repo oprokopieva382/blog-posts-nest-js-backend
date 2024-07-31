@@ -39,46 +39,46 @@ export class AuthService {
     }
   }
 
-  async registerUser(dto: UserInputModel) {
-    const userL = await this.authRepository.getByLogin(dto.login);
-    const userE = await this.authRepository.getByEmail(dto.email);
+  // async registerUser(dto: UserInputModel) {
+  //   const userL = await this.authRepository.getByLogin(dto.login);
+  //   const userE = await this.authRepository.getByEmail(dto.email);
 
-    if (userL) {
-      throw new BadRequestException([
-        { message: 'User already exist', field: 'login' },
-      ]);
-    }
-    if (userE) {
-      throw new BadRequestException([
-        { message: 'User already exist', field: 'email' },
-      ]);
-    }
+  //   if (userL) {
+  //     throw new BadRequestException([
+  //       { message: 'User already exist', field: 'login' },
+  //     ]);
+  //   }
+  //   if (userE) {
+  //     throw new BadRequestException([
+  //       { message: 'User already exist', field: 'email' },
+  //     ]);
+  //   }
 
-    const hashedPassword = await this.createHash(dto.password);
+  //   const hashedPassword = await this.createHash(dto.password);
 
-    const userDto = {
-      login: dto.login,
-      email: dto.email,
-      password: hashedPassword,
-      createdAt: new Date(),
-      emailConfirmation: {
-        confirmationCode: randomUUID(),
-        expirationDate: add(new Date(), {
-          hours: 1,
-        }),
-        isConfirmed: false,
-      },
-    };
+  //   const userDto = {
+  //     login: dto.login,
+  //     email: dto.email,
+  //     password: hashedPassword,
+  //     createdAt: new Date(),
+  //     emailConfirmation: {
+  //       confirmationCode: randomUUID(),
+  //       expirationDate: add(new Date(), {
+  //         hours: 1,
+  //       }),
+  //       isConfirmed: false,
+  //     },
+  //   };
 
-    const user = await this.authRepository.registerUser(userDto);
+  //   const user = await this.authRepository.registerUser(userDto);
 
-    await this.emailService.sendRegistrationEmail(
-      userDto.email,
-      userDto.emailConfirmation.confirmationCode,
-    );
+  //   await this.emailService.sendRegistrationEmail(
+  //     userDto.email,
+  //     userDto.emailConfirmation.confirmationCode,
+  //   );
 
-    return user;
-  }
+  //   return user;
+  // }
 
   async confirmRegistration(code: string) {
     const findUser = await this.authRepository.getByConfirmationCode(code);
