@@ -16,6 +16,8 @@ import { SetNewPasswordUseCase } from './use-cases/setNewPassword-use-case';
 import { CqrsModule } from '@nestjs/cqrs';
 import { LoginUserUseCase } from './use-cases/loginUser-use-case';
 import { RegisterUserUseCase } from './use-cases/registerUser-use-case';
+import { ConfirmationRegistrationUserUseCase } from './use-cases/confirmationRegistration-use-case';
+import { RegistrationEmailResendingUseCase } from './use-cases/registrationEmailResending-use-case';
 
 @Module({
   imports: [
@@ -51,6 +53,8 @@ import { RegisterUserUseCase } from './use-cases/registerUser-use-case';
     SetNewPasswordUseCase,
     LoginUserUseCase,
     RegisterUserUseCase,
+    ConfirmationRegistrationUserUseCase,
+    RegistrationEmailResendingUseCase,
   ],
   exports: [AuthService],
 })

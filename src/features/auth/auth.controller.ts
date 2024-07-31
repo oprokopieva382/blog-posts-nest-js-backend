@@ -24,6 +24,8 @@ import { CommandBus } from '@nestjs/cqrs';
 import { SetNewPasswordCommand } from './use-cases/setNewPassword-use-case';
 import { LoginUserCommand } from './use-cases/loginUser-use-case';
 import { RegisterUserCommand } from './use-cases/registerUser-use-case';
+import { ConfirmationRegistrationUserCommand } from './use-cases/confirmationRegistration-use-case';
+import { RegistrationEmailResendingCommand } from './use-cases/registrationEmailResending-use-case';
 
 @Controller('auth')
 export class AuthController {
@@ -50,7 +52,9 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @HttpCode(204)
   async confirmRegistration(@Body() dto: RegistrationConfirmationCodeModel) {
-    return await this.authService.confirmRegistration(dto.code);
+    return await this.commandBus.execute(
+      new ConfirmationRegistrationUserCommand(dto.code),
+    );
   }
 
   @Post('registration-email-resending')
@@ -59,7 +63,9 @@ export class AuthController {
   async registrationEmailResending(
     @Body() dto: RegistrationEmailResendingModel,
   ) {
-    return await this.authService.registrationEmailResending(dto.email);
+    return await this.commandBus.execute(
+      new RegistrationEmailResendingCommand(dto.email),
+    );
   }
 
   @Post('password-recovery')

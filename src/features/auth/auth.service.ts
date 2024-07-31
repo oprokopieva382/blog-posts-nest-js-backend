@@ -1,11 +1,9 @@
 import {
-  BadRequestException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { AuthRepository } from './auth.repository';
-import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns/add';
 import { EmailService } from 'src/base/application/email.service';
@@ -80,39 +78,39 @@ export class AuthService {
   //   return user;
   // }
 
-  async confirmRegistration(code: string) {
-    const findUser = await this.authRepository.getByConfirmationCode(code);
-    if (!findUser || findUser.emailConfirmation.isConfirmed === true) {
-      throw new BadRequestException([
-        {
-          message:
-            'Confirmation code is incorrect, expired or already been applied',
-          field: 'code',
-        },
-      ]);
-    }
-    return await this.authRepository.updateConfirmation(findUser._id);
-  }
+  // async confirmRegistration(code: string) {
+  //   const findUser = await this.authRepository.getByConfirmationCode(code);
+  //   if (!findUser || findUser.emailConfirmation.isConfirmed === true) {
+  //     throw new BadRequestException([
+  //       {
+  //         message:
+  //           'Confirmation code is incorrect, expired or already been applied',
+  //         field: 'code',
+  //       },
+  //     ]);
+  //   }
+  //   return await this.authRepository.updateConfirmation(findUser._id);
+  // }
 
-  async registrationEmailResending(email: string) {
-    const findUser = await this.authRepository.getByEmail(email);
+  // async registrationEmailResending(email: string) {
+  //   const findUser = await this.authRepository.getByEmail(email);
 
-    if (!findUser || findUser.emailConfirmation.isConfirmed === true) {
-      throw new BadRequestException([
-        {
-          message: 'Incorrect input value',
-          field: 'email',
-        },
-      ]);
-    }
+  //   if (!findUser || findUser.emailConfirmation.isConfirmed === true) {
+  //     throw new BadRequestException([
+  //       {
+  //         message: 'Incorrect input value',
+  //         field: 'email',
+  //       },
+  //     ]);
+  //   }
 
-    const newCode = randomUUID();
-    await this.authRepository.updateCode(findUser._id, newCode);
+  //   const newCode = randomUUID();
+  //   await this.authRepository.updateCode(findUser._id, newCode);
 
-    await this.emailService.sendRegistrationEmail(email, newCode);
+  //   await this.emailService.sendRegistrationEmail(email, newCode);
 
-    return findUser;
-  }
+  //   return findUser;
+  // }
 
   async passwordRecovery(email: string) {
     const passwordRecoveryCodeDto = {
