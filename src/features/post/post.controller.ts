@@ -9,8 +9,6 @@ import {
   Post,
   Put,
   Query,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { PostInputModel } from './DTOs/input/PostInputModel.dto';
 import { PostService } from './post.service';
@@ -27,7 +25,6 @@ export class PostController {
   ) {}
 
   @Get()
-  @UsePipes(new ValidationPipe({ transform: true }))
   async getPosts(@Query() query: PostQueryModel) {
     return await this.postQueryRepository.getPosts(baseQueryFilter(query));
   }
@@ -42,7 +39,6 @@ export class PostController {
   }
 
   @Get(':postId/comments')
-  @UsePipes(new ValidationPipe({ transform: true }))
   async getPostComments(
     @Query() query: PostQueryModel,
     @Param('postId') postId: string,
@@ -58,7 +54,6 @@ export class PostController {
   }
 
   @Post()
-  @UsePipes(new ValidationPipe())
   async createPost(@Body() dto: PostInputModel) {
     const result = await this.postService.createPost(dto);
     return transformToViewPosts(result);
@@ -66,7 +61,6 @@ export class PostController {
 
   @Put(':id')
   @HttpCode(204)
-  @UsePipes(new ValidationPipe())
   async updatePost(@Param('id') id: string, @Body() dto: PostInputModel) {
     const result = await this.postService.updatePost(id, dto);
     if (!result) {
