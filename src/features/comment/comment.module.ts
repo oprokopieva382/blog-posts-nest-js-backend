@@ -5,6 +5,11 @@ import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 import { CommentRepository } from './comment.repository';
 import { CommentQueryRepository } from './comment.query.repository';
+import {
+  CommentReaction,
+  CommentReactionSchema,
+} from './schemas/CommentReaction.schema';
+import { Reaction, ReactionSchema } from 'src/base/schemas/Reaction.schema';
 
 @Module({
   imports: [
@@ -12,6 +17,14 @@ import { CommentQueryRepository } from './comment.query.repository';
       {
         name: Comment.name,
         schema: CommentSchema,
+      },
+      {
+        name: CommentReaction.name,
+        schema: CommentReactionSchema,
+      },
+      {
+        name: Reaction.name,
+        schema: ReactionSchema,
       },
     ]),
   ],

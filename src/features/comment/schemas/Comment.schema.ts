@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { LikeStatus } from 'src/base/enam/LikesStatus';
 import { Post } from 'src/features/post/schemas/Post.schema';
+import { CommentReaction } from './CommentReaction.schema';
 
 export type CommentDocument = HydratedDocument<Comment>;
 
@@ -19,8 +19,16 @@ export class Comment {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true })
   post: Post;
 
-  @Prop({ required: true })
-  myStatus: LikeStatus.None;
+  @Prop({
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'CommentReaction',
+        required: true,
+      },
+    ],
+  })
+  myStatus: CommentReaction[];
 
   @Prop({ required: true, default: 0, min: 0 })
   likesCount: number;
