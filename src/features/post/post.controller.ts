@@ -27,6 +27,7 @@ import { LikeInputModel } from 'src/base/DTOs/input/LikeInputModel.dto';
 import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 import { CreatePostCommand } from './use-cases/createPost-use-case';
 import { UpdatePostCommand } from './use-cases/updatePost-use-case';
+import { DeletePostCommand } from './use-cases/deletePost-use-case';
 
 @Controller('posts')
 export class PostController {
@@ -133,7 +134,7 @@ export class PostController {
   @UseGuards(AdminAuthGuard)
   @HttpCode(204)
   async deletePost(@Param('id') id: string) {
-    const result = await this.postService.deletePost(id);
+    const result = await this.commandBus.execute(new DeletePostCommand(id));
     if (!result) {
       throw new NotFoundException();
     }

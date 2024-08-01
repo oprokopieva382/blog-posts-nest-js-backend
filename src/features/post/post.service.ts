@@ -151,9 +151,9 @@ export class PostService {
   //   return await this.postRepository.updatePost(id, dto);
   // }
 
-  async deletePost(id: string) {
-    return await this.postRepository.deletePost(id);
-  }
+  // async deletePost(id: string) {
+  //   return await this.postRepository.deletePost(id);
+  // }
 
   async reactToPost(postId: string, likeStatus: LikeStatus, user: any) {
     const post = await this.postRepository.getByIdPost(postId);

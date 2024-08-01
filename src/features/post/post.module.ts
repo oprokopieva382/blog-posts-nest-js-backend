@@ -20,6 +20,7 @@ import {
 } from '../comment/schemas/CommentReaction.schema';
 import { CreatePostUseCase } from './use-cases/createPost-use-case';
 import { UpdatePostUseCase } from './use-cases/updatePost-use-case';
+import { DeletePostUseCase } from './use-cases/deletePost-use-case';
 
 
 @Module({
@@ -54,6 +55,7 @@ import { UpdatePostUseCase } from './use-cases/updatePost-use-case';
     CommentQueryRepository,
     CreatePostUseCase,
     UpdatePostUseCase,
+    DeletePostUseCase,
   ],
 })
 export class PostModule {}
