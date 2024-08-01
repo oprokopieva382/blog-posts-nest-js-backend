@@ -12,9 +12,17 @@ import { UserQueryRepository } from '../user/user.query.repository';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { EmailService } from 'src/base/application/email.service';
 import { PasswordRecoveryCode, PasswordRecoveryCodeSchema } from './schemas/PasswordRecoveryCode.schema';
+import { SetNewPasswordUseCase } from './use-cases/setNewPassword-use-case';
+import { CqrsModule } from '@nestjs/cqrs';
+import { LoginUserUseCase } from './use-cases/loginUser-use-case';
+import { RegisterUserUseCase } from './use-cases/registerUser-use-case';
+import { ConfirmationRegistrationUserUseCase } from './use-cases/confirmationRegistration-use-case';
+import { RegistrationEmailResendingUseCase } from './use-cases/registrationEmailResending-use-case';
+import { PasswordRecoveryUseCase } from './use-cases/passwordRecovery-use-case';
 
 @Module({
   imports: [
+    CqrsModule,
     MongooseModule.forFeature([
       {
         name: User.name,
@@ -43,6 +51,12 @@ import { PasswordRecoveryCode, PasswordRecoveryCodeSchema } from './schemas/Pass
     JwtStrategy,
     UserQueryRepository,
     EmailService,
+    SetNewPasswordUseCase,
+    LoginUserUseCase,
+    RegisterUserUseCase,
+    ConfirmationRegistrationUserUseCase,
+    RegistrationEmailResendingUseCase,
+    PasswordRecoveryUseCase,
   ],
   exports: [AuthService],
 })

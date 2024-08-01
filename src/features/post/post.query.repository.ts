@@ -10,13 +10,14 @@ import {
 } from './DTOs/output/PostViewModel.dto';
 import { Comment, CommentDocument } from '../comment/schemas/Comment.schema';
 import { SortDirection } from 'src/base/enam/SortDirection';
-import { transformToViewComments } from '../comment/DTOs/output/CommentViewModel';
+import { TransformComment } from '../comment/DTOs/output/TransformComment';
 
 @Injectable()
 export class PostQueryRepository {
   constructor(
     @InjectModel(Post.name) private PostModel: Model<PostDocument>,
     @InjectModel(Comment.name) private CommentModel: Model<CommentDocument>,
+    private readonly TransformComment: TransformComment,
   ) {}
 
   async getPosts(
@@ -83,20 +84,24 @@ export class PostQueryRepository {
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize)
       .populate('post', '_id')
-      .populate('myStatus')
+      .populate({ path: 'myStatus', select: 'status' })
       .sort({
         [query.sortBy]:
           query.sortDirection === '1' ? SortDirection.asc : SortDirection.desc,
       });
+
+    console.log('Found comments', comments);
 
     const commentsToView = {
       pagesCount: Math.ceil(totalCommentsCount / query.pageSize),
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalCommentsCount,
-      items: comments.map((c) => transformToViewComments(c)),
+      items: await Promise.all(
+        comments.map((c) => this.TransformComment.transformToViewModel(c)),
+      ),
     };
-
+    console.log('Found commentsToView', commentsToView);
     return commentsToView;
   }
 }

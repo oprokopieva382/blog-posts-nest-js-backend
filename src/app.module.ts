@@ -28,10 +28,12 @@ import { ThrottlerModule } from '@nestjs/throttler';
     CommentModule,
     AuthModule,
     TestingModule,
-    ThrottlerModule.forRoot([{
-      ttl: 10000, 
-      limit: 5, 
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 10000,
+        limit: 5,
+      },
+    ]),
   ],
   controllers: [],
   providers: [],
