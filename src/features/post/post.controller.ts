@@ -31,10 +31,11 @@ export class PostController {
     private readonly postService: PostService,
     private readonly postQueryRepository: PostQueryRepository,
     private readonly TransformComment: TransformComment,
-   ) {}
+  ) {}
 
   @Get()
   @UseGuards(OptionalJwtAuthGuard)
+  @HttpCode(201)
   async getPosts(@Query() query: PostQueryModel, @Request() req) {
     return await this.postQueryRepository.getPosts(
       baseQueryFilter(query),
