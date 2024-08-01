@@ -1,13 +1,14 @@
 import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CommentQueryRepository } from './comment.query.repository';
-import { transformToViewComments } from './DTOs/output/CommentViewModel';
+import { TransformComment } from './DTOs/output/TransformComment';
 
 @Controller('comments')
 export class CommentController {
   constructor(
-    protected commentService: CommentService,
-    protected commentQueryRepository: CommentQueryRepository,
+    private readonly commentService: CommentService,
+    private readonly commentQueryRepository: CommentQueryRepository,
+    private readonly TransformComment: TransformComment,
   ) {}
 
   @Get(':id')
@@ -16,6 +17,6 @@ export class CommentController {
     if (!result) {
       throw new NotFoundException();
     }
-    return transformToViewComments(result);
+    return this.TransformComment.transformToViewModel(result);
   }
 }

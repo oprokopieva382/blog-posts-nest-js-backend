@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { LikeStatus } from 'src/base/enam/LikesStatus';
 import { Reaction, ReactionModel } from 'src/base/schemas/Reaction.schema';
+import { Comment } from './Comment.schema';
 
 export type CommentReactionDocument = HydratedDocument<CommentReaction>;
 

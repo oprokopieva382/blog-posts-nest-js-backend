@@ -8,6 +8,10 @@ export class CommentQueryRepository {
   ) {}
 
   async getByIdComment(id: string) {
-    return await this.CommentModel.findById(id).populate("post");
+    return await this.CommentModel.findById(id).populate('post');
+  }
+
+  async getReactionStatus(userId: string, commentId: string) {
+    return;
   }
 }

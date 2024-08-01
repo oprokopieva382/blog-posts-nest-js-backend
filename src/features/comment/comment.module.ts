@@ -10,6 +10,7 @@ import {
   CommentReactionSchema,
 } from './schemas/CommentReaction.schema';
 import { Reaction, ReactionSchema } from 'src/base/schemas/Reaction.schema';
+import { TransformComment } from './DTOs/output/TransformComment';
 
 @Module({
   imports: [
@@ -29,6 +30,11 @@ import { Reaction, ReactionSchema } from 'src/base/schemas/Reaction.schema';
     ]),
   ],
   controllers: [CommentController],
-  providers: [CommentService, CommentRepository, CommentQueryRepository],
+  providers: [
+    CommentService,
+    CommentRepository,
+    CommentQueryRepository,
+    TransformComment,
+  ],
 })
 export class CommentModule {}

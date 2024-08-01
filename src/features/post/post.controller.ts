@@ -9,6 +9,8 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { PostInputModel } from './DTOs/input/PostInputModel.dto';
 import { PostService } from './post.service';
@@ -16,12 +18,17 @@ import { PostQueryRepository } from './post.query.repository';
 import { PostQueryModel } from './DTOs/input/PostQueryModel.dto';
 import { baseQueryFilter } from 'src/base/utils/queryFilter';
 import { transformToViewPosts } from './DTOs/output/PostViewModel.dto';
+import { CommentInputModel } from '../comment/DTOs/input/CommentInputModel.dto';
+import { TransformComment } from '../comment/DTOs/output/TransformComment';
+import { LocalAuthGuard } from '../auth/guards/local-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('posts')
 export class PostController {
   constructor(
-    protected postService: PostService,
-    protected postQueryRepository: PostQueryRepository,
+    private readonly postService: PostService,
+    private readonly postQueryRepository: PostQueryRepository,
+    private readonly TransformComment: TransformComment,
   ) {}
 
   @Get()
@@ -51,6 +58,26 @@ export class PostController {
       throw new NotFoundException();
     }
     return result;
+  }
+
+  @Post(':postId/comments')
+  @UseGuards(JwtAuthGuard)
+  async createPostComment(
+    @Body() dto: CommentInputModel,
+    @Param('postId') postId: string,
+    @Request() req,
+  ) {
+    const result = await this.postService.createPostComment(
+      postId,
+      dto.content,
+      req.user,
+    );
+
+    if (!result) {
+      throw new NotFoundException();
+    }
+
+    return this.TransformComment.transformToViewModel(result);
   }
 
   @Post()
