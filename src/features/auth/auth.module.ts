@@ -18,6 +18,7 @@ import { LoginUserUseCase } from './use-cases/loginUser-use-case';
 import { RegisterUserUseCase } from './use-cases/registerUser-use-case';
 import { ConfirmationRegistrationUserUseCase } from './use-cases/confirmationRegistration-use-case';
 import { RegistrationEmailResendingUseCase } from './use-cases/registrationEmailResending-use-case';
+import { PasswordRecoveryUseCase } from './use-cases/passwordRecovery-use-case';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { RegistrationEmailResendingUseCase } from './use-cases/registrationEmail
     RegisterUserUseCase,
     ConfirmationRegistrationUserUseCase,
     RegistrationEmailResendingUseCase,
+    PasswordRecoveryUseCase,
   ],
   exports: [AuthService],
 })

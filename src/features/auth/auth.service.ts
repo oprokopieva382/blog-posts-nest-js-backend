@@ -1,19 +1,10 @@
-import {
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { AuthRepository } from './auth.repository';
-import { randomUUID } from 'crypto';
-import { add } from 'date-fns/add';
-import { EmailService } from 'src/base/application/email.service';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly authRepository: AuthRepository,
-    private readonly emailService: EmailService,
-  ) {}
+  constructor(private readonly authRepository: AuthRepository) {}
 
   async createHash(password: string) {
     const salt = await bcrypt.genSalt(10);
@@ -112,22 +103,22 @@ export class AuthService {
   //   return findUser;
   // }
 
-  async passwordRecovery(email: string) {
-    const passwordRecoveryCodeDto = {
-      recoveryCode: randomUUID(),
-      email,
-      expirationDate: add(new Date(Date.now()).toISOString(), {
-        hours: 1,
-      }),
-      createdAt: new Date().toISOString(),
-    };
+  // async passwordRecovery(email: string) {
+  //   const passwordRecoveryCodeDto = {
+  //     recoveryCode: randomUUID(),
+  //     email,
+  //     expirationDate: add(new Date(Date.now()).toISOString(), {
+  //       hours: 1,
+  //     }),
+  //     createdAt: new Date().toISOString(),
+  //   };
 
-    const { recoveryCode } = await this.authRepository.savePasswordRecoveryInfo(
-      passwordRecoveryCodeDto,
-    );
+  //   const { recoveryCode } = await this.authRepository.savePasswordRecoveryInfo(
+  //     passwordRecoveryCodeDto,
+  //   );
 
-    await this.emailService.sendPasswordRecoveryEmail(email, recoveryCode);
-  }
+  //   await this.emailService.sendPasswordRecoveryEmail(email, recoveryCode);
+  // }
 
   // async setNewPassword(data: NewPasswordRecoveryInputModel) {
   //   const { newPassword, recoveryCode } = data;

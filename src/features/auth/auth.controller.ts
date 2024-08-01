@@ -9,7 +9,6 @@ import {
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { AuthService } from './auth.service';
 import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
 import { LocalAuthGuard } from 'src/features/auth/guards/local-auth.guard';
 import { UserQueryRepository } from '../user/user.query.repository';
@@ -26,11 +25,11 @@ import { LoginUserCommand } from './use-cases/loginUser-use-case';
 import { RegisterUserCommand } from './use-cases/registerUser-use-case';
 import { ConfirmationRegistrationUserCommand } from './use-cases/confirmationRegistration-use-case';
 import { RegistrationEmailResendingCommand } from './use-cases/registrationEmailResending-use-case';
+import { PasswordRecoveryCommand } from './use-cases/passwordRecovery-use-case';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService,
     private readonly userQueryRepository: UserQueryRepository,
     private readonly commandBus: CommandBus,
   ) {}
@@ -72,7 +71,9 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @HttpCode(204)
   async passwordRecovery(@Body() dto: PasswordRecoveryInputModel) {
-    return await this.authService.passwordRecovery(dto.email);
+    return await this.commandBus.execute(
+      new PasswordRecoveryCommand(dto.email),
+    );
   }
 
   @Post('new-password')
