@@ -20,8 +20,8 @@ import { baseQueryFilter } from 'src/base/utils/queryFilter';
 import { transformToViewPosts } from './DTOs/output/PostViewModel.dto';
 import { CommentInputModel } from '../comment/DTOs/input/CommentInputModel.dto';
 import { TransformComment } from '../comment/DTOs/output/TransformComment';
-import { LocalAuthGuard } from '../auth/guards/local-auth.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
 
 @Controller('posts')
 export class PostController {
@@ -81,6 +81,7 @@ export class PostController {
   }
 
   @Post()
+  @UseGuards(AdminAuthGuard)
   async createPost(@Body() dto: PostInputModel) {
     const result = await this.postService.createPost(dto);
     return transformToViewPosts(result);
@@ -88,6 +89,7 @@ export class PostController {
 
   @Put(':id')
   @HttpCode(204)
+  @UseGuards(AdminAuthGuard)
   async updatePost(@Param('id') id: string, @Body() dto: PostInputModel) {
     const result = await this.postService.updatePost(id, dto);
     if (!result) {
@@ -96,6 +98,7 @@ export class PostController {
   }
 
   @Delete(':id')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(204)
   async deletePost(@Param('id') id: string) {
     const result = await this.postService.deletePost(id);
