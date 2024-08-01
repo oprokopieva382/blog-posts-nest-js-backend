@@ -147,9 +147,9 @@ export class PostService {
     return await this.postRepository.createComment(newComment);
   }
 
-  async updatePost(id: string, dto: PostInputModel) {
-    return await this.postRepository.updatePost(id, dto);
-  }
+  // async updatePost(id: string, dto: PostInputModel) {
+  //   return await this.postRepository.updatePost(id, dto);
+  // }
 
   async deletePost(id: string) {
     return await this.postRepository.deletePost(id);

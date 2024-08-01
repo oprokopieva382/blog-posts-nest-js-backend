@@ -19,6 +19,7 @@ import {
   CommentReactionSchema,
 } from '../comment/schemas/CommentReaction.schema';
 import { CreatePostUseCase } from './use-cases/createPost-use-case';
+import { UpdatePostUseCase } from './use-cases/updatePost-use-case';
 
 
 @Module({
@@ -52,6 +53,7 @@ import { CreatePostUseCase } from './use-cases/createPost-use-case';
     TransformComment,
     CommentQueryRepository,
     CreatePostUseCase,
+    UpdatePostUseCase,
   ],
 })
 export class PostModule {}

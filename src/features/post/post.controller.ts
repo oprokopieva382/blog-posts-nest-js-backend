@@ -26,6 +26,7 @@ import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
 import { LikeInputModel } from 'src/base/DTOs/input/LikeInputModel.dto';
 import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 import { CreatePostCommand } from './use-cases/createPost-use-case';
+import { UpdatePostCommand } from './use-cases/updatePost-use-case';
 
 @Controller('posts')
 export class PostController {
@@ -102,7 +103,9 @@ export class PostController {
   @HttpCode(204)
   @UseGuards(AdminAuthGuard)
   async updatePost(@Param('id') id: string, @Body() dto: PostInputModel) {
-    const result = await this.postService.updatePost(id, dto);
+    const result = await this.commandBus.execute(
+      new UpdatePostCommand(id, dto),
+    );
     if (!result) {
       throw new NotFoundException();
     }
