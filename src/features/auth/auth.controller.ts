@@ -91,7 +91,7 @@ export class AuthController {
     @Request() req,
     @Res({ passthrough: true }) response: Response,
   ) {
-    console.log('Req.user in login', req.user);
+    //console.log('Req.user in login', req.user);
     const { accessToken, refreshToken } = await this.commandBus.execute(
       new LoginUserCommand(req.user, req.ip, req.headers),
     );

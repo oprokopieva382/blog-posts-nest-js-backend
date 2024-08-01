@@ -11,11 +11,13 @@ import {
 } from './schemas/PostReaction.schema';
 import { Comment, CommentSchema } from '../comment/schemas/Comment.schema';
 import { TransformComment } from '../comment/DTOs/output/TransformComment';
+import { TransformPost } from './DTOs/output/TransformPost';
 import { CommentQueryRepository } from '../comment/comment.query.repository';
 import {
   CommentReaction,
   CommentReactionSchema,
 } from '../comment/schemas/CommentReaction.schema';
+
 
 @Module({
   imports: [
@@ -40,6 +42,7 @@ import {
   ],
   controllers: [PostController],
   providers: [
+    TransformPost,
     PostService,
     PostRepository,
     PostQueryRepository,

@@ -22,6 +22,8 @@ import { CommentInputModel } from '../comment/DTOs/input/CommentInputModel.dto';
 import { TransformComment } from '../comment/DTOs/output/TransformComment';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
+import { LikeInputModel } from 'src/base/DTOs/input/LikeInputModel.dto';
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 
 @Controller('posts')
 export class PostController {
@@ -29,11 +31,15 @@ export class PostController {
     private readonly postService: PostService,
     private readonly postQueryRepository: PostQueryRepository,
     private readonly TransformComment: TransformComment,
-  ) {}
+   ) {}
 
   @Get()
-  async getPosts(@Query() query: PostQueryModel) {
-    return await this.postQueryRepository.getPosts(baseQueryFilter(query));
+  @UseGuards(OptionalJwtAuthGuard)
+  async getPosts(@Query() query: PostQueryModel, @Request() req) {
+    return await this.postQueryRepository.getPosts(
+      baseQueryFilter(query),
+      req?.user?.id,
+    );
   }
 
   @Get(':id')
@@ -92,6 +98,24 @@ export class PostController {
   @UseGuards(AdminAuthGuard)
   async updatePost(@Param('id') id: string, @Body() dto: PostInputModel) {
     const result = await this.postService.updatePost(id, dto);
+    if (!result) {
+      throw new NotFoundException();
+    }
+  }
+
+  @Put(':postId/like-status')
+  @HttpCode(204)
+  @UseGuards(JwtAuthGuard)
+  async reactToPost(
+    @Param('postId') postId: string,
+    @Body() dto: LikeInputModel,
+    @Request() req,
+  ) {
+    const result = await this.postService.reactToPost(
+      postId,
+      dto.likeStatus,
+      req.user,
+    );
     if (!result) {
       throw new NotFoundException();
     }

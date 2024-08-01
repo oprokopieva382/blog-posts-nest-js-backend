@@ -1,5 +1,5 @@
 import { CommentDocument } from '../../schemas/Comment.schema';
-import { LikeStatus } from 'src/base/enam/LikesStatus';
+import { LikeStatus } from 'src/base/enum/LikesStatus';
 import { Injectable } from '@nestjs/common';
 import { CommentQueryRepository } from '../../comment.query.repository';
 import { CommentViewModel } from './CommentViewModel';

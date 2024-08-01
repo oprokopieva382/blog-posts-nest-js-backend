@@ -12,7 +12,7 @@ import {
   transformToViewBlogs,
 } from './DTOs/output/BlogViewModel.dto';
 import { Post, PostDocument } from '../post/schemas/Post.schema';
-import { SortDirection } from 'src/base/enam/SortDirection';
+import { SortDirection } from 'src/base/enum/SortDirection';
 import {
   PostViewModel,
   transformToViewPosts,

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { ExtendedLikesInfoViewModel } from 'src/base/DTOs/output/ExtendedLikesInfoViewModel.dto';
 import { Blog } from 'src/features/blog/schemas/Blog.schema';
 import { PostDocument } from '../../schemas/Post.schema';
-import { LikeStatus } from 'src/base/enam/LikesStatus';
+import { LikeStatus } from 'src/base/enum/LikesStatus';
 
 export class PostViewModel {
   @IsNotEmpty()
@@ -43,7 +43,10 @@ export interface PopulatedBlog extends Blog {
   _id: mongoose.Types.ObjectId;
 }
 
-export const transformToViewPosts = (post: PostDocument): PostViewModel => {
+export const transformToViewPosts = (
+  post: PostDocument,
+  userId?: string,
+): PostViewModel => {
   const blog = post.blog as PopulatedBlog;
 
   return {
