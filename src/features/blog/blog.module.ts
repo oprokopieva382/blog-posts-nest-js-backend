@@ -10,6 +10,12 @@ import {
   PostReaction,
   PostReactionSchema,
 } from '../post/schemas/PostReaction.schema';
+import { TransformPost } from '../post/DTOs/output/TransformPost';
+import { PostQueryRepository } from '../post/post.query.repository';
+import { Comment, CommentSchema } from '../comment/schemas/Comment.schema';
+import { TransformComment } from '../comment/DTOs/output/TransformComment';
+import { CommentQueryRepository } from '../comment/comment.query.repository';
+import { CommentReaction, CommentReactionSchema } from '../comment/schemas/CommentReaction.schema';
 
 @Module({
   imports: [
@@ -17,6 +23,14 @@ import {
       {
         name: Blog.name,
         schema: BlogSchema,
+      },
+      {
+        name: Comment.name,
+        schema: CommentSchema,
+      },
+      {
+        name: CommentReaction.name,
+        schema: CommentReactionSchema,
       },
       {
         name: Post.name,
@@ -29,6 +43,14 @@ import {
     ]),
   ],
   controllers: [BlogController],
-  providers: [BlogService, BlogRepository, BlogQueryRepository],
+  providers: [
+    BlogService,
+    BlogRepository,
+    BlogQueryRepository,
+    TransformPost,
+    TransformComment,
+    PostQueryRepository,
+    CommentQueryRepository,
+  ],
 })
 export class BlogModule {}

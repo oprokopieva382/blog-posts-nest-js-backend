@@ -1,4 +1,4 @@
-import { ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PostRepository } from '../post.repository';
 import { PostInputModel } from '../DTOs/input/PostInputModel.dto';
 
@@ -6,6 +6,7 @@ export class CreatePostCommand {
   constructor(public dto: PostInputModel) {}
 }
 
+@CommandHandler(CreatePostCommand)
 export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
   constructor(private readonly postRepository: PostRepository) {}
 
@@ -15,6 +16,7 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
       blog: command.dto.blogId,
       createdAt: new Date(),
     };
+
     return await this.postRepository.createPost(postDto);
   }
 }

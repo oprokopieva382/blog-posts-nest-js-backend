@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { CqrsModule } from '@nestjs/cqrs';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Post, PostSchema } from './schemas/Post.schema';
 import { PostController } from './post.controller';
@@ -17,10 +18,12 @@ import {
   CommentReaction,
   CommentReactionSchema,
 } from '../comment/schemas/CommentReaction.schema';
+import { CreatePostUseCase } from './use-cases/createPost-use-case';
 
 
 @Module({
   imports: [
+    CqrsModule,
     MongooseModule.forFeature([
       {
         name: Post.name,
@@ -48,6 +51,7 @@ import {
     PostQueryRepository,
     TransformComment,
     CommentQueryRepository,
+    CreatePostUseCase,
   ],
 })
 export class PostModule {}

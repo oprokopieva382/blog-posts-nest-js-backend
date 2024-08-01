@@ -19,12 +19,9 @@ export class Post {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Blog', required: true })
   blog: Blog;
 
-  // @Prop({ required: true })
-  // reactionInfo: [];
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PostReaction',
-    required: true,
   })
   reactionInfo: PostReaction;
 

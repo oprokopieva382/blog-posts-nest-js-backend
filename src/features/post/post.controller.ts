@@ -12,6 +12,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import { PostInputModel } from './DTOs/input/PostInputModel.dto';
 import { PostService } from './post.service';
 import { PostQueryRepository } from './post.query.repository';
@@ -24,6 +25,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
 import { LikeInputModel } from 'src/base/DTOs/input/LikeInputModel.dto';
 import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
+import { CreatePostCommand } from './use-cases/createPost-use-case';
 
 @Controller('posts')
 export class PostController {
@@ -32,6 +34,7 @@ export class PostController {
     private readonly postQueryRepository: PostQueryRepository,
     private readonly TransformComment: TransformComment,
     private readonly TransformPost: TransformPost,
+    private readonly commandBus: CommandBus,
   ) {}
 
   @Get()
@@ -91,7 +94,7 @@ export class PostController {
   @Post()
   @UseGuards(AdminAuthGuard)
   async createPost(@Body() dto: PostInputModel) {
-    const result = await this.postService.createPost(dto);
+    const result = await this.commandBus.execute(new CreatePostCommand(dto));
     return this.TransformPost.transformToViewModel(result);
   }
 

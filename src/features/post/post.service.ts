@@ -116,14 +116,14 @@ export class PostService {
     );
   }
 
-  async createPost(dto: PostInputModel) {
-    const postDto = {
-      ...dto,
-      blog: dto.blogId,
-      createdAt: new Date(),
-    };
-    return await this.postRepository.createPost(postDto);
-  }
+  // async createPost(dto: PostInputModel) {
+  //   const postDto = {
+  //     ...dto,
+  //     blog: dto.blogId,
+  //     createdAt: new Date(),
+  //   };
+  //   return await this.postRepository.createPost(postDto);
+  // }
 
   async createPostComment(postId: string, content: string, user: any) {
     const post = await this.postRepository.getByIdPost(postId);

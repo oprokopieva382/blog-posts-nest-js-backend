@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from './schemas/Post.schema';
 import { Model } from 'mongoose';
@@ -24,7 +24,9 @@ export class PostQueryRepository {
     @InjectModel(Comment.name) private CommentModel: Model<CommentDocument>,
     @InjectModel(PostReaction.name)
     private PostReactionModel: Model<PostReactionDocument>,
+    @Inject(forwardRef(() => TransformComment))
     private readonly TransformComment: TransformComment,
+    @Inject(forwardRef(() => TransformPost))
     private readonly TransformPost: TransformPost,
   ) {}
 
@@ -58,7 +60,7 @@ export class PostQueryRepository {
         $lookup: {
           from: 'blogs', // collection name in MongoDB
           localField: 'blog',
-          foreignField: "_id",
+          foreignField: '_id',
           as: 'blog',
         },
       },
@@ -85,7 +87,11 @@ export class PostQueryRepository {
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalPostsCount,
-      items: await Promise.all(posts.map((post) => this.TransformPost.transformToViewModel(post, userId))),
+      items: await Promise.all(
+        posts.map((post) =>
+          this.TransformPost.transformToViewModel(post, userId),
+        ),
+      ),
     };
 
     return postsToView;

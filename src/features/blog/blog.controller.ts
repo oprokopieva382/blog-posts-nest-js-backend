@@ -22,13 +22,14 @@ import {
 import { BlogQueryRepository } from './blog.query.repository';
 import { blogQueryFilter } from 'src/base/utils/queryFilter';
 import { transformToViewBlogs } from './DTOs/output/BlogViewModel.dto';
-import { transformToViewPosts } from '../post/DTOs/output/PostViewModel.dto';
+import { TransformPost } from '../post/DTOs/output/TransformPost';
 
 @Controller('blogs')
 export class BlogController {
   constructor(
-    protected blogService: BlogService,
-    protected blogQueryRepository: BlogQueryRepository,
+    private readonly blogService: BlogService,
+    private readonly blogQueryRepository: BlogQueryRepository,
+    private readonly TransformPost: TransformPost,
   ) {}
 
   @Get()
@@ -69,7 +70,7 @@ export class BlogController {
     @Body() dto: BlogPostInputModel,
   ) {
     const result = await this.blogService.createBlogPost(blogId, dto);
-    return transformToViewPosts(result);
+    return this.TransformPost.transformToViewModel(result);
   }
 
   @Post()
