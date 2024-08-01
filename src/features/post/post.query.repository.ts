@@ -90,16 +90,18 @@ export class PostQueryRepository {
           query.sortDirection === '1' ? SortDirection.asc : SortDirection.desc,
       });
 
+    console.log('Found comments', comments);
+
     const commentsToView = {
       pagesCount: Math.ceil(totalCommentsCount / query.pageSize),
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalCommentsCount,
-      items: comments.map((c) =>
-        this.TransformComment.transformToViewModel(c),
+      items: await Promise.all(
+        comments.map((c) => this.TransformComment.transformToViewModel(c)),
       ),
     };
-
+    console.log('Found commentsToView', commentsToView);
     return commentsToView;
   }
 }
