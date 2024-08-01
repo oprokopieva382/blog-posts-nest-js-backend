@@ -37,7 +37,7 @@ export class TransformPost {
     const postReactionsInfo =
       await this.postQueryRepository.getPostReactionsInfo(post._id.toString());
 
-       console.log('postReactionsInfo', postReactionsInfo);
+    console.log('postReactionsInfo', postReactionsInfo);
 
     const sortedLikes = sortLikes(postReactionsInfo);
 
@@ -51,7 +51,7 @@ export class TransformPost {
     });
 
     const blog = post.blog as PopulatedBlog;
-    console.log("post", post)
+    console.log('post', post);
 
     return {
       id: post._id.toString(),

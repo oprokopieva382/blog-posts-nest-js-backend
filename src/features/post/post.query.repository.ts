@@ -5,8 +5,7 @@ import { Model } from 'mongoose';
 import { PostQueryModel } from './DTOs/input/PostQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
 import {
-  PostViewModel,
-  transformToViewPosts,
+  PostViewModel
 } from './DTOs/output/PostViewModel.dto';
 import { Comment, CommentDocument } from '../comment/schemas/Comment.schema';
 import { SortDirection } from 'src/base/enum/SortDirection';

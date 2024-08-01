@@ -17,7 +17,7 @@ import { PostService } from './post.service';
 import { PostQueryRepository } from './post.query.repository';
 import { PostQueryModel } from './DTOs/input/PostQueryModel.dto';
 import { baseQueryFilter } from 'src/base/utils/queryFilter';
-import { transformToViewPosts } from './DTOs/output/PostViewModel.dto';
+import { TransformPost } from './DTOs/output/TransformPost';
 import { CommentInputModel } from '../comment/DTOs/input/CommentInputModel.dto';
 import { TransformComment } from '../comment/DTOs/output/TransformComment';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -31,6 +31,7 @@ export class PostController {
     private readonly postService: PostService,
     private readonly postQueryRepository: PostQueryRepository,
     private readonly TransformComment: TransformComment,
+    private readonly TransformPost: TransformPost,
   ) {}
 
   @Get()
@@ -49,7 +50,7 @@ export class PostController {
     if (!result) {
       throw new NotFoundException();
     }
-    return transformToViewPosts(result);
+    return this.TransformPost.transformToViewModel(result);
   }
 
   @Get(':postId/comments')
@@ -91,7 +92,7 @@ export class PostController {
   @UseGuards(AdminAuthGuard)
   async createPost(@Body() dto: PostInputModel) {
     const result = await this.postService.createPost(dto);
-    return transformToViewPosts(result);
+    return this.TransformPost.transformToViewModel(result);
   }
 
   @Put(':id')

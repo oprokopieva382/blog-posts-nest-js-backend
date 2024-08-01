@@ -39,29 +39,29 @@ export class PostViewModel {
   createdAt?: string;
 }
 
-export interface PopulatedBlog extends Blog {
-  _id: mongoose.Types.ObjectId;
-}
+// export interface PopulatedBlog extends Blog {
+//   _id: mongoose.Types.ObjectId;
+// }
 
-export const transformToViewPosts = (
-  post: PostDocument,
-  userId?: string,
-): PostViewModel => {
-  const blog = post.blog as PopulatedBlog;
+// export const transformToViewPosts = (
+//   post: PostDocument,
+//   userId?: string,
+// ): PostViewModel => {
+//   const blog = post.blog as PopulatedBlog;
 
-  return {
-    id: post._id.toString(),
-    title: post.title,
-    shortDescription: post.shortDescription,
-    content: post.content,
-    blogId: blog._id.toString(),
-    blogName: blog.name,
-    createdAt: post.createdAt.toISOString(),
-    extendedLikesInfo: {
-      likesCount: 0,
-      dislikesCount: 0,
-      myStatus: LikeStatus.None,
-      newestLikes: [],
-    },
-  };
-};
+//   return {
+//     id: post._id.toString(),
+//     title: post.title,
+//     shortDescription: post.shortDescription,
+//     content: post.content,
+//     blogId: blog._id.toString(),
+//     blogName: blog.name,
+//     createdAt: post.createdAt.toISOString(),
+//     extendedLikesInfo: {
+//       likesCount: 0,
+//       dislikesCount: 0,
+//       myStatus: LikeStatus.None,
+//       newestLikes: [],
+//     },
+//   };
+// };
