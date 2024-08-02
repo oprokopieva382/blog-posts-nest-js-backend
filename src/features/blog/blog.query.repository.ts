@@ -7,14 +7,12 @@ import {
   BlogQueryModel,
 } from './DTOs/input/BlogQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
-import {
-  BlogViewModel,
-  transformToViewBlogs,
-} from './DTOs/output/BlogViewModel.dto';
+import { BlogViewModel } from './DTOs/output/BlogViewModel.dto';
 import { Post, PostDocument } from '../post/schemas/Post.schema';
 import { SortDirection } from 'src/base/enum/SortDirection';
 import { PostViewModel } from '../post/DTOs/output/PostViewModel.dto';
 import { TransformPost } from '../post/DTOs/output/TransformPost';
+import { TransformBlog } from './DTOs/output/TransformBlog';
 
 @Injectable()
 export class BlogQueryRepository {
@@ -22,6 +20,7 @@ export class BlogQueryRepository {
     @InjectModel(Blog.name) private BlogModel: Model<BlogDocument>,
     @InjectModel(Post.name) private PostModel: Model<PostDocument>,
     private readonly TransformPost: TransformPost,
+    private readonly TransformBlog: TransformBlog,
   ) {}
 
   async getBlogs(
@@ -48,7 +47,9 @@ export class BlogQueryRepository {
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalBlogsCount,
-      items: blogs.map((b) => transformToViewBlogs(b)),
+      items: await Promise.all(
+        blogs.map((b) => this.TransformBlog.transformToViewModel(b)),
+      ),
     };
 
     return blogsToView;

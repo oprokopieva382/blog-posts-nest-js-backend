@@ -19,6 +19,7 @@ import { RegisterUserUseCase } from './use-cases/registerUser-use-case';
 import { ConfirmationRegistrationUserUseCase } from './use-cases/confirmationRegistration-use-case';
 import { RegistrationEmailResendingUseCase } from './use-cases/registrationEmailResending-use-case';
 import { PasswordRecoveryUseCase } from './use-cases/passwordRecovery-use-case';
+import { TransformUser } from '../user/DTOs/output/TransformUser';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { PasswordRecoveryUseCase } from './use-cases/passwordRecovery-use-case';
     ConfirmationRegistrationUserUseCase,
     RegistrationEmailResendingUseCase,
     PasswordRecoveryUseCase,
+    TransformUser,
   ],
   exports: [AuthService],
 })

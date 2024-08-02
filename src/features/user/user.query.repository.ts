@@ -4,16 +4,17 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserQueryModel } from './DTOs/input/UserQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
-import {
-  transformToViewUsers,
-  UserViewModel,
-} from './DTOs/output/UserViewModel.dto';
+import { UserViewModel } from './DTOs/output/UserViewModel.dto';
 import { SortDirection } from 'src/base/enum/SortDirection';
 import { transformToViewUser } from '../auth/DTOs/output/UserViewModel.dto';
+import { TransformUser } from './DTOs/output/TransformUser';
 
 @Injectable()
 export class UserQueryRepository {
-  constructor(@InjectModel(User.name) private UserModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private UserModel: Model<UserDocument>,
+    private readonly TransformUser: TransformUser,
+  ) {}
 
   async getUsers(
     query: UserQueryModel,
@@ -45,7 +46,9 @@ export class UserQueryRepository {
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalUsersCount,
-      items: users.map((u) => transformToViewUsers(u)),
+      items: await Promise.all(
+        users.map((u) => this.TransformUser.transformToViewModel(u)),
+      ),
     };
     return usersToView;
   }
