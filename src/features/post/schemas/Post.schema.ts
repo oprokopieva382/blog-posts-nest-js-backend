@@ -19,11 +19,14 @@ export class Post {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Blog', required: true })
   blog: Blog;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'PostReaction',
-  })
-  reactionInfo: PostReaction;
+  @Prop([
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'PostReaction',
+      default: [],
+    },
+  ])
+  reactionInfo: PostReaction[];
 
   @Prop({ required: true, default: 0, min: 0 })
   likesCount: number;
@@ -38,4 +41,3 @@ export class Post {
 //if need to add class methods in future
 export const PostSchema = SchemaFactory.createForClass(Post);
 PostSchema.loadClass(Post);
-

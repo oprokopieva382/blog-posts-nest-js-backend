@@ -19,6 +19,8 @@ import { CommentReaction, CommentReactionSchema } from '../comment/schemas/Comme
 import { CreateBlogPostUseCase } from './use-cases/createBlogPost-use-case';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CreateBlogUseCase } from './use-cases/createBlog-use-case';
+import { UpdateBlogUseCase } from './use-cases/updateBlog-use-case';
+import { DeleteBlogUseCase } from './use-cases/deleteBlog-use-case';
 
 @Module({
   imports: [
@@ -57,6 +59,8 @@ import { CreateBlogUseCase } from './use-cases/createBlog-use-case';
     CommentQueryRepository,
     CreateBlogPostUseCase,
     CreateBlogUseCase,
+    UpdateBlogUseCase,
+    DeleteBlogUseCase,
   ],
 })
 export class BlogModule {}
