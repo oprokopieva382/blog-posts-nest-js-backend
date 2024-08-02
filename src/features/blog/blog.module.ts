@@ -21,6 +21,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { CreateBlogUseCase } from './use-cases/createBlog-use-case';
 import { UpdateBlogUseCase } from './use-cases/updateBlog-use-case';
 import { DeleteBlogUseCase } from './use-cases/deleteBlog-use-case';
+import { TransformBlog } from './DTOs/output/TransformBlog';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { DeleteBlogUseCase } from './use-cases/deleteBlog-use-case';
     BlogQueryRepository,
     TransformPost,
     TransformComment,
+    TransformBlog,
     PostQueryRepository,
     CommentQueryRepository,
     CreateBlogPostUseCase,

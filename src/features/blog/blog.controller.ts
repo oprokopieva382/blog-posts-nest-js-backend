@@ -12,7 +12,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BlogInputModel } from './DTOs/input/BlogInputModel.dto';
-import { BlogService } from './blog.service';
 import { BlogPostInputModel } from './DTOs/input/BlogPostInputModel';
 import {
   BlogPostQueryModel,
@@ -20,7 +19,6 @@ import {
 } from './DTOs/input/BlogQueryModel.dto';
 import { BlogQueryRepository } from './blog.query.repository';
 import { blogQueryFilter } from 'src/base/utils/queryFilter';
-import { transformToViewBlogs } from './DTOs/output/BlogViewModel.dto';
 import { TransformPost } from '../post/DTOs/output/TransformPost';
 import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
@@ -28,13 +26,14 @@ import { CreateBlogPostCommand } from './use-cases/createBlogPost-use-case';
 import { CreateBlogCommand } from './use-cases/createBlog-use-case';
 import { UpdateBlogCommand } from './use-cases/updateBlog-use-case';
 import { DeleteBlogCommand } from './use-cases/deleteBlog-use-case';
+import { TransformBlog } from './DTOs/output/TransformBlog';
 
 @Controller('blogs')
 export class BlogController {
   constructor(
-    private readonly blogService: BlogService,
     private readonly blogQueryRepository: BlogQueryRepository,
     private readonly TransformPost: TransformPost,
+    private readonly TransformBlog: TransformBlog,
     private readonly commandBus: CommandBus,
   ) {}
 
@@ -49,7 +48,7 @@ export class BlogController {
     if (!result) {
       throw new NotFoundException();
     }
-    return transformToViewBlogs(result);
+    return this.TransformBlog.transformToViewModel(result);
   }
 
   @Get(':blogId/posts')
@@ -83,7 +82,7 @@ export class BlogController {
   @UseGuards(AdminAuthGuard)
   async createBlog(@Body() dto: BlogInputModel) {
     const result = await this.commandBus.execute(new CreateBlogCommand(dto));
-    return transformToViewBlogs(result);
+    return this.TransformBlog.transformToViewModel(result);
   }
 
   @Put(':id')
