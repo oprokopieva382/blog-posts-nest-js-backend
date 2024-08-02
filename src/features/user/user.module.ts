@@ -7,6 +7,7 @@ import { User, UserSchema } from './schemas/User.schema';
 import { UserQueryRepository } from './user.query.repository';
 import { AdminAuthGuard } from 'src/features/auth/guards/admin-auth.guard';
 import { AuthModule } from '../auth/auth.module';
+import { TransformUser } from './DTOs/output/TransformUser';
 
 @Module({
   imports: [
@@ -19,6 +20,12 @@ import { AuthModule } from '../auth/auth.module';
     AuthModule,
   ],
   controllers: [UserController],
-  providers: [UserService, UserRepository, UserQueryRepository, AdminAuthGuard],
+  providers: [
+    UserService,
+    UserRepository,
+    UserQueryRepository,
+    AdminAuthGuard,
+    TransformUser,
+  ],
 })
 export class UserModule {}

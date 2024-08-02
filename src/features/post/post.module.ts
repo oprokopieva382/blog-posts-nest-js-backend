@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { CqrsModule } from '@nestjs/cqrs';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Post, PostSchema } from './schemas/Post.schema';
 import { PostController } from './post.controller';
@@ -11,14 +12,21 @@ import {
 } from './schemas/PostReaction.schema';
 import { Comment, CommentSchema } from '../comment/schemas/Comment.schema';
 import { TransformComment } from '../comment/DTOs/output/TransformComment';
+import { TransformPost } from './DTOs/output/TransformPost';
 import { CommentQueryRepository } from '../comment/comment.query.repository';
 import {
   CommentReaction,
   CommentReactionSchema,
 } from '../comment/schemas/CommentReaction.schema';
+import { CreatePostUseCase } from './use-cases/createPost-use-case';
+import { UpdatePostUseCase } from './use-cases/updatePost-use-case';
+import { DeletePostUseCase } from './use-cases/deletePost-use-case';
+import { CreatePostCommentUseCase } from './use-cases/createPostComment-use-case';
+
 
 @Module({
   imports: [
+    CqrsModule,
     MongooseModule.forFeature([
       {
         name: Post.name,
@@ -40,11 +48,16 @@ import {
   ],
   controllers: [PostController],
   providers: [
+    TransformPost,
     PostService,
     PostRepository,
     PostQueryRepository,
     TransformComment,
     CommentQueryRepository,
+    CreatePostUseCase,
+    UpdatePostUseCase,
+    DeletePostUseCase,
+    CreatePostCommentUseCase,
   ],
 })
 export class PostModule {}

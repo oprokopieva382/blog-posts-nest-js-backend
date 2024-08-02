@@ -1,27 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from './schemas/Post.schema';
 import { Model } from 'mongoose';
 import { PostQueryModel } from './DTOs/input/PostQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
 import {
-  PostViewModel,
-  transformToViewPosts,
+  PostViewModel
 } from './DTOs/output/PostViewModel.dto';
 import { Comment, CommentDocument } from '../comment/schemas/Comment.schema';
-import { SortDirection } from 'src/base/enam/SortDirection';
+import { SortDirection } from 'src/base/enum/SortDirection';
 import { TransformComment } from '../comment/DTOs/output/TransformComment';
+import {
+  PostReaction,
+  PostReactionDocument,
+} from './schemas/PostReaction.schema';
+import { LikeStatus } from 'src/base/enum/LikesStatus';
+import { TransformPost } from './DTOs/output/TransformPost';
 
 @Injectable()
 export class PostQueryRepository {
   constructor(
     @InjectModel(Post.name) private PostModel: Model<PostDocument>,
     @InjectModel(Comment.name) private CommentModel: Model<CommentDocument>,
+    @InjectModel(PostReaction.name)
+    private PostReactionModel: Model<PostReactionDocument>,
+    @Inject(forwardRef(() => TransformComment))
     private readonly TransformComment: TransformComment,
+    @Inject(forwardRef(() => TransformPost))
+    private readonly TransformPost: TransformPost,
   ) {}
+
+  async getReactionStatus(userId: string, postId: string) {
+    return this.PostReactionModel.findOne({ user: userId, post: postId });
+  }
+
+  async getPostReactionsInfo(postId: string) {
+    return await this.PostReactionModel.find({
+      post: postId,
+      myStatus: LikeStatus.Like,
+    }).populate({
+      path: 'latestReactions.user',
+      select: ['login', '_id'],
+    });
+  }
 
   async getPosts(
     query: PostQueryModel,
+    userId?: string,
   ): Promise<PaginatorModel<PostViewModel>> {
     const totalPostsCount = await this.PostModel.countDocuments();
 
@@ -62,7 +87,11 @@ export class PostQueryRepository {
       page: query.pageNumber,
       pageSize: query.pageSize,
       totalCount: totalPostsCount,
-      items: posts.map((post) => transformToViewPosts(post)),
+      items: await Promise.all(
+        posts.map((post) =>
+          this.TransformPost.transformToViewModel(post, userId),
+        ),
+      ),
     };
 
     return postsToView;

@@ -26,12 +26,14 @@ import { RegisterUserCommand } from './use-cases/registerUser-use-case';
 import { ConfirmationRegistrationUserCommand } from './use-cases/confirmationRegistration-use-case';
 import { RegistrationEmailResendingCommand } from './use-cases/registrationEmailResending-use-case';
 import { PasswordRecoveryCommand } from './use-cases/passwordRecovery-use-case';
+import { TransformUser } from '../user/DTOs/output/TransformUser';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly userQueryRepository: UserQueryRepository,
     private readonly commandBus: CommandBus,
+    private readonly TransformUser: TransformUser,
   ) {}
 
   @Get('me')
@@ -44,7 +46,8 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @HttpCode(204)
   async registerUser(@Body() dto: UserInputModel) {
-    return await this.commandBus.execute(new RegisterUserCommand(dto));
+    const result = await this.commandBus.execute(new RegisterUserCommand(dto));
+    return this.TransformUser.transformToViewModel(result);
   }
 
   @Post('registration-confirmation')
@@ -91,7 +94,7 @@ export class AuthController {
     @Request() req,
     @Res({ passthrough: true }) response: Response,
   ) {
-    console.log('Req.user in login', req.user);
+    //console.log('Req.user in login', req.user);
     const { accessToken, refreshToken } = await this.commandBus.execute(
       new LoginUserCommand(req.user, req.ip, req.headers),
     );

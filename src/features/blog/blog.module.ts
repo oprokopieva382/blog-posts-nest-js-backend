@@ -10,13 +10,34 @@ import {
   PostReaction,
   PostReactionSchema,
 } from '../post/schemas/PostReaction.schema';
+import { TransformPost } from '../post/DTOs/output/TransformPost';
+import { PostQueryRepository } from '../post/post.query.repository';
+import { Comment, CommentSchema } from '../comment/schemas/Comment.schema';
+import { TransformComment } from '../comment/DTOs/output/TransformComment';
+import { CommentQueryRepository } from '../comment/comment.query.repository';
+import { CommentReaction, CommentReactionSchema } from '../comment/schemas/CommentReaction.schema';
+import { CreateBlogPostUseCase } from './use-cases/createBlogPost-use-case';
+import { CqrsModule } from '@nestjs/cqrs';
+import { CreateBlogUseCase } from './use-cases/createBlog-use-case';
+import { UpdateBlogUseCase } from './use-cases/updateBlog-use-case';
+import { DeleteBlogUseCase } from './use-cases/deleteBlog-use-case';
+import { TransformBlog } from './DTOs/output/TransformBlog';
 
 @Module({
   imports: [
+    CqrsModule,
     MongooseModule.forFeature([
       {
         name: Blog.name,
         schema: BlogSchema,
+      },
+      {
+        name: Comment.name,
+        schema: CommentSchema,
+      },
+      {
+        name: CommentReaction.name,
+        schema: CommentReactionSchema,
       },
       {
         name: Post.name,
@@ -29,6 +50,19 @@ import {
     ]),
   ],
   controllers: [BlogController],
-  providers: [BlogService, BlogRepository, BlogQueryRepository],
+  providers: [
+    BlogService,
+    BlogRepository,
+    BlogQueryRepository,
+    TransformPost,
+    TransformComment,
+    TransformBlog,
+    PostQueryRepository,
+    CommentQueryRepository,
+    CreateBlogPostUseCase,
+    CreateBlogUseCase,
+    UpdateBlogUseCase,
+    DeleteBlogUseCase,
+  ],
 })
 export class BlogModule {}
