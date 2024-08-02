@@ -21,6 +21,7 @@ import {
 import { CreatePostUseCase } from './use-cases/createPost-use-case';
 import { UpdatePostUseCase } from './use-cases/updatePost-use-case';
 import { DeletePostUseCase } from './use-cases/deletePost-use-case';
+import { CreatePostCommentUseCase } from './use-cases/createPostComment-use-case';
 
 
 @Module({
@@ -56,6 +57,7 @@ import { DeletePostUseCase } from './use-cases/deletePost-use-case';
     CreatePostUseCase,
     UpdatePostUseCase,
     DeletePostUseCase,
+    CreatePostCommentUseCase,
   ],
 })
 export class PostModule {}

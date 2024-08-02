@@ -28,6 +28,7 @@ import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 import { CreatePostCommand } from './use-cases/createPost-use-case';
 import { UpdatePostCommand } from './use-cases/updatePost-use-case';
 import { DeletePostCommand } from './use-cases/deletePost-use-case';
+import { CreatePostCommentCommand } from './use-cases/createPostComment-use-case';
 
 @Controller('posts')
 export class PostController {
@@ -80,10 +81,8 @@ export class PostController {
     @Param('postId') postId: string,
     @Request() req,
   ) {
-    const result = await this.postService.createPostComment(
-      postId,
-      dto.content,
-      req.user,
+    const result = await this.commandBus.execute(
+      new CreatePostCommentCommand(postId, dto.content, req.user),
     );
 
     if (!result) {
