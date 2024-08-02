@@ -16,9 +16,13 @@ import { Comment, CommentSchema } from '../comment/schemas/Comment.schema';
 import { TransformComment } from '../comment/DTOs/output/TransformComment';
 import { CommentQueryRepository } from '../comment/comment.query.repository';
 import { CommentReaction, CommentReactionSchema } from '../comment/schemas/CommentReaction.schema';
+import { CreateBlogPostUseCase } from './use-cases/createBlogPost-use-case';
+import { CqrsModule } from '@nestjs/cqrs';
+import { CreateBlogUseCase } from './use-cases/createBlog-use-case';
 
 @Module({
   imports: [
+    CqrsModule,
     MongooseModule.forFeature([
       {
         name: Blog.name,
@@ -51,6 +55,8 @@ import { CommentReaction, CommentReactionSchema } from '../comment/schemas/Comme
     TransformComment,
     PostQueryRepository,
     CommentQueryRepository,
+    CreateBlogPostUseCase,
+    CreateBlogUseCase,
   ],
 })
 export class BlogModule {}

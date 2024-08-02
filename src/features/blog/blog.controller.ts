@@ -9,8 +9,7 @@ import {
   Post,
   Put,
   Query,
-  UsePipes,
-  ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { BlogInputModel } from './DTOs/input/BlogInputModel.dto';
 import { BlogService } from './blog.service';
@@ -23,6 +22,10 @@ import { BlogQueryRepository } from './blog.query.repository';
 import { blogQueryFilter } from 'src/base/utils/queryFilter';
 import { transformToViewBlogs } from './DTOs/output/BlogViewModel.dto';
 import { TransformPost } from '../post/DTOs/output/TransformPost';
+import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateBlogPostCommand } from './use-cases/createBlogPost-use-case';
+import { CreateBlogCommand } from './use-cases/createBlog-use-case';
 
 @Controller('blogs')
 export class BlogController {
@@ -30,10 +33,10 @@ export class BlogController {
     private readonly blogService: BlogService,
     private readonly blogQueryRepository: BlogQueryRepository,
     private readonly TransformPost: TransformPost,
+    private readonly commandBus: CommandBus,
   ) {}
 
   @Get()
-  @UsePipes(new ValidationPipe({ transform: true }))
   async getBlogs(@Query() query: BlogQueryModel) {
     return await this.blogQueryRepository.getBlogs(blogQueryFilter(query));
   }
@@ -48,7 +51,6 @@ export class BlogController {
   }
 
   @Get(':blogId/posts')
-  @UsePipes(new ValidationPipe({ transform: true }))
   async getBlogPosts(
     @Query() query: BlogPostQueryModel,
     @Param('blogId') blogId: string,
@@ -64,25 +66,27 @@ export class BlogController {
   }
 
   @Post(':blogId/posts')
-  @UsePipes(new ValidationPipe())
+  @UseGuards(AdminAuthGuard)
   async createBlogPost(
     @Param('blogId') blogId: string,
     @Body() dto: BlogPostInputModel,
   ) {
-    const result = await this.blogService.createBlogPost(blogId, dto);
+    const result = await this.commandBus.execute(
+      new CreateBlogPostCommand(blogId, dto),
+    );
     return this.TransformPost.transformToViewModel(result);
   }
 
   @Post()
-  @UsePipes(new ValidationPipe())
+  @UseGuards(AdminAuthGuard)
   async createBlog(@Body() dto: BlogInputModel) {
-    const result = await this.blogService.createBlog(dto);
+    const result = await this.commandBus.execute(new CreateBlogCommand(dto));
     return transformToViewBlogs(result);
   }
 
   @Put(':id')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(204)
-  @UsePipes(new ValidationPipe())
   async updateBlog(@Param('id') id: string, @Body() dto: BlogInputModel) {
     const result = await this.blogService.updateBlog(id, dto);
     if (!result) {
@@ -91,6 +95,7 @@ export class BlogController {
   }
 
   @Delete(':id')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(204)
   async deleteBlog(@Param('id') id: string) {
     const result = await this.blogService.deleteBlog(id);
