@@ -13,6 +13,8 @@ import { Reaction, ReactionSchema } from 'src/base/schemas/Reaction.schema';
 import { TransformComment } from './DTOs/output/TransformComment';
 import { CqrsModule } from '@nestjs/cqrs';
 import { UpdateCommentUseCase } from './use-cases/updateComment-use-case';
+import { DeleteCommentUseCase } from './use-cases/deleteComment-use-case';
+import { ReactToComment } from './use-cases/updateCommentReaction-use-case';
 
 @Module({
   imports: [
@@ -39,6 +41,8 @@ import { UpdateCommentUseCase } from './use-cases/updateComment-use-case';
     CommentQueryRepository,
     TransformComment,
     UpdateCommentUseCase,
+    DeleteCommentUseCase,
+    ReactToComment,
   ],
 })
 export class CommentModule {}
