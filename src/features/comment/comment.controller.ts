@@ -2,9 +2,12 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   NotFoundException,
   Param,
   Put,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CommentQueryRepository } from './comment.query.repository';
@@ -12,6 +15,7 @@ import { TransformComment } from './DTOs/output/TransformComment';
 import { CommentInputModel } from './DTOs/input/CommentInputModel.dto';
 import { CommandBus } from '@nestjs/cqrs';
 import { UpdateCommentCommand } from './use-cases/updateComment-use-case';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('comments')
 export class CommentController {
@@ -32,12 +36,15 @@ export class CommentController {
   }
 
   @Put(':commentId')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
   async updateComment(
     @Param('commentId') commentId: string,
     @Body() dto: CommentInputModel,
+    @Request() req,
   ) {
     const result = await this.commandBus.execute(
-      new UpdateCommentCommand(commentId, dto),
+      new UpdateCommentCommand(commentId, dto, req.user),
     );
     if (!result) {
       throw new NotFoundException();

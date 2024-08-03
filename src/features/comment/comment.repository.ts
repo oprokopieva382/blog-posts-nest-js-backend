@@ -10,9 +10,13 @@ export class CommentRepository {
     @InjectModel(Comment.name) private CommentModel: Model<CommentDocument>,
   ) {}
 
+  async getByIdComment(id: string) {
+    return await this.CommentModel.findById(id).populate('post');
+  }
+  
   async updateComment(commentId: string, dto: CommentInputModel) {
-    return await this.CommentModel.findByIdAndUpdate(commentId, dto, {
-      new: true,
-    });
+    // return await this.CommentModel.findByIdAndUpdate(commentId, dto, {
+    //   new: true,
+    // });
   }
 }
