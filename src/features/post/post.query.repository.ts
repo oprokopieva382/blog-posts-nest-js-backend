@@ -103,7 +103,7 @@ export class PostQueryRepository {
     return await this.PostModel.findById(id).populate('blog');
   }
 
-  async getPostComments(postId: string, query: PostQueryModel) {
+  async getPostComments(postId: string, query: PostQueryModel, userId?: string) {
     const totalCommentsCount = await this.CommentModel.countDocuments({
       post: postId.toString(),
     });
@@ -129,7 +129,9 @@ export class PostQueryRepository {
       pageSize: query.pageSize,
       totalCount: totalCommentsCount,
       items: await Promise.all(
-        comments.map((c) => this.TransformComment.transformToViewModel(c)),
+        comments.map((c) =>
+          this.TransformComment.transformToViewModel(c, userId),
+        ),
       ),
     };
     console.log('Found commentsToView', commentsToView);

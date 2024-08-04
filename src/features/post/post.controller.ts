@@ -57,22 +57,20 @@ export class PostController {
     if (!result) {
       throw new NotFoundException();
     }
-    const resultAfterTransform = await this.TransformPost.transformToViewModel(
-      result,
-      req?.user?.id,
-    );
-    //console.log('resultAfterTransform', resultAfterTransform);
-    return resultAfterTransform;
+    return await this.TransformPost.transformToViewModel(result, req?.user?.id);
   }
 
   @Get(':postId/comments')
+  @UseGuards(OptionalJwtAuthGuard)
   async getPostComments(
     @Query() query: PostQueryModel,
     @Param('postId') postId: string,
+    @Request() req,
   ) {
     const result = await this.postQueryRepository.getPostComments(
       postId,
       baseQueryFilter(query),
+      req?.user?.id,
     );
     if (result.items.length === 0 || !result) {
       throw new NotFoundException();
