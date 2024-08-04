@@ -14,7 +14,7 @@ export class CommentQueryRepository {
   ) {}
 
   async getByIdComment(id: string) {
-    return await this.CommentModel.findOne({
+    return await this.CommentModel.findById({
       _id: new Object(id),
     })
       .populate({

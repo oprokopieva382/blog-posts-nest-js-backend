@@ -9,7 +9,6 @@ import {
   CommentReaction,
   CommentReactionSchema,
 } from './schemas/CommentReaction.schema';
-import { Reaction, ReactionSchema } from 'src/base/schemas/Reaction.schema';
 import { TransformComment } from './DTOs/output/TransformComment';
 import { CqrsModule } from '@nestjs/cqrs';
 import { UpdateCommentUseCase } from './use-cases/updateComment-use-case';
@@ -27,10 +26,6 @@ import { ReactToComment } from './use-cases/reactToComment-use-case';
       {
         name: CommentReaction.name,
         schema: CommentReactionSchema,
-      },
-      {
-        name: Reaction.name,
-        schema: ReactionSchema,
       },
     ]),
   ],

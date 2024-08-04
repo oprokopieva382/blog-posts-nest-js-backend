@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { LikeStatus } from 'src/base/enum/LikesStatus';
-import { ReactionModel } from 'src/base/schemas/Reaction.schema';
 import { Comment } from './Comment.schema';
 import { User } from 'src/features/user/schemas/User.schema';
 
@@ -38,8 +37,3 @@ export class CommentReaction {
 export const CommentReactionSchema =
   SchemaFactory.createForClass(CommentReaction);
 
-export const CommentReactionModel =
-  ReactionModel.discriminator<CommentReactionDocument>(
-    'CommentReaction',
-    CommentReactionSchema,
-  );
