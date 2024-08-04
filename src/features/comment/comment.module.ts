@@ -11,9 +11,14 @@ import {
 } from './schemas/CommentReaction.schema';
 import { Reaction, ReactionSchema } from 'src/base/schemas/Reaction.schema';
 import { TransformComment } from './DTOs/output/TransformComment';
+import { CqrsModule } from '@nestjs/cqrs';
+import { UpdateCommentUseCase } from './use-cases/updateComment-use-case';
+import { DeleteCommentUseCase } from './use-cases/deleteComment-use-case';
+import { ReactToComment } from './use-cases/reactToComment-use-case';
 
 @Module({
   imports: [
+    CqrsModule,
     MongooseModule.forFeature([
       {
         name: Comment.name,
@@ -35,6 +40,9 @@ import { TransformComment } from './DTOs/output/TransformComment';
     CommentRepository,
     CommentQueryRepository,
     TransformComment,
+    UpdateCommentUseCase,
+    DeleteCommentUseCase,
+    ReactToComment,
   ],
 })
 export class CommentModule {}

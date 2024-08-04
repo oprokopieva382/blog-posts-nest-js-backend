@@ -17,6 +17,9 @@ import { UserQueryModel } from './DTOs/input/UserQueryModel.dto';
 import { userQueryFilter } from 'src/base/utils/queryFilter';
 import { AdminAuthGuard } from 'src/features/auth/guards/admin-auth.guard';
 import { TransformUser } from './DTOs/output/TransformUser';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from './use-cases/createUser-use.case';
+import { DeleteUserCommand } from './use-cases/deleteUser-use.case';
 
 @Controller('users')
 @UseGuards(AdminAuthGuard)
@@ -25,6 +28,7 @@ export class UserController {
     protected userService: UserService,
     protected userQueryRepository: UserQueryRepository,
     private readonly TransformUser: TransformUser,
+    private readonly commandBus: CommandBus,
   ) {}
 
   @Get()
@@ -34,14 +38,14 @@ export class UserController {
 
   @Post()
   async createUser(@Body() dto: UserInputModel) {
-    const result = await this.userService.createUser(dto);
+    const result = await this.commandBus.execute(new CreateUserCommand(dto));
     return this.TransformUser.transformToViewModel(result);
   }
 
   @Delete(':id')
   @HttpCode(204)
   async deleteUser(@Param('id') id: string) {
-    const result = await this.userService.deleteUser(id);
+    const result = await this.commandBus.execute(new DeleteUserCommand(id));
     if (!result) {
       throw new NotFoundException();
     }

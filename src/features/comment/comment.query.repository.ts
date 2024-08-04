@@ -14,7 +14,14 @@ export class CommentQueryRepository {
   ) {}
 
   async getByIdComment(id: string) {
-    return await this.CommentModel.findById(id).populate('post');
+    return await this.CommentModel.findOne({
+      _id: new Object(id),
+    })
+      .populate({
+        path: 'myStatus',
+        select: 'status',
+      })
+      .populate('post', '_id');
   }
 
   async getReactionStatus(userId: string, commentId: string) {
