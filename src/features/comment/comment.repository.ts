@@ -19,7 +19,10 @@ export class CommentRepository {
   ) {}
 
   async getByIdComment(id: string) {
-    return await this.CommentModel.findById(id).populate('post');
+    return await this.CommentModel.findById(id).populate({
+      path: 'myStatus',
+      select: 'status',
+    });
   }
 
   async getReactionStatus(userId: string, commentId: string) {
@@ -31,6 +34,7 @@ export class CommentRepository {
 
   async createDefaultReaction(userId: string, commentId: string) {
     await this.CommentReactionModel.create({
+      _id: new ObjectId(),
       user: userId,
       status: LikeStatus.None,
       comment: commentId,
@@ -64,7 +68,7 @@ export class CommentRepository {
 
   async likeComment(commentId: string, count: number) {
     return await this.CommentModel.findOneAndUpdate(
-      { _id: new ObjectId(commentId) },
+      { _id: commentId },
       {
         $inc: { likesCount: count },
       },

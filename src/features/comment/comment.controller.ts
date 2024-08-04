@@ -19,12 +19,11 @@ import { UpdateCommentCommand } from './use-cases/updateComment-use-case';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { DeleteCommentCommand } from './use-cases/deleteComment-use-case';
 import { LikeInputModel } from 'src/base/DTOs/input/LikeInputModel.dto';
-import { ReactToCommentCommand } from './use-cases/updateCommentReaction-use-case';
+import { ReactToCommentCommand } from './use-cases/reactToComment-use-case';
 
 @Controller('comments')
 export class CommentController {
   constructor(
-    private readonly commentService: CommentService,
     private readonly commentQueryRepository: CommentQueryRepository,
     private readonly TransformComment: TransformComment,
     private readonly commandBus: CommandBus,
@@ -36,6 +35,7 @@ export class CommentController {
     if (!result) {
       throw new NotFoundException();
     }
+    console.log(result)
     return this.TransformComment.transformToViewModel(result);
   }
 

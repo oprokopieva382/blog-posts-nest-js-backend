@@ -1,13 +1,24 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { LikeStatus } from 'src/base/enum/LikesStatus';
-import { Reaction, ReactionModel } from 'src/base/schemas/Reaction.schema';
+import { ReactionModel } from 'src/base/schemas/Reaction.schema';
 import { Comment } from './Comment.schema';
+import { User } from 'src/features/user/schemas/User.schema';
 
 export type CommentReactionDocument = HydratedDocument<CommentReaction>;
 
 @Schema()
-export class CommentReaction extends Reaction {
+export class CommentReaction {
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  })
+  user: User;
+
+  @Prop({ required: true })
+  createdAt: Date;
+
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comment',
