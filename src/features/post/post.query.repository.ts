@@ -31,7 +31,9 @@ export class PostQueryRepository {
   ) {}
 
   async getReactionStatus(userId: string, postId: string) {
-    return this.PostReactionModel.findOne({ user: userId, post: postId });
+    const MyReaction = await this.PostReactionModel.findOne({ user: userId, post: postId });
+    console.log("MyReaction", MyReaction)
+    return MyReaction;
   }
 
   async getPostReactionsInfo(postId: string) {

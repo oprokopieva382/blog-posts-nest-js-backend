@@ -25,6 +25,7 @@ export class TransformPost {
   ): Promise<PostViewModel> {
     let userStatus: LikeStatus = LikeStatus.None;
     let newestLikes: LikeDetailsViewModel[] = [];
+    console.log("userId", userId)
 
     if (userId) {
       const reactionInfo = (await this.postQueryRepository.getReactionStatus(
@@ -34,10 +35,12 @@ export class TransformPost {
       userStatus = reactionInfo ? reactionInfo.myStatus : LikeStatus.None;
     }
 
+    //console.log("MyStatus", userStatus)
+
     const postReactionsInfo =
       await this.postQueryRepository.getPostReactionsInfo(post._id.toString());
 
-    console.log('postReactionsInfo', postReactionsInfo);
+    //console.log('postReactionsInfo', postReactionsInfo);
 
     const sortedLikes = sortLikes(postReactionsInfo);
 
@@ -51,7 +54,7 @@ export class TransformPost {
     });
 
     const blog = post.blog as PopulatedBlog;
-    console.log('post', post);
+    //console.log('post', post);
 
     return {
       id: post._id.toString(),
