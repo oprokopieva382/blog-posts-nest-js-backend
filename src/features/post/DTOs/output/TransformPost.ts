@@ -60,7 +60,7 @@ export class TransformPost {
       content: post.content,
       blogId: blog._id.toString(),
       blogName: blog.name,
-      createdAt: post.createdAt.toString(),
+      createdAt: post.createdAt.toISOString(),
       extendedLikesInfo: {
         likesCount: post.likesCount,
         dislikesCount: post.dislikesCount,

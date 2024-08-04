@@ -18,6 +18,7 @@ export class Blog {
   isMembership: string;
 
   @Prop({ required: true })
+  //createdAt: Date;
   createdAt: Date;
 }
 

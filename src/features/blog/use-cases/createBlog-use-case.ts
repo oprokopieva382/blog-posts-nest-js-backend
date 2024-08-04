@@ -13,7 +13,7 @@ export class CreateBlogUseCase implements ICommandHandler<CreateBlogCommand> {
   async execute(command: CreateBlogCommand) {
     const blogDto = {
       ...command.dto,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
     };
     return await this.blogRepository.createBlog(blogDto);
   }
