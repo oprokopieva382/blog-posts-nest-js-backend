@@ -5,6 +5,14 @@ import { Blog, BlogSchema } from '../blog/schemas/Blog.schema';
 import { User, UserSchema } from '../user/schemas/User.schema';
 import { TestingController } from './testing.controller';
 import { Post, PostSchema } from '../post/schemas/Post.schema';
+import {
+  CommentReaction,
+  CommentReactionSchema,
+} from '../comment/schemas/CommentReaction.schema';
+import {
+  PostReaction,
+  PostReactionSchema,
+} from '../post/schemas/PostReaction.schema';
 
 @Module({
   imports: [
@@ -24,6 +32,14 @@ import { Post, PostSchema } from '../post/schemas/Post.schema';
       {
         name: User.name,
         schema: UserSchema,
+      },
+      {
+        name: CommentReaction.name,
+        schema: CommentReactionSchema,
+      },
+      {
+        name: PostReaction.name,
+        schema: PostReactionSchema,
       },
     ]),
   ],
