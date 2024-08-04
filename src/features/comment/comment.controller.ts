@@ -35,8 +35,7 @@ export class CommentController {
     if (!result) {
       throw new NotFoundException();
     }
-    console.log(result)
-    return this.TransformComment.transformToViewModel(result);
+     return this.TransformComment.transformToViewModel(result);
   }
 
   @Put(':commentId')
