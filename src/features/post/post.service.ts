@@ -65,7 +65,7 @@ export class PostService {
       : (myStatus = reaction.myStatus);
 
     if (myStatus === LikeStatus.Dislike && likeStatus === LikeStatus.Dislike) {
-      return;
+      return true;
     }
 
     if (myStatus === LikeStatus.Like && likeStatus === LikeStatus.Dislike) {

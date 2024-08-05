@@ -67,12 +67,9 @@ export class CommentController {
     const result = await this.commandBus.execute(
       new ReactToCommentCommand(commentId, dto, req.user),
     );
-    console.log("Result", result)
     if (!result) {
       throw new NotFoundException();
     }
-    //return this.TransformComment.transformToViewModel(result);
-    return
   }
 
   @Delete(':commentId')

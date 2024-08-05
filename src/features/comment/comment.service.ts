@@ -27,22 +27,19 @@ export class CommentService {
       ? await this.commentRepository.createDefaultReaction(userId, commentId)
       : (myStatus = reaction.status);
 
-      console.log(reaction)
-      console.log(myStatus)
-
     if (myStatus === LikeStatus.Like && likeStatus === LikeStatus.Like) {
       return true;
     }
 
-    // if (myStatus === LikeStatus.Dislike && likeStatus === LikeStatus.Like) {
-    //   await this.commentRepository.updateMyReaction(
-    //     userId,
-    //     commentId,
-    //     likeStatus,
-    //   );
-    //   await this.commentRepository.dislikeComment(commentId, -1);
-    //   return await this.commentRepository.likeComment(commentId, 1);
-    // }
+    if (myStatus === LikeStatus.Dislike && likeStatus === LikeStatus.Like) {
+      await this.commentRepository.updateMyReaction(
+        userId,
+        commentId,
+        likeStatus,
+      );
+      await this.commentRepository.dislikeComment(commentId, -1);
+      return await this.commentRepository.likeComment(commentId, 1);
+    }
 
     await this.commentRepository.updateMyReaction(
       userId,
@@ -69,7 +66,7 @@ export class CommentService {
       : (myStatus = reaction.status);
 
     if (myStatus === LikeStatus.Dislike && likeStatus === LikeStatus.Dislike) {
-      return;
+      return true;
     }
 
     if (myStatus === LikeStatus.Like && likeStatus === LikeStatus.Dislike) {
