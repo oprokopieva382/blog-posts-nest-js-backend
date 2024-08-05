@@ -62,6 +62,7 @@ export class BlogQueryRepository {
   async getBlogPosts(
     blogId: string,
     query: BlogPostQueryModel,
+    userId?: string,
   ): Promise<PaginatorModel<PostViewModel>> {
     const totalPostsCount = await this.PostModel.countDocuments({
       blog: blogId.toString(),
@@ -88,6 +89,14 @@ export class BlogQueryRepository {
         $unwind: '$blog',
       },
       {
+        $lookup: {
+          from: 'postreactions', // collection name in MongoDB
+          localField: 'reactionInfo',
+          foreignField: 'post',
+          as: 'reactionInfo',
+        },
+      },
+      {
         $sort: {
           [sortField]: sortDirection === SortDirection.asc ? 1 : -1,
         },
@@ -101,6 +110,7 @@ export class BlogQueryRepository {
     ] as any;
 
     const posts = await this.PostModel.aggregate(aggregationPipeline);
+    console.log('posts', posts);
 
     const postsToView = {
       pagesCount: Math.ceil(totalPostsCount / query.pageSize),
@@ -108,10 +118,10 @@ export class BlogQueryRepository {
       pageSize: query.pageSize,
       totalCount: totalPostsCount,
       items: await Promise.all(
-        posts.map((p) => this.TransformPost.transformToViewModel(p)),
+        posts.map((p) => this.TransformPost.transformToViewModel(p, userId)),
       ),
     };
-
+    console.log('post to view', postsToView);
     return postsToView;
   }
 }

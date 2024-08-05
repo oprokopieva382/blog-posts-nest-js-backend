@@ -42,7 +42,7 @@ export class PostController {
 
   @Get()
   @UseGuards(OptionalJwtAuthGuard)
-  @HttpCode(201)
+  @HttpCode(200)
   async getPosts(@Query() query: PostQueryModel, @Request() req) {
     return await this.postQueryRepository.getPosts(
       baseQueryFilter(query),
@@ -51,22 +51,26 @@ export class PostController {
   }
 
   @Get(':id')
-  async getByIdPost(@Param('id') id: string) {
+  @UseGuards(OptionalJwtAuthGuard)
+  async getByIdPost(@Param('id') id: string, @Request() req) {
     const result = await this.postQueryRepository.getByIdPost(id);
     if (!result) {
       throw new NotFoundException();
     }
-    return this.TransformPost.transformToViewModel(result);
+    return await this.TransformPost.transformToViewModel(result, req?.user?.id);
   }
 
   @Get(':postId/comments')
+  @UseGuards(OptionalJwtAuthGuard)
   async getPostComments(
     @Query() query: PostQueryModel,
     @Param('postId') postId: string,
+    @Request() req,
   ) {
     const result = await this.postQueryRepository.getPostComments(
       postId,
       baseQueryFilter(query),
+      req?.user?.id,
     );
     if (result.items.length === 0 || !result) {
       throw new NotFoundException();

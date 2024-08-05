@@ -10,6 +10,7 @@ import {
   Put,
   Query,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { BlogInputModel } from './DTOs/input/BlogInputModel.dto';
 import { BlogPostInputModel } from './DTOs/input/BlogPostInputModel';
@@ -27,6 +28,7 @@ import { CreateBlogCommand } from './use-cases/createBlog-use-case';
 import { UpdateBlogCommand } from './use-cases/updateBlog-use-case';
 import { DeleteBlogCommand } from './use-cases/deleteBlog-use-case';
 import { TransformBlog } from './DTOs/output/TransformBlog';
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 
 @Controller('blogs')
 export class BlogController {
@@ -52,13 +54,16 @@ export class BlogController {
   }
 
   @Get(':blogId/posts')
+  @UseGuards(OptionalJwtAuthGuard)
   async getBlogPosts(
     @Query() query: BlogPostQueryModel,
     @Param('blogId') blogId: string,
+    @Request() req,
   ) {
     const result = await this.blogQueryRepository.getBlogPosts(
       blogId,
       blogQueryFilter(query),
+      req?.user?.id,
     );
     if (result.items.length === 0) {
       throw new NotFoundException();

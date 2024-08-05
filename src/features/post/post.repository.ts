@@ -65,7 +65,7 @@ export class PostRepository {
   }
 
   async addLikedUser(userId: string, createdAt: string, postId: string) {
-    return await this.PostReactionModel.findOneAndUpdate(
+    const result =  await this.PostReactionModel.findOneAndUpdate(
       { user: userId, post: postId },
       {
         $push: {
@@ -78,6 +78,8 @@ export class PostRepository {
       },
       { new: true, upsert: true },
     ).populate('latestReactions.user', 'login _id');
+    console.log("addLikeUser in repository", result)
+    return result
   }
 
   async createPost(dto: PostInputModel) {

@@ -31,7 +31,9 @@ export class PostQueryRepository {
   ) {}
 
   async getReactionStatus(userId: string, postId: string) {
-    return this.PostReactionModel.findOne({ user: userId, post: postId });
+    const MyReaction = await this.PostReactionModel.findOne({ user: userId, post: postId });
+    console.log("MyReaction", MyReaction)
+    return MyReaction;
   }
 
   async getPostReactionsInfo(postId: string) {
@@ -101,7 +103,7 @@ export class PostQueryRepository {
     return await this.PostModel.findById(id).populate('blog');
   }
 
-  async getPostComments(postId: string, query: PostQueryModel) {
+  async getPostComments(postId: string, query: PostQueryModel, userId?: string) {
     const totalCommentsCount = await this.CommentModel.countDocuments({
       post: postId.toString(),
     });
@@ -127,7 +129,9 @@ export class PostQueryRepository {
       pageSize: query.pageSize,
       totalCount: totalCommentsCount,
       items: await Promise.all(
-        comments.map((c) => this.TransformComment.transformToViewModel(c)),
+        comments.map((c) =>
+          this.TransformComment.transformToViewModel(c, userId),
+        ),
       ),
     };
     console.log('Found commentsToView', commentsToView);
