@@ -22,7 +22,8 @@ import { CreatePostUseCase } from './use-cases/createPost-use-case';
 import { UpdatePostUseCase } from './use-cases/updatePost-use-case';
 import { DeletePostUseCase } from './use-cases/deletePost-use-case';
 import { CreatePostCommentUseCase } from './use-cases/createPostComment-use-case';
-
+//import { IsBlogIdExistConstraint } from 'src/base/utils/validateBlogId';
+import { Blog, BlogSchema } from '../blog/schemas/Blog.schema';
 
 @Module({
   imports: [
@@ -32,6 +33,10 @@ import { CreatePostCommentUseCase } from './use-cases/createPostComment-use-case
         name: Post.name,
         schema: PostSchema,
       },
+      // {
+      //   name: Blog.name,
+      //   schema: BlogSchema,
+      // },
       {
         name: Comment.name,
         schema: CommentSchema,
@@ -48,6 +53,7 @@ import { CreatePostCommentUseCase } from './use-cases/createPostComment-use-case
   ],
   controllers: [PostController],
   providers: [
+    //IsBlogIdExistConstraint,
     TransformPost,
     PostService,
     PostRepository,

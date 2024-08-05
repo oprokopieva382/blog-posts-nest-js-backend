@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsString, MaxLength } from "class-validator";
+//import { IsBlogIdExist } from "src/base/decorators/isBlogIdExist";
 import { Trim } from "src/base/decorators/trim";
 
 export class PostInputModel {
@@ -23,5 +24,6 @@ export class PostInputModel {
   @IsNotEmpty()
   @Trim()
   @IsString()
+  //@IsBlogIdExist({ message: 'Invalid blog ID' })
   blogId: string;
 }
