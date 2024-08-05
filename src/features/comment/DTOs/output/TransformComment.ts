@@ -17,13 +17,14 @@ export class TransformComment {
     let userStatus: LikeStatus = LikeStatus.None;
 
     if (userId) {
-      const status = (await this.commentQueryRepository.getReactionStatus(
+      const myStatus = (await this.commentQueryRepository.getReactionStatus(
         userId,
         comment._id.toString(),
       )) as any;
-      userStatus = status ? status.myStatus : LikeStatus.None;
+      userStatus = myStatus ? myStatus.status : LikeStatus.None;
     }
 
+    
     return {
       id: comment._id.toString(),
       content: comment.content,
