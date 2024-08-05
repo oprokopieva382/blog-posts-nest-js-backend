@@ -10,7 +10,6 @@ import {
   Request,
   Delete,
 } from '@nestjs/common';
-import { CommentService } from './comment.service';
 import { CommentQueryRepository } from './comment.query.repository';
 import { TransformComment } from './DTOs/output/TransformComment';
 import { CommentInputModel } from './DTOs/input/CommentInputModel.dto';
@@ -60,7 +59,7 @@ export class CommentController {
   @Put(':commentId/like-status')
   @UseGuards(JwtAuthGuard)
   @HttpCode(204)
-  async updateCommentReaction(
+  async reactToComment(
     @Param('commentId') commentId: string,
     @Body() dto: LikeInputModel,
     @Request() req,
@@ -68,10 +67,12 @@ export class CommentController {
     const result = await this.commandBus.execute(
       new ReactToCommentCommand(commentId, dto, req.user),
     );
+    console.log("Result", result)
     if (!result) {
       throw new NotFoundException();
     }
-    return this.TransformComment.transformToViewModel(result);
+    //return this.TransformComment.transformToViewModel(result);
+    return
   }
 
   @Delete(':commentId')

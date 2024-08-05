@@ -138,8 +138,6 @@ export class PostService {
         throw new BadRequestException();
     }
 
-    console.log(result)
-
     return result;
   }
 }
