@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CommentRepository } from '../comment.repository';
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { LikeInputModel } from 'src/base/DTOs/input/LikeInputModel.dto';
 import { CommentService } from '../comment.service';
 
@@ -28,14 +28,10 @@ export class ReactToComment implements ICommandHandler<ReactToCommentCommand> {
       throw new NotFoundException();
     }
 
-    if (comment && command.user.id !== comment.commentatorInfo.userId) {
-      throw new ForbiddenException();
-    }
-
     return await this.commentService.reactToComment(
       command.dto,
       command.commentId,
-      command.user
+      command.user,
     );
   }
 }

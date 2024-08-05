@@ -10,7 +10,6 @@ import {
   Request,
   Delete,
 } from '@nestjs/common';
-import { CommentService } from './comment.service';
 import { CommentQueryRepository } from './comment.query.repository';
 import { TransformComment } from './DTOs/output/TransformComment';
 import { CommentInputModel } from './DTOs/input/CommentInputModel.dto';
@@ -20,6 +19,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { DeleteCommentCommand } from './use-cases/deleteComment-use-case';
 import { LikeInputModel } from 'src/base/DTOs/input/LikeInputModel.dto';
 import { ReactToCommentCommand } from './use-cases/reactToComment-use-case';
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 
 @Controller('comments')
 export class CommentController {
@@ -30,12 +30,13 @@ export class CommentController {
   ) {}
 
   @Get(':id')
-  async getByIdComment(@Param('id') id: string) {
+  @UseGuards(OptionalJwtAuthGuard)
+  async getByIdComment(@Param('id') id: string, @Request() req) {
     const result = await this.commentQueryRepository.getByIdComment(id);
     if (!result) {
       throw new NotFoundException();
     }
-     return this.TransformComment.transformToViewModel(result);
+    return this.TransformComment.transformToViewModel(result, req?.user?.id);
   }
 
   @Put(':commentId')
@@ -58,7 +59,7 @@ export class CommentController {
   @Put(':commentId/like-status')
   @UseGuards(JwtAuthGuard)
   @HttpCode(204)
-  async updateCommentReaction(
+  async reactToComment(
     @Param('commentId') commentId: string,
     @Body() dto: LikeInputModel,
     @Request() req,
@@ -69,7 +70,6 @@ export class CommentController {
     if (!result) {
       throw new NotFoundException();
     }
-    return this.TransformComment.transformToViewModel(result);
   }
 
   @Delete(':commentId')

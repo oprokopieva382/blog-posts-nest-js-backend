@@ -25,10 +25,10 @@ export class CommentService {
 
     !reaction
       ? await this.commentRepository.createDefaultReaction(userId, commentId)
-      : (myStatus = reaction.myStatus);
+      : (myStatus = reaction.status);
 
     if (myStatus === LikeStatus.Like && likeStatus === LikeStatus.Like) {
-      return;
+      return true;
     }
 
     if (myStatus === LikeStatus.Dislike && likeStatus === LikeStatus.Like) {
@@ -63,10 +63,10 @@ export class CommentService {
 
     !reaction
       ? await this.commentRepository.createDefaultReaction(userId, commentId)
-      : (myStatus = reaction.myStatus);
+      : (myStatus = reaction.status);
 
     if (myStatus === LikeStatus.Dislike && likeStatus === LikeStatus.Dislike) {
-      return;
+      return true;
     }
 
     if (myStatus === LikeStatus.Like && likeStatus === LikeStatus.Dislike) {
@@ -101,7 +101,7 @@ export class CommentService {
 
     !reaction
       ? await this.commentRepository.createDefaultReaction(userId, commentId)
-      : (myStatus = reaction.myStatus);
+      : (myStatus = reaction.status);
 
     if (myStatus === LikeStatus.Like && likeStatus === LikeStatus.None) {
       await this.commentRepository.updateMyReaction(

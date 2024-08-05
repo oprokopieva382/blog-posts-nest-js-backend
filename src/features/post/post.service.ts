@@ -65,7 +65,7 @@ export class PostService {
       : (myStatus = reaction.myStatus);
 
     if (myStatus === LikeStatus.Dislike && likeStatus === LikeStatus.Dislike) {
-      return;
+      return true;
     }
 
     if (myStatus === LikeStatus.Like && likeStatus === LikeStatus.Dislike) {
@@ -137,8 +137,6 @@ export class PostService {
       default:
         throw new BadRequestException();
     }
-
-    console.log(result)
 
     return result;
   }
