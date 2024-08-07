@@ -5,7 +5,10 @@ import { Post, PostDocument } from './schemas/Post.schema';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { Comment, CommentDocument } from '../comment/schemas/Comment.schema';
-import { PostReaction, PostReactionDocument } from './schemas/PostReaction.schema';
+import {
+  PostReaction,
+  PostReactionDocument,
+} from './schemas/PostReaction.schema';
 import { LikeStatus } from 'src/base/enum/LikesStatus';
 
 @Injectable()
@@ -65,7 +68,7 @@ export class PostRepository {
   }
 
   async addLikedUser(userId: string, createdAt: string, postId: string) {
-    const result =  await this.PostReactionModel.findOneAndUpdate(
+    const result = await this.PostReactionModel.findOneAndUpdate(
       { user: userId, post: postId },
       {
         $push: {
@@ -78,8 +81,8 @@ export class PostRepository {
       },
       { new: true, upsert: true },
     ).populate('latestReactions.user', 'login _id');
-    console.log("addLikeUser in repository", result)
-    return result
+    console.log('addLikeUser in repository', result);
+    return result;
   }
 
   async createPost(dto: PostInputModel) {

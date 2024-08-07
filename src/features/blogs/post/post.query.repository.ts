@@ -4,9 +4,7 @@ import { Post, PostDocument } from './schemas/Post.schema';
 import { Model } from 'mongoose';
 import { PostQueryModel } from './DTOs/input/PostQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
-import {
-  PostViewModel
-} from './DTOs/output/PostViewModel.dto';
+import { PostViewModel } from './DTOs/output/PostViewModel.dto';
 import { Comment, CommentDocument } from '../comment/schemas/Comment.schema';
 import { SortDirection } from 'src/base/enum/SortDirection';
 import { TransformComment } from '../comment/DTOs/output/TransformComment';
@@ -31,8 +29,11 @@ export class PostQueryRepository {
   ) {}
 
   async getReactionStatus(userId: string, postId: string) {
-    const MyReaction = await this.PostReactionModel.findOne({ user: userId, post: postId });
-    console.log("MyReaction", MyReaction)
+    const MyReaction = await this.PostReactionModel.findOne({
+      user: userId,
+      post: postId,
+    });
+   
     return MyReaction;
   }
 
@@ -103,7 +104,11 @@ export class PostQueryRepository {
     return await this.PostModel.findById(id).populate('blog');
   }
 
-  async getPostComments(postId: string, query: PostQueryModel, userId?: string) {
+  async getPostComments(
+    postId: string,
+    query: PostQueryModel,
+    userId?: string,
+  ) {
     const totalCommentsCount = await this.CommentModel.countDocuments({
       post: postId.toString(),
     });

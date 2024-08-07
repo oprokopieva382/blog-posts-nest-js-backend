@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Blog } from 'src/features/blog/schemas/Blog.schema';
+import { Blog } from 'src/features/blogs/blog/schemas/Blog.schema';
 import { PostReaction } from './PostReaction.schema';
 
 export type PostDocument = HydratedDocument<Post>;

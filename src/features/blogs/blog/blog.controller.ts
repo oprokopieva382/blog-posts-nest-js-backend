@@ -21,14 +21,14 @@ import {
 import { BlogQueryRepository } from './blog.query.repository';
 import { blogQueryFilter } from 'src/base/utils/queryFilter';
 import { TransformPost } from '../post/DTOs/output/TransformPost';
-import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
+import { AdminAuthGuard } from '../../auth/guards/admin-auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateBlogPostCommand } from './use-cases/createBlogPost-use-case';
 import { CreateBlogCommand } from './use-cases/createBlog-use-case';
 import { UpdateBlogCommand } from './use-cases/updateBlog-use-case';
 import { DeleteBlogCommand } from './use-cases/deleteBlog-use-case';
 import { TransformBlog } from './DTOs/output/TransformBlog';
-import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../../auth/guards/optional-jwt-auth.guard';
 
 @Controller('blogs')
 export class BlogController {
