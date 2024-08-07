@@ -1,17 +1,19 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
-import { User, UserSchema } from '../user/schemas/User.schema';
+import { UserModule } from '../user/user.module';
 import { AuthService } from './auth.service';
 import { AuthRepository } from './auth.repository';
 import { LocalStrategy } from 'src/features/auth/strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserQueryRepository } from '../user/user.query.repository';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { EmailService } from 'src/base/application/email.service';
-import { PasswordRecoveryCode, PasswordRecoveryCodeSchema } from './schemas/PasswordRecoveryCode.schema';
+import {
+  PasswordRecoveryCode,
+  PasswordRecoveryCodeSchema,
+} from './schemas/PasswordRecoveryCode.schema';
 import { SetNewPasswordUseCase } from './use-cases/setNewPassword-use-case';
 import { CqrsModule } from '@nestjs/cqrs';
 import { LoginUserUseCase } from './use-cases/loginUser-use-case';
@@ -19,16 +21,13 @@ import { RegisterUserUseCase } from './use-cases/registerUser-use-case';
 import { ConfirmationRegistrationUserUseCase } from './use-cases/confirmationRegistration-use-case';
 import { RegistrationEmailResendingUseCase } from './use-cases/registrationEmailResending-use-case';
 import { PasswordRecoveryUseCase } from './use-cases/passwordRecovery-use-case';
-import { TransformUser } from '../user/DTOs/output/TransformUser';
+import { AdminAuthGuard } from './guards/admin-auth.guard';
 
 @Module({
   imports: [
     CqrsModule,
+    forwardRef(() => UserModule),
     MongooseModule.forFeature([
-      {
-        name: User.name,
-        schema: UserSchema,
-      },
       {
         name: PasswordRecoveryCode.name,
         schema: PasswordRecoveryCodeSchema,
@@ -50,7 +49,6 @@ import { TransformUser } from '../user/DTOs/output/TransformUser';
     AuthRepository,
     LocalStrategy,
     JwtStrategy,
-    UserQueryRepository,
     EmailService,
     SetNewPasswordUseCase,
     LoginUserUseCase,
@@ -58,7 +56,7 @@ import { TransformUser } from '../user/DTOs/output/TransformUser';
     ConfirmationRegistrationUserUseCase,
     RegistrationEmailResendingUseCase,
     PasswordRecoveryUseCase,
-    TransformUser,
+    AdminAuthGuard,
   ],
   exports: [AuthService],
 })

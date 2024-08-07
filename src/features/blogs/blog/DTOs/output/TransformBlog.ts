@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { BlogDocument } from 'src/features/blog/schemas/Blog.schema';
+import { BlogDocument } from 'src/features/blogs/blog/schemas/Blog.schema';
 import { BlogViewModel } from './BlogViewModel.dto';
 
 @Injectable()

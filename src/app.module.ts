@@ -2,13 +2,10 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './features/user/user.module';
-import { PostModule } from './features/post/post.module';
-import { BlogModule } from './features/blog/blog.module';
-import { CommentModule } from './features/comment/comment.module';
+import { BlogModule } from './features/blogs/blog.module';
 import { TestingModule } from './features/testing/testing.module';
 import { AuthModule } from './features/auth/auth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
-
 
 @Module({
   imports: [
@@ -24,9 +21,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
       inject: [ConfigService],
     }),
     UserModule,
-    PostModule,
     BlogModule,
-    CommentModule,
     AuthModule,
     TestingModule,
     ThrottlerModule.forRoot([

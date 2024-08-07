@@ -13,7 +13,7 @@ export class ReactToCommentCommand {
 }
 
 @CommandHandler(ReactToCommentCommand)
-export class ReactToComment implements ICommandHandler<ReactToCommentCommand> {
+export class ReactToCommentUseCase implements ICommandHandler<ReactToCommentCommand> {
   constructor(
     private readonly commentRepository: CommentRepository,
     private readonly commentService: CommentService,

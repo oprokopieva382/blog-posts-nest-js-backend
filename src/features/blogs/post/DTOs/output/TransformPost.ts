@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {  forwardRef, Inject, Injectable } from '@nestjs/common';
 import { PostQueryRepository } from '../../post.query.repository';
 import { LikeStatus } from 'src/base/enum/LikesStatus';
 import { PostDocument } from '../../schemas/Post.schema';
@@ -6,7 +6,7 @@ import { PostViewModel } from './PostViewModel.dto';
 import { LikeDetailsViewModel } from 'src/base/DTOs/output/LikeDetailsViewModel.dto';
 import { sortLikes } from 'src/base/utils/sortLikes';
 import mongoose from 'mongoose';
-import { Blog } from 'src/features/blog/schemas/Blog.schema';
+import { Blog } from 'src/features/blogs/blog/schemas/Blog.schema';
 
 export interface PopulatedBlog extends Blog {
   _id: mongoose.Types.ObjectId;
@@ -25,7 +25,7 @@ export class TransformPost {
   ): Promise<PostViewModel> {
     let userStatus: LikeStatus = LikeStatus.None;
     let newestLikes: LikeDetailsViewModel[] = [];
-  
+
     if (userId) {
       const reactionInfo = (await this.postQueryRepository.getReactionStatus(
         userId,

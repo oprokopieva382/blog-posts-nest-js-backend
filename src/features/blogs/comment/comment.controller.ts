@@ -15,11 +15,11 @@ import { TransformComment } from './DTOs/output/TransformComment';
 import { CommentInputModel } from './DTOs/input/CommentInputModel.dto';
 import { CommandBus } from '@nestjs/cqrs';
 import { UpdateCommentCommand } from './use-cases/updateComment-use-case';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { DeleteCommentCommand } from './use-cases/deleteComment-use-case';
 import { LikeInputModel } from 'src/base/DTOs/input/LikeInputModel.dto';
 import { ReactToCommentCommand } from './use-cases/reactToComment-use-case';
-import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../../auth/guards/optional-jwt-auth.guard';
 
 @Controller('comments')
 export class CommentController {
