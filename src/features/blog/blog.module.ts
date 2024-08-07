@@ -22,6 +22,7 @@ import { CreateBlogUseCase } from './use-cases/createBlog-use-case';
 import { UpdateBlogUseCase } from './use-cases/updateBlog-use-case';
 import { DeleteBlogUseCase } from './use-cases/deleteBlog-use-case';
 import { TransformBlog } from './DTOs/output/TransformBlog';
+import { IsBlogIdExistConstraint } from 'src/base/utils/validateBlogId';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { TransformBlog } from './DTOs/output/TransformBlog';
     CreateBlogUseCase,
     UpdateBlogUseCase,
     DeleteBlogUseCase,
+    IsBlogIdExistConstraint,
   ],
 })
 export class BlogModule {}
