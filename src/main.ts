@@ -16,5 +16,5 @@ async function bootstrap() {
     console.log('App starting listen port: ', appSettings.api.PORT);
     console.log('ENV: ', appSettings.env.getEnv());
   });
-  bootstrap();
 }
+bootstrap();
