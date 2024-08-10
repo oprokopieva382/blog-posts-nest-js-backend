@@ -1,7 +1,6 @@
 import { config } from 'dotenv';
 config();
 
-
 export type EnvironmentVariable = { [key: string]: string | undefined };
 
 export type EnvironmentsTypes =
@@ -44,33 +43,34 @@ export class AppSettings {
 }
 
 class APISettings {
-  // Application
   public readonly PORT: number;
   public readonly ADMIN_AUTH: string;
-
-  // Database
   public readonly MONGO_DB_ATLAS: string;
   public readonly MONGO_CONNECTION_URI_FOR_TESTS: string;
+  public readonly DB_NAME: string;
+  public readonly DB_NAME_TEST: string;
+  public readonly JWT_ACCESS_TOKEN_SECRET: string;
+  public readonly JWT_REFRESH_TOKEN_SECRET: string;
+  public readonly REGISTRATION_EMAIL: string;
+  public readonly REGISTRATION_PASS: string;
 
   constructor(private readonly envVariables: EnvironmentVariable) {
-    // Application
-    this.PORT = this.getNumberOrDefault(envVariables.PORT as string, 7840);
-    this.ADMIN_AUTH = envVariables.ADMIN_AUTH ?? 'admin:qwerty';
-
-    // Database
-    this.MONGO_DB_ATLAS =
-      envVariables.MONGO_DB_ATLAS ?? 'mongodb://localhost/nest';
-    // this.MONGO_CONNECTION_URI_FOR_TESTS =
-    //   envVariables.MONGO_CONNECTION_URI_FOR_TESTS ?? 'mongodb://localhost/test';
+    this.PORT = this.getNumberOrDefault(envVariables.PORT as string, 5007);
+    this.ADMIN_AUTH = envVariables.ADMIN_AUTH ?? '';
+    this.MONGO_DB_ATLAS = envVariables.MONGO_DB_ATLAS ?? '';
+    this.DB_NAME = envVariables.DB_NAME ?? '';
+    this.DB_NAME_TEST = envVariables.DB_NAME_TEST ?? '';
+    this.JWT_ACCESS_TOKEN_SECRET = envVariables.JWT_ACCESS_TOKEN_SECRET ?? '';
+    this.JWT_REFRESH_TOKEN_SECRET = envVariables.JWT_REFRESH_TOKEN_SECRET ?? '';
+    this.REGISTRATION_EMAIL = envVariables.REGISTRATION_EMAIL ?? '';
+    this.REGISTRATION_PASS = envVariables.REGISTRATION_PASS ?? '';
   }
 
   private getNumberOrDefault(value: any, defaultValue: number): number {
     const parsedValue = Number(value);
-
     if (isNaN(parsedValue)) {
       return defaultValue;
     }
-
     return parsedValue;
   }
 }
