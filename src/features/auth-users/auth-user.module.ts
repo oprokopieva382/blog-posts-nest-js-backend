@@ -29,6 +29,7 @@ import { CreateUserUseCase } from './user/use-cases/createUser-use.case';
 import { DeleteUserUseCase } from './user/use-cases/deleteUser-use.case';
 import { TransformUser } from './user/DTOs/output/TransformUser';
 import { AdminAuthGuard } from './auth/guards/admin-auth.guard';
+import { Session, SessionSchema } from './auth/schemas/Session.schema';
 
 @Module({
   imports: [
@@ -41,6 +42,10 @@ import { AdminAuthGuard } from './auth/guards/admin-auth.guard';
       {
         name: User.name,
         schema: UserSchema,
+      },
+      {
+        name: Session.name,
+        schema: SessionSchema,
       },
     ]),
     PassportModule,

@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { AuthRepository } from './auth.repository';
+import { fromUnixTime } from 'date-fns/fromUnixTime';
 
 @Injectable()
 export class AuthService {
@@ -26,5 +27,17 @@ export class AuthService {
       const { password, ...result } = user.toObject();
       return result;
     }
+  }
+
+  async createSession(sessionData: any) {
+    const newSession = {
+      userId: sessionData.userId,
+      deviceId: sessionData.deviceId,
+      iat: fromUnixTime(sessionData.iat!).toISOString(),
+      deviceName: sessionData.deviceName,
+      ip: sessionData.ip,
+      exp: fromUnixTime(sessionData.exp!).toISOString(),
+    }
+    await this.authRepository.createSession(newSession);
   }
 }

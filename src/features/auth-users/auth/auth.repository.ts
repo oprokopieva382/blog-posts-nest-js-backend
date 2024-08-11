@@ -7,11 +7,13 @@ import {
 } from './schemas/PasswordRecoveryCode.schema';
 import { User, UserDocument } from '../user/schemas/User.schema';
 import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
+import { Session, SessionDocument } from './schemas/Session.schema';
 
 @Injectable()
 export class AuthRepository {
   constructor(
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
+    @InjectModel(Session.name) private readonly SessionModel: Model<SessionDocument>,
     @InjectModel(PasswordRecoveryCode.name)
     private readonly PasswordRecoveryCodeModel: Model<PasswordRecoveryCodeDocument>,
   ) {}
@@ -62,7 +64,6 @@ export class AuthRepository {
   async registerUser(dto: UserInputModel) {
     const newUser = new this.UserModel(dto);
     return await newUser.save();
-   
   }
 
   async savePasswordRecoveryInfo(passwordRecovery: PasswordRecoveryCode) {
@@ -77,5 +78,9 @@ export class AuthRepository {
       { $set: { password: newPassword } },
       { new: true },
     );
+  }
+
+  async createSession(newSession: any) {
+    return await this.SessionModel.create(newSession);
   }
 }

@@ -105,4 +105,24 @@ export class AuthController {
     });
     return { accessToken };
   }
+
+//   @Post('refresh-token')
+//   @UseGuards(LocalAuthGuard)
+//   @HttpCode(200)
+//   async refreshToken(
+//     //@Body() dto: LoginInputModel,
+//     @Request() req,
+//     @Res({ passthrough: true }) response: Response,
+//   ) {
+//     //console.log('Req.user in login', req.user);
+//     const { accessToken, refreshToken } = await this.commandBus.execute(
+//       new LoginUserCommand(req.user, req.ip, req.headers),
+//     );
+
+//     response.cookie('refreshToken', refreshToken, {
+//       httpOnly: true,
+//       secure: true,
+//     });
+//     return { accessToken };
+//   }
 }
