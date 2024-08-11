@@ -30,6 +30,7 @@ import { DeleteUserUseCase } from './user/use-cases/deleteUser-use.case';
 import { TransformUser } from './user/DTOs/output/TransformUser';
 import { AdminAuthGuard } from './auth/guards/admin-auth.guard';
 import { Session, SessionSchema } from './auth/schemas/Session.schema';
+import { CreateSessionCommand } from './auth/use-cases/createSession-use-case';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { Session, SessionSchema } from './auth/schemas/Session.schema';
     ConfirmationRegistrationUserUseCase,
     RegistrationEmailResendingUseCase,
     PasswordRecoveryUseCase,
+    CreateSessionCommand,
     CreateUserUseCase,
     DeleteUserUseCase,
     AdminAuthGuard,
