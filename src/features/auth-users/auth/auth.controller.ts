@@ -9,9 +9,6 @@ import {
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
-import { LocalAuthGuard } from 'src/features/auth/guards/local-auth.guard';
-import { UserQueryRepository } from '../user/user.query.repository';
 import { CurrentUserId } from './decorators/currentUserId.param.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';
@@ -26,7 +23,10 @@ import { RegisterUserCommand } from './use-cases/registerUser-use-case';
 import { ConfirmationRegistrationUserCommand } from './use-cases/confirmationRegistration-use-case';
 import { RegistrationEmailResendingCommand } from './use-cases/registrationEmailResending-use-case';
 import { PasswordRecoveryCommand } from './use-cases/passwordRecovery-use-case';
-import { TransformUser } from '../user/DTOs/output/TransformUser';
+import { UserQueryRepository } from '../user/user.query.repository';
+import {TransformUser} from '../user/DTOs/output/TransformUser'
+import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {

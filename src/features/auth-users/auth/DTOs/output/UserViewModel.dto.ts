@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { UserDocument } from 'src/features/user/schemas/User.schema';
+import { UserDocument } from 'src/features/auth-users/user/schemas/User.schema';
 
 export class UserViewModel {
   @IsNotEmpty()

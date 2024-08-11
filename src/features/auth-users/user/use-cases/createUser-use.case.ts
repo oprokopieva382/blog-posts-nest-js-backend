@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UserInputModel } from '../DTOs/input/UserInputModel.dto';
-import { AuthService } from 'src/features/auth/auth.service';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns/add';
 import { UserRepository } from '../user.repository';
+import { AuthService } from '../../auth/auth.service';
 
 export class CreateUserCommand {
   constructor(public dto: UserInputModel) {}

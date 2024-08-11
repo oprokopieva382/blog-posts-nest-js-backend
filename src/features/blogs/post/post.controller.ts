@@ -21,14 +21,14 @@ import { baseQueryFilter } from 'src/base/utils/queryFilter';
 import { TransformPost } from './DTOs/output/TransformPost';
 import { CommentInputModel } from '../comment/DTOs/input/CommentInputModel.dto';
 import { TransformComment } from '../comment/DTOs/output/TransformComment';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { AdminAuthGuard } from '../../auth/guards/admin-auth.guard';
 import { LikeInputModel } from 'src/base/DTOs/input/LikeInputModel.dto';
-import { OptionalJwtAuthGuard } from '../../auth/guards/optional-jwt-auth.guard';
 import { CreatePostCommand } from './use-cases/createPost-use-case';
 import { UpdatePostCommand } from './use-cases/updatePost-use-case';
 import { DeletePostCommand } from './use-cases/deletePost-use-case';
 import { CreatePostCommentCommand } from './use-cases/createPostComment-use-case';
+import { OptionalJwtAuthGuard } from 'src/features/auth-users/auth/guards/optional-jwt-auth.guard';
+import { JwtAuthGuard } from 'src/features/auth-users/auth/guards/jwt-auth.guard';
+import { AdminAuthGuard } from 'src/features/auth-users/auth/guards/admin-auth.guard';
 
 @Controller('posts')
 export class PostController {

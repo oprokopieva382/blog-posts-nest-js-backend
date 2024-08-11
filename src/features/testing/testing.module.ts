@@ -5,7 +5,7 @@ import {
   CommentSchema,
 } from '../blogs/comment/schemas/Comment.schema';
 import { Blog, BlogSchema } from '../blogs/blog/schemas/Blog.schema';
-import { User, UserSchema } from '../user/schemas/User.schema';
+import { User, UserSchema } from '../auth-users/user/schemas/User.schema';
 import { TestingController } from './testing.controller';
 import { Post, PostSchema } from '../blogs/post/schemas/Post.schema';
 import {
