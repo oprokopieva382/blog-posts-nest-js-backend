@@ -7,7 +7,6 @@ import { AuthService } from './auth.service';
 import { AuthRepository } from './auth.repository';
 import { LocalStrategy } from 'src/features/auth/strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { EmailService } from 'src/base/application/email.service';
 import {
@@ -22,6 +21,7 @@ import { ConfirmationRegistrationUserUseCase } from './use-cases/confirmationReg
 import { RegistrationEmailResendingUseCase } from './use-cases/registrationEmailResending-use-case';
 import { PasswordRecoveryUseCase } from './use-cases/passwordRecovery-use-case';
 import { AdminAuthGuard } from './guards/admin-auth.guard';
+import { appSettings } from 'src/settings/app-settings';
 
 @Module({
   imports: [
@@ -35,12 +35,10 @@ import { AdminAuthGuard } from './guards/admin-auth.guard';
     ]),
     PassportModule,
     JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
+        useFactory: async () => ({
+        secret: appSettings.api.JWT_ACCESS_TOKEN_SECRET,
         signOptions: { expiresIn: '5m' },
       }),
-      inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],
