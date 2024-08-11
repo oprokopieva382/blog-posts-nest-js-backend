@@ -29,6 +29,8 @@ import { CreateUserUseCase } from './user/use-cases/createUser-use.case';
 import { DeleteUserUseCase } from './user/use-cases/deleteUser-use.case';
 import { TransformUser } from './user/DTOs/output/TransformUser';
 import { AdminAuthGuard } from './auth/guards/admin-auth.guard';
+import { Session, SessionSchema } from './auth/schemas/Session.schema';
+import { CreateSessionCommand } from './auth/use-cases/createSession-use-case';
 
 @Module({
   imports: [
@@ -41,6 +43,10 @@ import { AdminAuthGuard } from './auth/guards/admin-auth.guard';
       {
         name: User.name,
         schema: UserSchema,
+      },
+      {
+        name: Session.name,
+        schema: SessionSchema,
       },
     ]),
     PassportModule,
@@ -67,6 +73,7 @@ import { AdminAuthGuard } from './auth/guards/admin-auth.guard';
     ConfirmationRegistrationUserUseCase,
     RegistrationEmailResendingUseCase,
     PasswordRecoveryUseCase,
+    CreateSessionCommand,
     CreateUserUseCase,
     DeleteUserUseCase,
     AdminAuthGuard,
