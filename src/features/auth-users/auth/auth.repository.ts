@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { User, UserDocument } from '../user/schemas/User.schema';
-import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
 import {
   PasswordRecoveryCode,
   PasswordRecoveryCodeDocument,
 } from './schemas/PasswordRecoveryCode.schema';
+import { User, UserDocument } from '../user/schemas/User.schema';
+import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
 
 @Injectable()
 export class AuthRepository {

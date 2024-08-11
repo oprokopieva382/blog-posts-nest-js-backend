@@ -6,8 +6,8 @@ import { UserQueryModel } from './DTOs/input/UserQueryModel.dto';
 import { PaginatorModel } from 'src/base/DTOs/output/Paginator.dto';
 import { UserViewModel } from './DTOs/output/UserViewModel.dto';
 import { SortDirection } from 'src/base/enum/SortDirection';
-import { transformToViewUser } from '../auth/DTOs/output/UserViewModel.dto';
 import { TransformUser } from './DTOs/output/TransformUser';
+import { transformToViewUser } from '../auth/DTOs/output/UserViewModel.dto';
 
 @Injectable()
 export class UserQueryRepository {

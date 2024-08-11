@@ -3,9 +3,9 @@ import { randomUUID } from 'crypto';
 import { add } from 'date-fns/add';
 import { BadRequestException } from '@nestjs/common';
 import { AuthRepository } from '../auth.repository';
-import { AuthService } from 'src/features/auth/auth.service';
-import { UserInputModel } from 'src/features/user/DTOs/input/UserInputModel.dto';
+import { UserInputModel } from 'src/features/auth-users/user/DTOs/input/UserInputModel.dto';
 import { EmailService } from 'src/base/application/email.service';
+import { AuthService } from '../auth.service';
 
 export class RegisterUserCommand {
   constructor(public dto: UserInputModel) {}

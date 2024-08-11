@@ -15,11 +15,11 @@ import { UserService } from './user.service';
 import { UserQueryRepository } from './user.query.repository';
 import { UserQueryModel } from './DTOs/input/UserQueryModel.dto';
 import { userQueryFilter } from 'src/base/utils/queryFilter';
-import { AdminAuthGuard } from 'src/features/auth/guards/admin-auth.guard';
 import { TransformUser } from './DTOs/output/TransformUser';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateUserCommand } from './use-cases/createUser-use.case';
 import { DeleteUserCommand } from './use-cases/deleteUser-use.case';
+import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
 
 @Controller('users')
 @UseGuards(AdminAuthGuard)

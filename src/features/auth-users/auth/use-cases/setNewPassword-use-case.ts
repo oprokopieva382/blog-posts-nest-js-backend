@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { NewPasswordRecoveryInputModel } from '../DTOs/input/NewPasswordRecoveryInputModel.dto';
 import { AuthRepository } from '../auth.repository';
 import { BadRequestException } from '@nestjs/common';
-import { AuthService } from 'src/features/auth/auth.service';
+import { AuthService } from '../auth.service';
 
 export class SetNewPasswordCommand {
   constructor(public data: NewPasswordRecoveryInputModel) {}

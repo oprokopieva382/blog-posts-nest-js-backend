@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from './features/user/user.module';
 import { BlogModule } from './features/blogs/blog.module';
 import { TestingModule } from './features/testing/testing.module';
-import { AuthModule } from './features/auth/auth.module';
+import { AuthUserModule } from './features/auth-users/auth-user.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { appSettings, AppSettings } from './settings/app-settings';
 
@@ -25,9 +24,8 @@ import { appSettings, AppSettings } from './settings/app-settings';
         };
       },
     }),
-    UserModule,
     BlogModule,
-    AuthModule,
+    AuthUserModule,
     TestingModule,
     ThrottlerModule.forRoot([
       {
