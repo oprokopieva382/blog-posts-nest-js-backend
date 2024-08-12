@@ -47,9 +47,8 @@ export class LoginUserUseCase implements ICommandHandler<LoginUserCommand> {
     const deviceName = command.headers['user-agent'] || 'Unknown Device';
 
     //set tokens payload
-    const payloadAT = { login: command.user.login, sub: command.user._id };
+    const payloadAT = { sub: command.user._id };
     const payloadRT = {
-      login: command.user.login,
       sub: command.user._id,
       deviceId,
     };
@@ -57,13 +56,15 @@ export class LoginUserUseCase implements ICommandHandler<LoginUserCommand> {
     const accessToken = this.tokenService.generateToken(
       payloadAT,
       this.accessTokenSecret,
-      '5m',
+      //'10m',
+      '10s',
     );
 
     const refreshToken = this.tokenService.generateToken(
       payloadRT,
       this.refreshTokenSecret,
-      '20m',
+      //'20m',
+      '20s',
     );
 
     const { iat, exp } = await this.tokenService.verifyToken(

@@ -28,6 +28,7 @@ import {TransformUser} from '../user/DTOs/output/TransformUser'
 import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { IsAuthRefreshTokenGuard } from './guards/is-auth-refresh-token.guard';
+import { SetNewTokensCommand } from './use-cases/setNewTokens-use-case';
 
 @Controller('auth')
 export class AuthController {
@@ -113,15 +114,15 @@ export class AuthController {
     @Request() req,
     @Res({ passthrough: true }) response: Response,
   ) {
-    //console.log('Req.user in refresh-token', req);
-    // const { accessToken, refreshToken } = await this.commandBus.execute(
-    //   new LoginUserCommand(req.user, req.ip, req.headers),
-    // );
+    const { accessToken, refreshToken } = await this.commandBus.execute(
+      new SetNewTokensCommand(req.userId, req.deviceId),
+    );
 
-    // response.cookie('refreshToken', refreshToken, {
-    //   httpOnly: true,
-    //   secure: true,
-    // });
-    return true;
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+
+    return {accessToken};
   }
 }

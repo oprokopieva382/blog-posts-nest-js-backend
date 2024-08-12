@@ -37,7 +37,7 @@ export class IsAuthRefreshTokenGuard implements CanActivate {
       refreshToken,
       this.refreshTokenSecret,
     );
-    console.log('token', token);
+    console.log('refreshToken', token);
 
     if (!token.sub) {
       throw new UnauthorizedException();
@@ -46,7 +46,6 @@ export class IsAuthRefreshTokenGuard implements CanActivate {
     const currentSession = await this.authRepository.getSessionByDeviceId(
       token.deviceId,
     );
-    console.log('currentSession', currentSession);
 
     if (!currentSession) {
       throw new UnauthorizedException();

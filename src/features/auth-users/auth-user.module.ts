@@ -32,6 +32,7 @@ import { AdminAuthGuard } from './auth/guards/admin-auth.guard';
 import { Session, SessionSchema } from './auth/schemas/Session.schema';
 import {  CreateSessionUseCase } from './auth/use-cases/createSession-use-case';
 import { TokenService } from 'src/base/application/jwt.service';
+import { SetNewTokensUseCase } from './auth/use-cases/setNewTokens-use-case';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { TokenService } from 'src/base/application/jwt.service';
     RegistrationEmailResendingUseCase,
     PasswordRecoveryUseCase,
     CreateSessionUseCase,
+    SetNewTokensUseCase,
     CreateUserUseCase,
     DeleteUserUseCase,
     AdminAuthGuard,
