@@ -13,7 +13,8 @@ import { Session, SessionDocument } from './schemas/Session.schema';
 export class AuthRepository {
   constructor(
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
-    @InjectModel(Session.name) private readonly SessionModel: Model<SessionDocument>,
+    @InjectModel(Session.name)
+    private readonly SessionModel: Model<SessionDocument>,
     @InjectModel(PasswordRecoveryCode.name)
     private readonly PasswordRecoveryCodeModel: Model<PasswordRecoveryCodeDocument>,
   ) {}
@@ -78,6 +79,10 @@ export class AuthRepository {
       { $set: { password: newPassword } },
       { new: true },
     );
+  }
+
+  async getSessionByDeviceId(deviceId: string) {
+    return await this.SessionModel.findOne({deviceId});
   }
 
   async createSession(newSession: any) {
