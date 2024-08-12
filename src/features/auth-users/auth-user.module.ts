@@ -28,11 +28,11 @@ import { PasswordRecoveryUseCase } from './auth/use-cases/passwordRecovery-use-c
 import { CreateUserUseCase } from './user/use-cases/createUser-use.case';
 import { DeleteUserUseCase } from './user/use-cases/deleteUser-use.case';
 import { TransformUser } from './user/DTOs/output/TransformUser';
-import { AdminAuthGuard } from './auth/guards/admin-auth.guard';
 import { Session, SessionSchema } from './auth/schemas/Session.schema';
 import {  CreateSessionUseCase } from './auth/use-cases/createSession-use-case';
 import { TokenService } from 'src/base/application/jwt.service';
 import { SetNewTokensUseCase } from './auth/use-cases/setNewTokens-use-case';
+import { UpdateSessionUseCase } from './auth/use-cases/updateSession-use-case';
 
 @Module({
   imports: [
@@ -78,10 +78,10 @@ import { SetNewTokensUseCase } from './auth/use-cases/setNewTokens-use-case';
     RegistrationEmailResendingUseCase,
     PasswordRecoveryUseCase,
     CreateSessionUseCase,
+    UpdateSessionUseCase,
     SetNewTokensUseCase,
     CreateUserUseCase,
     DeleteUserUseCase,
-    AdminAuthGuard,
     TransformUser,
   ],
   exports: [],

@@ -123,6 +123,25 @@ export class AuthController {
       secure: true,
     });
 
-    return {accessToken};
+    return { accessToken };
   }
+
+  // @Post('logout')
+  // @UseGuards(IsAuthRefreshTokenGuard)
+  // @HttpCode(204)
+  // async logout(
+  //   @Request() req,
+  //   @Res({ passthrough: true }) response: Response,
+  // ) {
+  //   const { accessToken, refreshToken } = await this.commandBus.execute(
+  //     new SetNewTokensCommand(req.userId, req.deviceId),
+  //   );
+
+  //   response.cookie('refreshToken', refreshToken, {
+  //     httpOnly: true,
+  //     secure: true,
+  //   });
+
+  //   return { accessToken };
+  // }
 }

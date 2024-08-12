@@ -1,6 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TokenService } from 'src/base/application/jwt.service';
 import { ConfigService } from '@nestjs/config';
+import { UpdateSessionCommand, UpdateSessionUseCase } from './updateSession-use-case';
 
 export class SetNewTokensCommand {
   constructor(
@@ -18,6 +19,7 @@ export class SetNewTokensUseCase
   constructor(
     private readonly tokenService: TokenService,
     private readonly configService: ConfigService,
+    private readonly updateSessionUseCase: UpdateSessionUseCase,
   ) {
     this.accessTokenSecret = this.configService.get<string>(
       'JWT_ACCESS_TOKEN_SECRET',
@@ -37,15 +39,21 @@ export class SetNewTokensUseCase
     const accessToken = this.tokenService.generateToken(
       payloadAT,
       this.accessTokenSecret,
-      //'10m',
-      '10s',
+      '10m',
+      //'10s',
     );
 
     const refreshToken = this.tokenService.generateToken(
       payloadRT,
       this.refreshTokenSecret,
-      //'20m',
-      '20s',
+      '20m',
+      //'20s',
+    );
+
+    await this.updateSessionUseCase.execute(
+      new UpdateSessionCommand({
+        refreshToken,
+      }),
     );
 
     return {

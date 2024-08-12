@@ -82,10 +82,26 @@ export class AuthRepository {
   }
 
   async getSessionByDeviceId(deviceId: string) {
-    return await this.SessionModel.findOne({deviceId});
+    return await this.SessionModel.findOne({ deviceId });
   }
 
   async createSession(newSession: any) {
     return await this.SessionModel.create(newSession);
+  }
+
+  async updateSession({
+    iat,
+    exp,
+    deviceId,
+  }: {
+    iat: string;
+    exp: string;
+    deviceId: string;
+  }) {
+    return await this.SessionModel.findOneAndUpdate(
+      { deviceId },
+      { $set: { iat, exp } },
+      { new: true },
+    );
   }
 }

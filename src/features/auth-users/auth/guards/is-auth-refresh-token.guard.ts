@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import { Observable } from 'rxjs';
 import { TokenService } from 'src/base/application/jwt.service';
 import { AuthRepository } from '../auth.repository';
 import { fromUnixTime } from 'date-fns/fromUnixTime';
+import { TokenExpiredError } from '@nestjs/jwt';
 
 @Injectable()
 export class IsAuthRefreshTokenGuard implements CanActivate {
@@ -33,35 +33,42 @@ export class IsAuthRefreshTokenGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    const token = await this.tokenService.verifyToken(
-      refreshToken,
-      this.refreshTokenSecret,
-    );
-    console.log('refreshToken', token);
+    try {
+      const token = await this.tokenService.verifyToken(
+        refreshToken,
+        this.refreshTokenSecret,
+      );
+      console.log('refreshToken', token);
 
-    if (!token.sub) {
+      if (!token.sub) {
+        throw new UnauthorizedException();
+      }
+
+      const currentSession = await this.authRepository.getSessionByDeviceId(
+        token.deviceId,
+      );
+
+      if (!currentSession) {
+        throw new UnauthorizedException();
+      }
+
+      if (currentSession.iat !== fromUnixTime(token.iat).toISOString()) {
+        throw new UnauthorizedException();
+      }
+
+      if (typeof refreshToken !== 'string') {
+        throw new UnauthorizedException();
+      }
+
+      request.userId = token.sub;
+      request.deviceId = token.deviceId;
+
+      return true;
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        throw new UnauthorizedException();
+      }
       throw new UnauthorizedException();
     }
-
-    const currentSession = await this.authRepository.getSessionByDeviceId(
-      token.deviceId,
-    );
-
-    if (!currentSession) {
-      throw new UnauthorizedException();
-    }
-
-    if (currentSession.iat !== fromUnixTime(token.iat).toISOString()) {
-      throw new UnauthorizedException();
-    }
-
-    if (typeof refreshToken !== 'string') {
-      throw new UnauthorizedException();
-    }
-
-     request.userId = token.sub;
-     request.deviceId = token.deviceId;
-
-    return true;
   }
 }
