@@ -1,10 +1,10 @@
 {
   "name": "blog-post-nestjs-backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "This backend platform for blog posts is crafted using NestJS, providing comprehensive CRUD operations for blogs, posts, users, comments and likes.",
+  "author": "Oksana(KsyFate) <oprokopieva382@gmail.com>",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
