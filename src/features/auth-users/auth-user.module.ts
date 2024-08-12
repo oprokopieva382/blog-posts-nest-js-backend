@@ -34,6 +34,7 @@ import { TokenService } from 'src/base/application/jwt.service';
 import { SetNewTokensUseCase } from './auth/use-cases/setNewTokens-use-case';
 import { UpdateSessionUseCase } from './auth/use-cases/updateSession-use-case';
 import { DeleteSessionUseCase } from './auth/use-cases/deleteSession-use-case';
+import { DeviceQueryRepository } from './securityDevices/device.query.repository';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { DeleteSessionUseCase } from './auth/use-cases/deleteSession-use-case';
     AuthRepository,
     UserRepository,
     UserQueryRepository,
+    DeviceQueryRepository,
     LocalStrategy,
     JwtStrategy,
     EmailService,
