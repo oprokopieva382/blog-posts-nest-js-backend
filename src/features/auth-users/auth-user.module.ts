@@ -37,6 +37,8 @@ import { DeleteSessionUseCase } from './auth/use-cases/deleteSession-use-case';
 import { DeviceQueryRepository } from './securityDevices/device.query.repository';
 import { DeleteDevicesUseCase } from './securityDevices/use-cases/deleteDevices-use-case';
 import { DeleteDeviceByIdUseCase } from './securityDevices/use-cases/deleteDeviceById-use-case';
+import { TransformDevice } from './securityDevices/DTOs/output/TransformDevice';
+import { DeviceRepository } from './securityDevices/device.repository';
 
 @Module({
   imports: [
@@ -70,6 +72,7 @@ import { DeleteDeviceByIdUseCase } from './securityDevices/use-cases/deleteDevic
     UserService,
     AuthRepository,
     UserRepository,
+    DeviceRepository,
     UserQueryRepository,
     DeviceQueryRepository,
     LocalStrategy,
@@ -91,6 +94,7 @@ import { DeleteDeviceByIdUseCase } from './securityDevices/use-cases/deleteDevic
     CreateUserUseCase,
     DeleteUserUseCase,
     TransformUser,
+    TransformDevice,
   ],
   exports: [],
 })

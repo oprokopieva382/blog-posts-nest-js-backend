@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { UserDocument } from 'src/features/auth-users/user/schemas/User.schema';
 
-export class UserViewModel {
+export class MeViewModel {
   @IsNotEmpty()
   @IsString()
   userId: string;
@@ -15,7 +15,7 @@ export class UserViewModel {
   email: string;
 }
 
-export const transformToViewUser = (user: UserDocument): UserViewModel => {
+export const transformToViewUser = (user: UserDocument): MeViewModel => {
   return {
     email: user.email,
     login: user.login,
