@@ -16,6 +16,7 @@ import {
   PostReaction,
   PostReactionSchema,
 } from '../blogs/post/schemas/PostReaction.schema';
+import { Session, SessionSchema } from '../auth-users/auth/schemas/Session.schema';
 
 @Module({
   imports: [
@@ -43,6 +44,10 @@ import {
       {
         name: PostReaction.name,
         schema: PostReactionSchema,
+      },
+      {
+        name: Session.name,
+        schema: SessionSchema,
       },
     ]),
   ],
