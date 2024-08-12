@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/NestJS-v10.0.0-E0234E?style=flat&logo=nestjs&logoColor=white&labelColor=E0234E&color=white" alt="NestJS" width="150" />
 </a>
 <a href="https://nodejs.org/" target="_blank">
-  <img src="https://img.shields.io/badge/Node.js-v18.16.0-green?style=flat&logo=node.js&logoColor=white&labelColor=339933&color=white" alt="Node.js" width="150" />
+  <img src="https://img.shields.io/badge/Node.js-v18.16.0-green?style=flat&logo=node.js&logoColor=white&labelColor=8FC708&color=white" alt="Node.js" width="150" />
 </a>
 <a href="https://www.javascript.com/" target="_blank">
   <img src="https://img.shields.io/badge/JavaScript-ES2024-yellow?style=flat&logo=javascript&logoColor=white&labelColor=F7DF1E&color=white" alt="JavaScript" width="150" />
@@ -14,19 +14,19 @@
   <img src="https://img.shields.io/badge/TypeScript-v5.1.3-blue?style=flat&logo=typescript&logoColor=white&labelColor=007ACC&color=white" alt="TypeScript" width="150" />
 </a>
 <a href="https://www.mongodb.com/cloud/atlas" target="_blank">
-  <img src="https://img.shields.io/badge/MongoDB-v8.5.0-green?style=flat&logo=mongodb&logoColor=white&labelColor=47A248&color=white" alt="MongoDB Atlas" width="150" />
+  <img src="https://img.shields.io/badge/MongoDB-v8.5.0-green?style=flat&logo=mongodb&logoColor=white&labelColor=086D50&color=white" alt="MongoDB Atlas" width="150" />
 </a>
 <a href="https://mongoosejs.com/" target="_blank">
-  <img src="https://img.shields.io/badge/Mongoose-v8.5.0-lightblue?style=flat&logo=mongoose&logoColor=white&labelColor=000000&color=white" alt="Mongoose" width="150" />
+  <img src="https://img.shields.io/badge/Mongoose-v8.5.0-lightblue?style=flat&logo=mongoose&logoColor=white&labelColor=A03333&color=white" alt="Mongoose" width="150" />
 </a>
 <a href="https://jwt.io/" target="_blank">
-  <img src="https://img.shields.io/badge/JWT-v10.2.0-yellowgreen?style=flat&logo=json-web-tokens&logoColor=white&labelColor=000000&color=white" alt="JWT" width="150" />
+  <img src="https://img.shields.io/badge/JWT-v10.2.0-yellowgreen?style=flat&logo=json-web-tokens&logoColor=white&labelColor=D63AFF&color=white" alt="JWT" width="150" />
 </a>
 <a href="https://nodemailer.com/" target="_blank">
-  <img src="https://img.shields.io/badge/Nodemailer-v6.9.14-blueviolet?style=flat&logo=nodemailer&logoColor=white&labelColor=4B5B5F&color=white" alt="Nodemailer" width="150" />
+  <img src="https://img.shields.io/badge/Nodemailer-v6.9.14-blueviolet?style=flat&logo=nodemailer&logoColor=white&labelColor=30AEE3&color=white" alt="Nodemailer" width="150" />
 </a>
 <a href="https://www.npmjs.com/package/cookie-parser" target="_blank">
-  <img src="https://img.shields.io/badge/Cookie--parser-v1.4.6-orange?style=flat&logo=npm&logoColor=white&labelColor=F7DF1E&color=white" alt="Cookie-parser" width="150" />
+  <img src="https://img.shields.io/badge/Cookie--parser-v1.4.6-orange?style=flat&logo=npm&logoColor=white&labelColor=D29D68&color=white" alt="Cookie-parser" width="150" />
 </a>
 
 ## Description
