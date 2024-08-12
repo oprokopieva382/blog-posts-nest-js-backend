@@ -10,6 +10,8 @@ import {
 import { CommandBus } from '@nestjs/cqrs';
 import { IsAuthRefreshTokenGuard } from '../auth/guards/is-auth-refresh-token.guard';
 import { DeviceQueryRepository } from './device.query.repository';
+import { DeleteDevicesCommand } from './use-cases/deleteDevices-use-case';
+import { DeleteDeviceByIdCommand } from './use-cases/deleteDeviceById-use-case';
 
 @Controller('devices')
 @UseGuards(IsAuthRefreshTokenGuard)
@@ -26,19 +28,17 @@ export class DeviceController {
 
   @Delete('devices')
   @HttpCode(204)
-  async deleteDevices(@Param('id') id: string) {
-    // const result = await this.commandBus.execute(new DeleteUserCommand(id));
-    // if (!result) {
-    //   throw new NotFoundException();
-    // }
+  async deleteDevices(@Request() req) {
+    await this.commandBus.execute(
+      new DeleteDevicesCommand(req.userId, req.deviceId),
+    );
   }
 
   @Delete(':deviceId')
   @HttpCode(204)
-  async deleteDeviceById(@Param('id') id: string) {
-    // const result = await this.commandBus.execute(new DeleteUserCommand(id));
-    // if (!result) {
-    //   throw new NotFoundException();
-    // }
+  async deleteDeviceById(@Param('id') id: string, @Request() req) {
+    await this.commandBus.execute(
+      new DeleteDeviceByIdCommand(req.userId, id),
+    );
   }
 }
