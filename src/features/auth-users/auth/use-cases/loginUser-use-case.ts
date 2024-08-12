@@ -6,6 +6,7 @@ import {
 } from './createSession-use-case';
 import { TokenService } from 'src/base/application/jwt.service';
 import { AppSettings } from 'src/settings/app-settings';
+import { ConfigService } from '@nestjs/config';
 
 export class LoginUserCommand {
   constructor(
@@ -17,16 +18,28 @@ export class LoginUserCommand {
 
 @CommandHandler(LoginUserCommand)
 export class LoginUserUseCase implements ICommandHandler<LoginUserCommand> {
+  private readonly accessTokenSecret: string;
+  private readonly refreshTokenSecret: string;
   constructor(
     private readonly tokenService: TokenService,
     private readonly createSessionUseCase: CreateSessionUseCase,
-    private readonly appSettings: AppSettings,
-  ) {}
-  
+    private readonly configService: ConfigService,
+    //private readonly appSettings: AppSettings,
+  ) {
+     this.accessTokenSecret = this.configService.get<string>(
+       'JWT_ACCESS_TOKEN_SECRET',
+     );
+     this.refreshTokenSecret = this.configService.get<string>(
+       'JWT_REFRESH_TOKEN_SECRET',
+     );
+  }
+
   async execute(command: LoginUserCommand) {
     //get token secrets value
-    const accessTokenSecret = this.appSettings.api.JWT_ACCESS_TOKEN_SECRET;
-    const refreshTokenSecret = this.appSettings.api.JWT_REFRESH_TOKEN_SECRET;
+    // const accessTokenSecret = this.appSettings.api.JWT_ACCESS_TOKEN_SECRET ?? "";
+    // const refreshTokenSecret = this.appSettings.api.JWT_REFRESH_TOKEN_SECRET ?? "";
+    // console.log('accessTokenSecret', accessTokenSecret);
+    // console.log('refreshTokenSecret', refreshTokenSecret);
 
     //gen values for session
     const deviceId = randomUUID();
@@ -34,28 +47,29 @@ export class LoginUserUseCase implements ICommandHandler<LoginUserCommand> {
     const deviceName = command.headers['user-agent'] || 'Unknown Device';
 
     //set tokens payload
-    const payloadAT = { login: command.user.login, sub: command.user._id };
+    const payloadAT = { sub: command.user._id };
     const payloadRT = {
-      login: command.user.login,
       sub: command.user._id,
       deviceId,
     };
 
     const accessToken = this.tokenService.generateToken(
       payloadAT,
-      accessTokenSecret,
-      '5m',
+      this.accessTokenSecret,
+      //'10m',
+      '10s',
     );
 
     const refreshToken = this.tokenService.generateToken(
       payloadRT,
-      refreshTokenSecret,
-      '20m',
+      this.refreshTokenSecret,
+      //'20m',
+      '20s',
     );
 
     const { iat, exp } = await this.tokenService.verifyToken(
       refreshToken,
-      refreshTokenSecret,
+      this.refreshTokenSecret,
     );
 
     await this.createSessionUseCase.execute(

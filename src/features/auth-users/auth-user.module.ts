@@ -8,7 +8,7 @@ import {
   PasswordRecoveryCode,
   PasswordRecoveryCodeSchema,
 } from './auth/schemas/PasswordRecoveryCode.schema';
-import { appSettings } from 'src/settings/app-settings';
+import { AppSettings, appSettings } from 'src/settings/app-settings';
 import { User, UserSchema } from './user/schemas/User.schema';
 import { UserController } from './user/user.controller';
 import { AuthController } from './auth/auth.controller';
@@ -28,9 +28,12 @@ import { PasswordRecoveryUseCase } from './auth/use-cases/passwordRecovery-use-c
 import { CreateUserUseCase } from './user/use-cases/createUser-use.case';
 import { DeleteUserUseCase } from './user/use-cases/deleteUser-use.case';
 import { TransformUser } from './user/DTOs/output/TransformUser';
-import { AdminAuthGuard } from './auth/guards/admin-auth.guard';
 import { Session, SessionSchema } from './auth/schemas/Session.schema';
-import { CreateSessionCommand } from './auth/use-cases/createSession-use-case';
+import {  CreateSessionUseCase } from './auth/use-cases/createSession-use-case';
+import { TokenService } from 'src/base/application/jwt.service';
+import { SetNewTokensUseCase } from './auth/use-cases/setNewTokens-use-case';
+import { UpdateSessionUseCase } from './auth/use-cases/updateSession-use-case';
+import { DeleteSessionUseCase } from './auth/use-cases/deleteSession-use-case';
 
 @Module({
   imports: [
@@ -59,6 +62,7 @@ import { CreateSessionCommand } from './auth/use-cases/createSession-use-case';
   ],
   controllers: [AuthController, UserController],
   providers: [
+    AppSettings,
     AuthService,
     UserService,
     AuthRepository,
@@ -67,16 +71,19 @@ import { CreateSessionCommand } from './auth/use-cases/createSession-use-case';
     LocalStrategy,
     JwtStrategy,
     EmailService,
+    TokenService,
     SetNewPasswordUseCase,
     LoginUserUseCase,
     RegisterUserUseCase,
     ConfirmationRegistrationUserUseCase,
     RegistrationEmailResendingUseCase,
     PasswordRecoveryUseCase,
-    CreateSessionCommand,
+    CreateSessionUseCase,
+    UpdateSessionUseCase,
+    DeleteSessionUseCase,
+    SetNewTokensUseCase,
     CreateUserUseCase,
     DeleteUserUseCase,
-    AdminAuthGuard,
     TransformUser,
   ],
   exports: [],

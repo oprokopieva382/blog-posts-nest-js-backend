@@ -24,9 +24,12 @@ import { ConfirmationRegistrationUserCommand } from './use-cases/confirmationReg
 import { RegistrationEmailResendingCommand } from './use-cases/registrationEmailResending-use-case';
 import { PasswordRecoveryCommand } from './use-cases/passwordRecovery-use-case';
 import { UserQueryRepository } from '../user/user.query.repository';
-import {TransformUser} from '../user/DTOs/output/TransformUser'
+import { TransformUser } from '../user/DTOs/output/TransformUser';
 import { UserInputModel } from '../user/DTOs/input/UserInputModel.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { IsAuthRefreshTokenGuard } from './guards/is-auth-refresh-token.guard';
+import { SetNewTokensCommand } from './use-cases/setNewTokens-use-case';
+import { DeleteSessionCommand } from './use-cases/deleteSession-use-case';
 
 @Controller('auth')
 export class AuthController {
@@ -90,7 +93,6 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @HttpCode(200)
   async loginUser(
-    //@Body() dto: LoginInputModel,
     @Request() req,
     @Res({ passthrough: true }) response: Response,
   ) {
@@ -106,23 +108,29 @@ export class AuthController {
     return { accessToken };
   }
 
-//   @Post('refresh-token')
-//   @UseGuards(LocalAuthGuard)
-//   @HttpCode(200)
-//   async refreshToken(
-//     //@Body() dto: LoginInputModel,
-//     @Request() req,
-//     @Res({ passthrough: true }) response: Response,
-//   ) {
-//     //console.log('Req.user in login', req.user);
-//     const { accessToken, refreshToken } = await this.commandBus.execute(
-//       new LoginUserCommand(req.user, req.ip, req.headers),
-//     );
+  @Post('refresh-token')
+  @UseGuards(IsAuthRefreshTokenGuard)
+  @HttpCode(200)
+  async refreshToken(
+    @Request() req,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const { accessToken, refreshToken } = await this.commandBus.execute(
+      new SetNewTokensCommand(req.userId, req.deviceId),
+    );
 
-//     response.cookie('refreshToken', refreshToken, {
-//       httpOnly: true,
-//       secure: true,
-//     });
-//     return { accessToken };
-//   }
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+
+    return { accessToken };
+  }
+
+  @Post('logout')
+  @UseGuards(IsAuthRefreshTokenGuard)
+  @HttpCode(204)
+  async logout(@Request() req) {
+    await this.commandBus.execute(new DeleteSessionCommand(req.deviceId));
+  }
 }

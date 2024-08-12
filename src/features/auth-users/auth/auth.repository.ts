@@ -13,7 +13,8 @@ import { Session, SessionDocument } from './schemas/Session.schema';
 export class AuthRepository {
   constructor(
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
-    @InjectModel(Session.name) private readonly SessionModel: Model<SessionDocument>,
+    @InjectModel(Session.name)
+    private readonly SessionModel: Model<SessionDocument>,
     @InjectModel(PasswordRecoveryCode.name)
     private readonly PasswordRecoveryCodeModel: Model<PasswordRecoveryCodeDocument>,
   ) {}
@@ -80,7 +81,33 @@ export class AuthRepository {
     );
   }
 
+  async getSessionByDeviceId(deviceId: string) {
+    return await this.SessionModel.findOne({ deviceId });
+  }
+
   async createSession(newSession: any) {
     return await this.SessionModel.create(newSession);
+  }
+
+  async deleteSession(deviceId: string) {
+    return await this.SessionModel.findOneAndDelete({
+      deviceId,
+    });
+  }
+
+  async updateSession({
+    iat,
+    exp,
+    deviceId,
+  }: {
+    iat: string;
+    exp: string;
+    deviceId: string;
+  }) {
+    return await this.SessionModel.findOneAndUpdate(
+      { deviceId },
+      { $set: { iat, exp } },
+      { new: true },
+    );
   }
 }
