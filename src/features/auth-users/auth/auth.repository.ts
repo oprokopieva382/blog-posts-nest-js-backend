@@ -89,6 +89,12 @@ export class AuthRepository {
     return await this.SessionModel.create(newSession);
   }
 
+  async deleteSession(deviceId: string) {
+    return await this.SessionModel.findOneAndDelete({
+      deviceId,
+    });
+  }
+
   async updateSession({
     iat,
     exp,

@@ -33,6 +33,7 @@ import {  CreateSessionUseCase } from './auth/use-cases/createSession-use-case';
 import { TokenService } from 'src/base/application/jwt.service';
 import { SetNewTokensUseCase } from './auth/use-cases/setNewTokens-use-case';
 import { UpdateSessionUseCase } from './auth/use-cases/updateSession-use-case';
+import { DeleteSessionUseCase } from './auth/use-cases/deleteSession-use-case';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { UpdateSessionUseCase } from './auth/use-cases/updateSession-use-case';
     PasswordRecoveryUseCase,
     CreateSessionUseCase,
     UpdateSessionUseCase,
+    DeleteSessionUseCase,
     SetNewTokensUseCase,
     CreateUserUseCase,
     DeleteUserUseCase,
