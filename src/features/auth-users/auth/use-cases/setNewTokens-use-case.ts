@@ -39,15 +39,15 @@ export class SetNewTokensUseCase
     const accessToken = this.tokenService.generateToken(
       payloadAT,
       this.accessTokenSecret,
-      '10m',
-      //'10s',
+      //'10m',
+      '10s',
     );
 
     const refreshToken = this.tokenService.generateToken(
       payloadRT,
       this.refreshTokenSecret,
-      '20m',
-      //'20s',
+      //'20m',
+      '20s',
     );
 
     await this.updateSessionUseCase.execute(
