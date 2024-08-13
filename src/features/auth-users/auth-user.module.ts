@@ -35,6 +35,11 @@ import { SetNewTokensUseCase } from './auth/use-cases/setNewTokens-use-case';
 import { UpdateSessionUseCase } from './auth/use-cases/updateSession-use-case';
 import { DeleteSessionUseCase } from './auth/use-cases/deleteSession-use-case';
 import { DeviceQueryRepository } from './securityDevices/device.query.repository';
+import { DeleteDevicesUseCase } from './securityDevices/use-cases/deleteDevices-use-case';
+import { DeleteDeviceByIdUseCase } from './securityDevices/use-cases/deleteDeviceById-use-case';
+import { TransformDevice } from './securityDevices/DTOs/output/TransformDevice';
+import { DeviceRepository } from './securityDevices/device.repository';
+import { DeviceController } from './securityDevices/device.controller';
 
 @Module({
   imports: [
@@ -61,13 +66,14 @@ import { DeviceQueryRepository } from './securityDevices/device.query.repository
       }),
     }),
   ],
-  controllers: [AuthController, UserController],
+  controllers: [AuthController, UserController, DeviceController],
   providers: [
     AppSettings,
     AuthService,
     UserService,
     AuthRepository,
     UserRepository,
+    DeviceRepository,
     UserQueryRepository,
     DeviceQueryRepository,
     LocalStrategy,
@@ -84,9 +90,12 @@ import { DeviceQueryRepository } from './securityDevices/device.query.repository
     UpdateSessionUseCase,
     DeleteSessionUseCase,
     SetNewTokensUseCase,
+    DeleteDevicesUseCase,
+    DeleteDeviceByIdUseCase,
     CreateUserUseCase,
     DeleteUserUseCase,
     TransformUser,
+    TransformDevice,
   ],
   exports: [],
 })
