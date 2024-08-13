@@ -28,17 +28,13 @@ export class DeleteDeviceByIdUseCase
       command.deviceId,
     );
     if (!dbSession) {
-      throw new UnauthorizedException();
+      throw new NotFoundException();
     }
 
     if (command.userId !== dbSession.userId) {
       throw new ForbiddenException();
     }
 
-    const result = await this.deviceRepository.removeDevice(command.deviceId);
-
-    if (!result) {
-      throw new NotFoundException();
-    }
+    await this.deviceRepository.removeDevice(command.deviceId);
   }
 }

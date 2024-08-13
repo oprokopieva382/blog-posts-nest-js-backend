@@ -13,7 +13,7 @@ import { DeviceQueryRepository } from './device.query.repository';
 import { DeleteDevicesCommand } from './use-cases/deleteDevices-use-case';
 import { DeleteDeviceByIdCommand } from './use-cases/deleteDeviceById-use-case';
 
-@Controller('devices')
+@Controller('security/devices')
 @UseGuards(IsAuthRefreshTokenGuard)
 export class DeviceController {
   constructor(

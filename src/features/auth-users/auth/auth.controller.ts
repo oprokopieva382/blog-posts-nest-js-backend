@@ -91,6 +91,7 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(LocalAuthGuard)
+  @UseGuards(ThrottlerGuard)
   @HttpCode(200)
   async loginUser(
     @Request() req,
