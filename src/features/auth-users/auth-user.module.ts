@@ -39,6 +39,7 @@ import { DeleteDevicesUseCase } from './securityDevices/use-cases/deleteDevices-
 import { DeleteDeviceByIdUseCase } from './securityDevices/use-cases/deleteDeviceById-use-case';
 import { TransformDevice } from './securityDevices/DTOs/output/TransformDevice';
 import { DeviceRepository } from './securityDevices/device.repository';
+import { DeviceController } from './securityDevices/device.controller';
 
 @Module({
   imports: [
@@ -65,7 +66,7 @@ import { DeviceRepository } from './securityDevices/device.repository';
       }),
     }),
   ],
-  controllers: [AuthController, UserController],
+  controllers: [AuthController, UserController, DeviceController],
   providers: [
     AppSettings,
     AuthService,

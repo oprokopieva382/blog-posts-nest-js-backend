@@ -1,12 +1,16 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeviceRepository } from '../device.repository';
 import { AuthRepository } from '../../auth/auth.repository';
-import { ForbiddenException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 export class DeleteDeviceByIdCommand {
   constructor(
     public userId: string,
-    public id: string,
+    public deviceId: string,
   ) {}
 }
 
@@ -21,7 +25,7 @@ export class DeleteDeviceByIdUseCase
 
   async execute(command: DeleteDeviceByIdCommand) {
     const dbSession = await this.authRepository.getSessionByDeviceId(
-      command.id,
+      command.deviceId,
     );
     if (!dbSession) {
       throw new UnauthorizedException();
@@ -31,7 +35,7 @@ export class DeleteDeviceByIdUseCase
       throw new ForbiddenException();
     }
 
-    const result = await this.deviceRepository.removeDevice(command.id);
+    const result = await this.deviceRepository.removeDevice(command.deviceId);
 
     if (!result) {
       throw new NotFoundException();

@@ -26,7 +26,7 @@ export class DeviceController {
     return await this.deviceQueryRepository.getDevices(req.userId);
   }
 
-  @Delete('devices')
+  @Delete('')
   @HttpCode(204)
   async deleteDevices(@Request() req) {
     await this.commandBus.execute(
@@ -36,9 +36,9 @@ export class DeviceController {
 
   @Delete(':deviceId')
   @HttpCode(204)
-  async deleteDeviceById(@Param('id') id: string, @Request() req) {
+  async deleteDeviceById(@Param('deviceId') deviceId: string, @Request() req) {
     await this.commandBus.execute(
-      new DeleteDeviceByIdCommand(req.userId, id),
+      new DeleteDeviceByIdCommand(req.userId, deviceId),
     );
   }
 }
