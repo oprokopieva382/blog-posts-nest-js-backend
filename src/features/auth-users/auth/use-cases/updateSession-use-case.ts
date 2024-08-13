@@ -2,8 +2,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { AuthRepository } from '../auth.repository';
 import { fromUnixTime } from 'date-fns/fromUnixTime';
 import { TokenService } from 'src/base/application/jwt.service';
-import { ConfigService } from '@nestjs/config';
-import { UnauthorizedException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
+import { AppSettings } from 'src/settings/app-settings';
 
 type SessionDataType = {
   refreshToken: string;
@@ -17,21 +17,20 @@ export class UpdateSessionCommand {
 export class UpdateSessionUseCase
   implements ICommandHandler<UpdateSessionCommand>
 {
-  private readonly refreshTokenSecret: string;
   constructor(
     private readonly authRepository: AuthRepository,
     private readonly tokenService: TokenService,
-    private readonly configService: ConfigService,
-  ) {
-    this.refreshTokenSecret = this.configService.get<string>(
-      'JWT_REFRESH_TOKEN_SECRET',
-    );
-  }
+    @Inject(AppSettings.name)
+    private readonly appSettings: AppSettings,
+  ) {}
 
   async execute(command: UpdateSessionCommand) {
+    const refreshTokenSecret =
+      this.appSettings.api.JWT_REFRESH_TOKEN_SECRET ?? '';
+
     const { iat, exp, deviceId } = await this.tokenService.verifyToken(
       command.sessionData.refreshToken,
-      this.refreshTokenSecret,
+      refreshTokenSecret,
     );
 
     const tokenIat = fromUnixTime(+iat!);
@@ -43,6 +42,6 @@ export class UpdateSessionUseCase
         exp: fromUnixTime(+exp!).toISOString(),
         deviceId: deviceId,
       });
-    } 
+    }
   }
 }

@@ -5,10 +5,12 @@ import { BlogModule } from './features/blogs/blog.module';
 import { TestingModule } from './features/testing/testing.module';
 import { AuthUserModule } from './features/auth-users/auth-user.module';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { appSettings, AppSettings } from './settings/app-settings';
+import { appSettings} from './settings/app-settings';
+import { MainConfigModule } from './settings/config.module';
 
 @Module({
   imports: [
+    MainConfigModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -35,11 +37,5 @@ import { appSettings, AppSettings } from './settings/app-settings';
     ]),
   ],
   controllers: [],
-  providers: [
-    {
-      provide: AppSettings,
-      useValue: appSettings,
-    },
-  ],
 })
 export class AppModule {}

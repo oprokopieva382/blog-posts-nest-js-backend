@@ -68,7 +68,6 @@ import { DeviceController } from './securityDevices/device.controller';
   ],
   controllers: [AuthController, UserController, DeviceController],
   providers: [
-    AppSettings,
     AuthService,
     UserService,
     AuthRepository,
