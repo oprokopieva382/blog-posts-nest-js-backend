@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, Matches, MaxLength } from 'class-validator';
-import { Trim } from 'src/base/decorators/trim';
+import { Trim } from '../../../../../base/decorators/trim';
 
 export class BlogInputModel {
   @IsNotEmpty()

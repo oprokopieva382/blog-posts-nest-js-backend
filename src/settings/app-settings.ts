@@ -46,10 +46,9 @@ class APISettings {
   public readonly PORT: number;
   public readonly ADMIN_AUTH: string;
   public readonly MONGO_DB_ATLAS: string;
-  public readonly MONGO_CONNECTION_URI_FOR_TESTS: string;
   public readonly DB_NAME: string;
   public readonly DB_NAME_TEST: string;
-  public readonly JWT_ACCESS_TOKEN_SECRET: string ;
+  public readonly JWT_ACCESS_TOKEN_SECRET: string;
   public readonly JWT_REFRESH_TOKEN_SECRET: string;
   public readonly REGISTRATION_EMAIL: string;
   public readonly REGISTRATION_PASS: string;

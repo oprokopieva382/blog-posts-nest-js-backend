@@ -1,7 +1,11 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TokenService } from 'src/base/application/jwt.service';
-import { ConfigService } from '@nestjs/config';
-import { UpdateSessionCommand, UpdateSessionUseCase } from './updateSession-use-case';
+import {
+  UpdateSessionCommand,
+  UpdateSessionUseCase,
+} from './updateSession-use-case';
+import { AppSettings } from 'src/settings/app-settings';
+import { Inject } from '@nestjs/common';
 
 export class SetNewTokensCommand {
   constructor(
@@ -14,22 +18,20 @@ export class SetNewTokensCommand {
 export class SetNewTokensUseCase
   implements ICommandHandler<SetNewTokensCommand>
 {
-  private readonly accessTokenSecret: string;
-  private readonly refreshTokenSecret: string;
   constructor(
     private readonly tokenService: TokenService,
-    private readonly configService: ConfigService,
     private readonly updateSessionUseCase: UpdateSessionUseCase,
-  ) {
-    this.accessTokenSecret = this.configService.get<string>(
-      'JWT_ACCESS_TOKEN_SECRET',
-    );
-    this.refreshTokenSecret = this.configService.get<string>(
-      'JWT_REFRESH_TOKEN_SECRET',
-    );
-  }
+    @Inject(AppSettings.name)
+    private readonly appSettings: AppSettings,
+  ) {}
 
   async execute(command: SetNewTokensCommand) {
+    //get token secrets value
+    const accessTokenSecret =
+      this.appSettings.api.JWT_ACCESS_TOKEN_SECRET ?? '';
+    const refreshTokenSecret =
+      this.appSettings.api.JWT_REFRESH_TOKEN_SECRET ?? '';
+
     const payloadAT = { sub: command.userId };
     const payloadRT = {
       sub: command.userId,
@@ -38,14 +40,14 @@ export class SetNewTokensUseCase
 
     const accessToken = this.tokenService.generateToken(
       payloadAT,
-      this.accessTokenSecret,
+      accessTokenSecret,
       //'10m',
       '10s',
     );
 
     const refreshToken = this.tokenService.generateToken(
       payloadRT,
-      this.refreshTokenSecret,
+      refreshTokenSecret,
       //'20m',
       '20s',
     );
