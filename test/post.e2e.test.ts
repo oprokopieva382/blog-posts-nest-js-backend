@@ -207,7 +207,129 @@ describe('user tests', () => {
     });
   });
 
-  describe('3. (PUT) - UPDATE POST BY ID', () => {
+  describe('3. (GET) - GET COMMENT OF POST', () => {
+    it("1. Shouldn't find comment for proper post if postId is not exist & return status code 404", async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //incorrect postId
+      const wrongPostId = '6634e807bcf8ea51a3d4da61';
+
+      await request(app.getHttpServer())
+        .get(`/posts/${wrongPostId}/comments?pageNumber=1&pageSize=5`)
+        .expect(404);
+    });
+
+    it('2. Should find comment for proper post if postId exist, return status code 200 & object with pagination', async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create comment
+      const comment = {
+        content: 'Can you, please, explain how it works?',
+      };
+
+      await request(app.getHttpServer())
+        .post(`/posts/${post.body.id}/comments`)
+        .send(comment)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(201);
+
+      await request(app.getHttpServer())
+        .get(`/posts/${post.body.id}/comments?pageNumber=1&pageSize=5`)
+        .expect(200);
+    });
+  });
+
+  describe('4. (PUT) - UPDATE POST BY ID', () => {
     it('1. Should update post and return status code 204', async () => {
       //create user
       const newUser = {
@@ -438,7 +560,7 @@ describe('user tests', () => {
     });
   });
 
-  describe('4. (POST) - CREATE COMMENT FOR POST', () => {
+  describe('5. (POST) - CREATE COMMENT FOR POST', () => {
     it('1- Should create comment for proper post and with user auth & return status code 201', async () => {
       //create user
       const newUser = {
@@ -689,7 +811,7 @@ describe('user tests', () => {
         blogId: blog.body.id,
       };
 
-      const post = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/posts')
         .send(newPost)
         .auth('admin', 'qwerty')
@@ -708,6 +830,152 @@ describe('user tests', () => {
         .send(comment)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(404);
+    });
+  });
+
+  describe('6. (DELETE) - DELETE POST', () => {
+    it("1. Shouldn't delete post and return status code 401 if unauthorized", async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      await request(app.getHttpServer())
+        .delete(`/posts/${post.body.id}`)
+        .auth('admin1', 'qwerty1')
+        .expect(401);
+    });
+
+    it("2- Shouldn't delete post and return status code 404 if id is not exist", async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //incorrect postId
+      const postsId = '662bb47c5ea70648a79f7c10';
+
+      await request(app.getHttpServer())
+        .delete(`/posts/${postsId}`)
+        .auth('admin', 'qwerty')
+        .expect(404);
+    });
+
+    it('3- Should delete post and return status code 204', async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      await request(app.getHttpServer())
+        .delete(`/posts/${post.body.id}`)
+        .auth('admin', 'qwerty')
+        .expect(204);
     });
   });
 });
