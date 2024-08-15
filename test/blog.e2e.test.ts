@@ -4,7 +4,7 @@ import { applyAppSettings } from '../src/settings/apply-app-settings';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 
-describe('user tests', () => {
+describe('blogs tests', () => {
   let app: INestApplication;
 
   beforeAll(async () => {

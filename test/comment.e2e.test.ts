@@ -4,7 +4,7 @@ import { applyAppSettings } from '../src/settings/apply-app-settings';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 
-describe('posts tests', () => {
+describe('comments tests', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -26,238 +26,8 @@ describe('posts tests', () => {
     await request(app.getHttpServer()).delete('/testing/all-data').expect(204);
   });
 
-  describe('1. (POST) - CREATE POST', () => {
-    it('1. Should create post and return  status code of 201', async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create blog
-      const newBlog = {
-        name: 'Promise',
-        description: 'do you know promise?',
-        websiteUrl: 'https://google.com',
-      };
-
-      const blog = await request(app.getHttpServer())
-        .post('/blogs')
-        .send(newBlog)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create post
-      const newPost = {
-        title: 'Refactor',
-        shortDescription: 'Learn more about refactor in ' + new Date(),
-        content: 'whole content about refactor',
-        blogId: blog.body.id,
-      };
-
-      await request(app.getHttpServer())
-        .post('/posts')
-        .send(newPost)
-        .auth('admin', 'qwerty')
-        .expect(201);
-    });
-
-    it("2. Shouldn't create post and return  status code of 400", async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create blog
-      const newBlog = {
-        name: 'Promise',
-        description: 'do you know promise?',
-        websiteUrl: 'https://google.com',
-      };
-
-      const blog = await request(app.getHttpServer())
-        .post('/blogs')
-        .send(newBlog)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create post
-      const newPost = {
-        title: '',
-        shortDescription: '',
-        content: 'whole content about refactor',
-        blogId: blog.body.id,
-      };
-
-      const res = await request(app.getHttpServer())
-        .post('/posts')
-        .send(newPost)
-        .auth('admin', 'qwerty')
-        .expect(400);
-
-      expect(res.body.errorsMessages.length).toBe(2);
-    });
-
-    it("3. Shouldn't create blog if unauthorized and return  status code of 401", async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create blog
-      const newBlog = {
-        name: 'Promise',
-        description: 'do you know promise?',
-        websiteUrl: 'https://google.com',
-      };
-
-      const blog = await request(app.getHttpServer())
-        .post('/blogs')
-        .send(newBlog)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create post
-      const newPost = {
-        title: 'Refactor',
-        shortDescription: 'Learn more about refactor in ' + new Date(),
-        content: 'whole content about refactor',
-        blogId: blog.body.id,
-      };
-
-      await request(app.getHttpServer())
-        .post('/posts')
-        .send(newPost)
-        .auth('admin1', 'qwerty1')
-        .expect(401);
-    });
-  });
-  describe('2. (GET) - GET POSTS', () => {
-    it('1. Should get posts and return status code 200 and object with pagination', async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create blog
-      const newBlog = {
-        name: 'Promise',
-        description: 'do you know promise?',
-        websiteUrl: 'https://google.com',
-      };
-
-      const blog = await request(app.getHttpServer())
-        .post('/blogs')
-        .send(newBlog)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create post
-      const newPost = {
-        title: 'Refactor',
-        shortDescription: 'Learn more about refactor in ' + new Date(),
-        content: 'whole content about refactor',
-        blogId: blog.body.id,
-      };
-
-      await request(app.getHttpServer())
-        .post('/posts')
-        .send(newPost)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //get posts
-      const res = await request(app.getHttpServer())
-        .get(`/posts?pageNumber=1&pageSize=5`)
-        .expect(200);
-
-      expect(res.body.page).toBe(1);
-      expect(res.body.pageSize).toBe(5);
-    });
-  });
-
-  describe('3. (GET) - GET COMMENT OF POST', () => {
-    it("1. Shouldn't find comment for proper post if postId is not exist & return status code 404", async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create blog
-      const newBlog = {
-        name: 'Promise',
-        description: 'do you know promise?',
-        websiteUrl: 'https://google.com',
-      };
-
-      const blog = await request(app.getHttpServer())
-        .post('/blogs')
-        .send(newBlog)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create post
-      const newPost = {
-        title: 'Refactor',
-        shortDescription: 'Learn more about refactor in ' + new Date(),
-        content: 'whole content about refactor',
-        blogId: blog.body.id,
-      };
-
-      await request(app.getHttpServer())
-        .post('/posts')
-        .send(newPost)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //incorrect postId
-      const wrongPostId = '6634e807bcf8ea51a3d4da61';
-
-      await request(app.getHttpServer())
-        .get(`/posts/${wrongPostId}/comments?pageNumber=1&pageSize=5`)
-        .expect(404);
-    });
-
-    it('2. Should find comment for proper post if postId exist, return status code 200 & object with pagination', async () => {
+  describe('1. (GET) - GET COMMENT BY ID', () => {
+    it('1. Should get comment by id & return status code 200', async () => {
       //create user
       const newUser = {
         login: 'Tina',
@@ -313,24 +83,22 @@ describe('posts tests', () => {
         .expect(201);
 
       //create comment
-      const comment = {
+      const newComment = {
         content: 'Can you, please, explain how it works?',
       };
 
-      await request(app.getHttpServer())
+      const comment = await request(app.getHttpServer())
         .post(`/posts/${post.body.id}/comments`)
-        .send(comment)
+        .send(newComment)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(201);
 
       await request(app.getHttpServer())
-        .get(`/posts/${post.body.id}/comments?pageNumber=1&pageSize=5`)
+        .get(`/comments/${comment.body.id}`)
         .expect(200);
     });
-  });
 
-  describe('4. (PUT) - UPDATE POST BY ID', () => {
-    it('1. Should update post and return status code 204', async () => {
+    it("2. Shouldn't get comment by id & return status code 200", async () => {
       //create user
       const newUser = {
         login: 'Tina',
@@ -365,203 +133,100 @@ describe('posts tests', () => {
         blogId: blog.body.id,
       };
 
+      await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //incorrect commentId
+      const commentId = '55350138933a2fd38939a3e4';
+
+      await request(app.getHttpServer())
+        .get(`/comments/${commentId}`)
+        .expect(404);
+    });
+  });
+
+  describe('2. (PUT) - UPDATE COMMENT BY ID', () => {
+    it('1. Should update comment by id if user auth & return status code 204', async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
       const post = await request(app.getHttpServer())
         .post('/posts')
         .send(newPost)
         .auth('admin', 'qwerty')
         .expect(201);
 
-      //post to update
-      const postToUpdate = {
-        title: 'Nest.js',
-        shortDescription: 'Learn more about Nest.js in ' + new Date(),
-        content: 'whole content about Nest.js',
-        blogId: blog.body.id,
+      //create comment
+      const newComment = {
+        content: 'Can you, please, explain how it works?',
+      };
+
+      const comment = await request(app.getHttpServer())
+        .post(`/posts/${post.body.id}/comments`)
+        .send(newComment)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(201);
+
+      const commentToUpdate = {
+        content: "Still can't understand, need more info to get how it works?",
       };
 
       await request(app.getHttpServer())
-        .put(`/posts/${post.body.id}`)
-        .send(postToUpdate)
-        .auth('admin', 'qwerty')
+        .put(`/comments/${comment.body.id}`)
+        .send(commentToUpdate)
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(204);
     });
 
-    it("2. Shouldn't update post and return status code 400 if invalid inputs", async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create blog
-      const newBlog = {
-        name: 'Promise',
-        description: 'do you know promise?',
-        websiteUrl: 'https://google.com',
-      };
-
-      const blog = await request(app.getHttpServer())
-        .post('/blogs')
-        .send(newBlog)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create post
-      const newPost = {
-        title: 'Refactor',
-        shortDescription: 'Learn more about refactor in ' + new Date(),
-        content: 'whole content about refactor',
-        blogId: blog.body.id,
-      };
-
-      const post = await request(app.getHttpServer())
-        .post('/posts')
-        .send(newPost)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //post to update
-      const postToUpdate = {
-        title: '',
-        shortDescription: '',
-        content: '',
-        blogId: blog.body.id,
-      };
-
-      const res = await request(app.getHttpServer())
-        .put(`/posts/${post.body.id}`)
-        .send(postToUpdate)
-        .auth('admin', 'qwerty')
-        .expect(400);
-
-      expect(res.body.errorsMessages.length).toBe(3);
-    });
-
-    it("3. Shouldn't update post and return status code 401 if unauthorized", async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create blog
-      const newBlog = {
-        name: 'Promise',
-        description: 'do you know promise?',
-        websiteUrl: 'https://google.com',
-      };
-
-      const blog = await request(app.getHttpServer())
-        .post('/blogs')
-        .send(newBlog)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create post
-      const newPost = {
-        title: 'Refactor',
-        shortDescription: 'Learn more about refactor in ' + new Date(),
-        content: 'whole content about refactor',
-        blogId: blog.body.id,
-      };
-
-      const post = await request(app.getHttpServer())
-        .post('/posts')
-        .send(newPost)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //post to update
-      const postToUpdate = {
-        title: 'Nest.js',
-        shortDescription: 'Learn more about Nest.js in ' + new Date(),
-        content: 'whole content about Nest.js',
-        blogId: blog.body.id,
-      };
-
-      await request(app.getHttpServer())
-        .put(`/posts/${post.body.id}`)
-        .send(postToUpdate)
-        .auth('admin1', 'qwerty1')
-        .expect(401);
-    });
-
-    it("4. Shouldn't update post and return status code 404 if ID not found", async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create blog
-      const newBlog = {
-        name: 'Promise',
-        description: 'do you know promise?',
-        websiteUrl: 'https://google.com',
-      };
-
-      const blog = await request(app.getHttpServer())
-        .post('/blogs')
-        .send(newBlog)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create post
-      const newPost = {
-        title: 'Refactor',
-        shortDescription: 'Learn more about refactor in ' + new Date(),
-        content: 'whole content about refactor',
-        blogId: blog.body.id,
-      };
-
-      await request(app.getHttpServer())
-        .post('/posts')
-        .send(newPost)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //incorrect postId
-      const postId = '662bb47c5ea70648a79f7c10';
-
-      //post to update
-      const postToUpdate = {
-        title: 'Nest.js',
-        shortDescription: 'Learn more about Nest.js in ' + new Date(),
-        content: 'whole content about Nest.js',
-        blogId: blog.body.id,
-      };
-
-      await request(app.getHttpServer())
-        .put(`/posts/${postId}`)
-        .send(postToUpdate)
-        .auth('admin', 'qwerty')
-        .expect(404);
-    });
-  });
-
-  describe('5. (POST) - CREATE COMMENT FOR POST', () => {
-    it('1- Should create comment for proper post and with user auth & return status code 201', async () => {
+    it("2. Shouldn't update comment by id if user auth and if incorrect values & return status code 400", async () => {
       //create user
       const newUser = {
         login: 'Tina',
@@ -617,85 +282,28 @@ describe('posts tests', () => {
         .expect(201);
 
       //create comment
-      const comment = {
+      const newComment = {
         content: 'Can you, please, explain how it works?',
       };
 
-      await request(app.getHttpServer())
+      const comment = await request(app.getHttpServer())
         .post(`/posts/${post.body.id}/comments`)
-        .send(comment)
+        .send(newComment)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(201);
-    });
 
-    it("2- Shouldn't create comment for proper post and with user auth if incorrect values & return status code 400", async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //login user
-      const loginInput = {
-        loginOrEmail: 'Tina',
-        password: 'tina123',
-      };
-
-      const res = await request(app.getHttpServer())
-        .post('/auth/login')
-        .send(loginInput)
-        .expect(200);
-
-      //set accessToken
-      const accessToken = res.body.accessToken;
-
-      //create blog
-      const newBlog = {
-        name: 'Promise',
-        description: 'do you know promise?',
-        websiteUrl: 'https://google.com',
-      };
-
-      const blog = await request(app.getHttpServer())
-        .post('/blogs')
-        .send(newBlog)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create post
-      const newPost = {
-        title: 'Refactor',
-        shortDescription: 'Learn more about refactor in ' + new Date(),
-        content: 'whole content about refactor',
-        blogId: blog.body.id,
-      };
-
-      const post = await request(app.getHttpServer())
-        .post('/posts')
-        .send(newPost)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //create comment
       const shortComment = {
         content: 'How it works?',
       };
 
       await request(app.getHttpServer())
-        .post(`/posts/${post.body.id}/comments`)
+        .put(`/comments/${comment.body.id}`)
         .send(shortComment)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(400);
     });
 
-    it("3- Shouldn't create comment for proper post if user unauthorized & return status code 401", async () => {
+    it("3. Shouldn't update comment by id if user unauthorized & return status code 401", async () => {
       //create user
       const newUser = {
         login: 'Tina',
@@ -751,18 +359,28 @@ describe('posts tests', () => {
         .expect(201);
 
       //create comment
-      const comment = {
+      const newComment = {
         content: 'Can you, please, explain how it works?',
       };
 
-      await request(app.getHttpServer())
+      const comment = await request(app.getHttpServer())
         .post(`/posts/${post.body.id}/comments`)
-        .send(comment)
+        .send(newComment)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(201);
+
+      const commentToUpdate = {
+        content: "Still can't understand, need more info to get how it works?",
+      };
+
+      await request(app.getHttpServer())
+        .put(`/comments/${comment.body.id}`)
+        .send(commentToUpdate)
         .set('Authorization', `Bearer ${accessToken}+1`)
         .expect(401);
     });
 
-    it("4- Shouldn't create comment for proper post if postId is not exist & return status code 404", async () => {
+    it("4. Shouldn't update comment by id if commentId is not exist & return status code 404", async () => {
       //create user
       const newUser = {
         login: 'Tina',
@@ -817,24 +435,128 @@ describe('posts tests', () => {
         .auth('admin', 'qwerty')
         .expect(201);
 
-      //incorrect postId
-      const wrongPostId = '6634e807bcf8ea51a3d4da61';
+      //incorrect comment
+      const commentId = '6634e807bcf8ea51a3d4da61';
 
-      //create comment
-      const comment = {
-        content: 'Can you, please, explain how it works?',
+      const commentToUpdate = {
+        content: "Still can't understand, need more info to get how it works?",
       };
 
       await request(app.getHttpServer())
-        .post(`/posts/${wrongPostId}/comments`)
-        .send(comment)
+        .put(`/comments/${commentId}`)
+        .send(commentToUpdate)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(404);
     });
+
+    it("5. Shouldn't update comment by id if commentId !== user.id & return status code 403", async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create comment
+      const newComment = {
+        content: 'Can you, please, explain how it works?',
+      };
+
+      const comment = await request(app.getHttpServer())
+        .post(`/posts/${post.body.id}/comments`)
+        .send(newComment)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(201);
+
+      //create user2
+      const newUser2 = {
+        login: 'Tina2',
+        password: 'tina1234',
+        email: 'Tina2@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser2)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //login user
+      const loginInput2 = {
+        loginOrEmail: 'Tina2',
+        password: 'tina1234',
+      };
+
+      const res2 = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput2)
+        .expect(200);
+
+      //set accessToken
+      const accessToken2 = res2.body.accessToken;
+
+      //update comment
+      const commentToUpdate = {
+        content: "Still can't understand, need more info to get how it works?",
+      };
+
+      await request(app.getHttpServer())
+        .put(`/comments/${comment.body.id}`)
+        .send(commentToUpdate)
+        .set('Authorization', `Bearer ${accessToken2}`)
+        .expect(403);
+    });
   });
 
-  describe('6. (DELETE) - DELETE POST', () => {
-    it("1. Shouldn't delete post and return status code 401 if unauthorized", async () => {
+  describe('3. (DELETE) - DELETE COMMENT BY ID', () => {
+    it('1. Should delete comment by id if user auth & return status code 204', async () => {
       //create user
       const newUser = {
         login: 'Tina',
@@ -847,6 +569,20 @@ describe('posts tests', () => {
         .send(newUser)
         .auth('admin', 'qwerty')
         .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
 
       //create blog
       const newBlog = {
@@ -875,13 +611,24 @@ describe('posts tests', () => {
         .auth('admin', 'qwerty')
         .expect(201);
 
+      //create comment
+      const newComment = {
+        content: 'Can you, please, explain how it works?',
+      };
+
+      const comment = await request(app.getHttpServer())
+        .post(`/posts/${post.body.id}/comments`)
+        .send(newComment)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(201);
+
       await request(app.getHttpServer())
-        .delete(`/posts/${post.body.id}`)
-        .auth('admin1', 'qwerty1')
-        .expect(401);
+        .delete(`/comments/${comment.body.id}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(204);
     });
 
-    it("2- Shouldn't delete post and return status code 404 if id is not exist", async () => {
+    it("2. Shouldn't delete comment by id if commentId is not exist & return status code 404", async () => {
       //create user
       const newUser = {
         login: 'Tina',
@@ -894,6 +641,20 @@ describe('posts tests', () => {
         .send(newUser)
         .auth('admin', 'qwerty')
         .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
 
       //create blog
       const newBlog = {
@@ -916,22 +677,22 @@ describe('posts tests', () => {
         blogId: blog.body.id,
       };
 
-      const post = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/posts')
         .send(newPost)
         .auth('admin', 'qwerty')
         .expect(201);
 
-      //incorrect postId
-      const postsId = '662bb47c5ea70648a79f7c10';
+      //incorrect commentId
+      const commentId = '6634e807bcf8ea51a3d4da61';
 
       await request(app.getHttpServer())
-        .delete(`/posts/${postsId}`)
-        .auth('admin', 'qwerty')
+        .delete(`/comments/${commentId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(404);
     });
 
-    it('3- Should delete post and return status code 204', async () => {
+    it("3. Shouldn't delete comment by id if user unauthorized & return status code 401", async () => {
       //create user
       const newUser = {
         login: 'Tina',
@@ -944,6 +705,20 @@ describe('posts tests', () => {
         .send(newUser)
         .auth('admin', 'qwerty')
         .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
 
       //create blog
       const newBlog = {
@@ -972,10 +747,327 @@ describe('posts tests', () => {
         .auth('admin', 'qwerty')
         .expect(201);
 
+      //create comment
+      const newComment = {
+        content: 'Can you, please, explain how it works?',
+      };
+
+      const comment = await request(app.getHttpServer())
+        .post(`/posts/${post.body.id}/comments`)
+        .send(newComment)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(201);
+
       await request(app.getHttpServer())
-        .delete(`/posts/${post.body.id}`)
+        .delete(`/comments/${comment.body.id}`)
+        .set('Authorization', `Bearer ${accessToken}+1`)
+        .expect(401);
+    });
+  });
+
+  describe('4. (PUT) - LIKE COMMENT', () => {
+    it('1. Should like comment by commentId & return status code 204', async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
         .auth('admin', 'qwerty')
+        .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create comment
+      const newComment = {
+        content: 'Can you, please, explain how it works?',
+      };
+
+      const comment = await request(app.getHttpServer())
+        .post(`/posts/${post.body.id}/comments`)
+        .send(newComment)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(201);
+
+      //like comment
+      const reaction = {
+        likeStatus: 'Like',
+      };
+
+      await request(app.getHttpServer())
+        .put(`/comments/${comment.body.id}/like-status`)
+        .send(reaction)
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(204);
+    });
+
+    it("2. Shouldn't like comment by commentId & return status code 400 if input has incorrect value", async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create comment
+      const newComment = {
+        content: 'Can you, please, explain how it works?',
+      };
+
+      const comment = await request(app.getHttpServer())
+        .post(`/posts/${post.body.id}/comments`)
+        .send(newComment)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(201);
+
+      //like comment with incorrect value
+      const reaction = {
+        likeStatus: 'like',
+      };
+
+      await request(app.getHttpServer())
+        .put(`/comments/${comment.body.id}/like-status`)
+        .send(reaction)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(400);
+    });
+
+    it("3. Shouldn't like comment by commentId & return status code 401 if user unauthorized", async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create comment
+      const newComment = {
+        content: 'Can you, please, explain how it works?',
+      };
+
+      const comment = await request(app.getHttpServer())
+        .post(`/posts/${post.body.id}/comments`)
+        .send(newComment)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(201);
+
+      //like comment
+      const reaction = {
+        likeStatus: 'Like',
+      };
+
+      await request(app.getHttpServer())
+        .put(`/comments/${comment.body.id}/like-status`)
+        .send(reaction)
+        .set('Authorization', `Bearer ${accessToken}+1`)
+        .expect(401);
+    });
+
+    it("4. Shouldn't like comment by commentId & return status code 404 commentId is not exist", async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //incorrect commentId
+      const commentId = '6634e807bcf8ea51a3d4da61';
+
+      //like comment
+      const reaction = {
+        likeStatus: 'Like',
+      };
+
+      await request(app.getHttpServer())
+        .put(`/comments/${commentId}/like-status`)
+        .send(reaction)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(404);
     });
   });
 });

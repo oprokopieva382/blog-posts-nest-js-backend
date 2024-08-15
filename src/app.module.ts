@@ -5,7 +5,7 @@ import { BlogModule } from './features/blogs/blog.module';
 import { TestingModule } from './features/testing/testing.module';
 import { AuthUserModule } from './features/auth-users/auth-user.module';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { appSettings} from './settings/app-settings';
+import { appSettings } from './settings/app-settings';
 import { MainConfigModule } from './settings/config.module';
 
 @Module({
@@ -32,7 +32,7 @@ import { MainConfigModule } from './settings/config.module';
     ThrottlerModule.forRoot([
       {
         ttl: 10000,
-        limit: 5,
+        limit: appSettings.env.isTesting() ? 1000 : 5,
       },
     ]),
   ],
