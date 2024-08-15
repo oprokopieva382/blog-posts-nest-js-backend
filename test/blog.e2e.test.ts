@@ -206,7 +206,7 @@ describe('user tests', () => {
     });
   });
 
-  describe('3. (UPDATE) - UPDATE BLOG BY ID', () => {
+  describe('3. (PUT) - UPDATE BLOG BY ID', () => {
     it('1. Should update blog and return status code 204', async () => {
       //create user
       const newUser = {
