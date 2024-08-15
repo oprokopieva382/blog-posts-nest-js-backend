@@ -155,4 +155,286 @@ describe('user tests', () => {
         .expect(401);
     });
   });
+  describe('2. (GET) - GET POSTS', () => {
+    it('1. Should get posts and return status code 200 and object with pagination', async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //get posts
+      const res = await request(app.getHttpServer())
+        .get(`/posts?pageNumber=1&pageSize=5`)
+        .expect(200);
+
+      expect(res.body.page).toBe(1);
+      expect(res.body.pageSize).toBe(5);
+    });
+  });
+
+  describe('3. (UPDATE) - UPDATE POST BY ID', () => {
+    it('1. Should update post and return status code 204', async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //post to update
+      const postToUpdate = {
+        title: 'Nest.js',
+        shortDescription: 'Learn more about Nest.js in ' + new Date(),
+        content: 'whole content about Nest.js',
+        blogId: blog.body.id,
+      };
+
+      await request(app.getHttpServer())
+        .put(`/posts/${post.body.id}`)
+        .send(postToUpdate)
+        .auth('admin', 'qwerty')
+        .expect(204);
+    });
+
+    it("2. Shouldn't update post and return status code 400 if invalid inputs", async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //post to update
+      const postToUpdate = {
+        title: '',
+        shortDescription: '',
+        content: '',
+        blogId: blog.body.id,
+      };
+
+      const res = await request(app.getHttpServer())
+        .put(`/posts/${post.body.id}`)
+        .send(postToUpdate)
+        .auth('admin', 'qwerty')
+        .expect(400);
+
+      expect(res.body.errorsMessages.length).toBe(3);
+    });
+
+    it("3. Shouldn't update post and return status code 401 if unauthorized", async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //post to update
+      const postToUpdate = {
+        title: 'Nest.js',
+        shortDescription: 'Learn more about Nest.js in ' + new Date(),
+        content: 'whole content about Nest.js',
+        blogId: blog.body.id,
+      };
+
+      await request(app.getHttpServer())
+        .put(`/posts/${post.body.id}`)
+        .send(postToUpdate)
+        .auth('admin1', 'qwerty1')
+        .expect(401);
+    });
+
+    it("4. Shouldn't update post and return status code 404 if ID not found", async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create blog
+      const newBlog = {
+        name: 'Promise',
+        description: 'do you know promise?',
+        websiteUrl: 'https://google.com',
+      };
+
+      const blog = await request(app.getHttpServer())
+        .post('/blogs')
+        .send(newBlog)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //create post
+      const newPost = {
+        title: 'Refactor',
+        shortDescription: 'Learn more about refactor in ' + new Date(),
+        content: 'whole content about refactor',
+        blogId: blog.body.id,
+      };
+
+      const post = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //incorrect postId
+      const postId = '662bb47c5ea70648a79f7c10';
+
+      //post to update
+      const postToUpdate = {
+        title: 'Nest.js',
+        shortDescription: 'Learn more about Nest.js in ' + new Date(),
+        content: 'whole content about Nest.js',
+        blogId: blog.body.id,
+      };
+
+      await request(app.getHttpServer())
+        .put(`/posts/${postId}`)
+        .send(postToUpdate)
+        .auth('admin', 'qwerty')
+        .expect(404);
+    });
+  });
 });

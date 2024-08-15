@@ -330,7 +330,7 @@ describe('user tests', () => {
         .expect(401);
     });
 
-    it("3. Shouldn't update blog and return status code 404 if ID not found", async () => {
+    it("4. Shouldn't update blog and return status code 404 if ID not found", async () => {
       //create user
       const newUser = {
         login: 'Tina',
