@@ -4,7 +4,7 @@ import { applyAppSettings } from '../src/settings/apply-app-settings';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 
-describe('user tests', () => {
+describe('blogs tests', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -206,7 +206,7 @@ describe('user tests', () => {
     });
   });
 
-  describe('3. (UPDATE) - UPDATE BLOG BY ID', () => {
+  describe('3. (PUT) - UPDATE BLOG BY ID', () => {
     it('1. Should update blog and return status code 204', async () => {
       //create user
       const newUser = {
@@ -330,7 +330,7 @@ describe('user tests', () => {
         .expect(401);
     });
 
-    it("3. Shouldn't update blog and return status code 404 if ID not found", async () => {
+    it("4. Shouldn't update blog and return status code 404 if ID not found", async () => {
       //create user
       const newUser = {
         login: 'Tina',
