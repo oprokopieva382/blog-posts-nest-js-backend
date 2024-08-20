@@ -216,7 +216,7 @@ describe('auth tests', () => {
         .expect(200);
 
       // Extract refreshToken from cookie
-      const cookies = res.headers['set-cookie'][0];
+      const cookies = res.headers['set-cookie'];
       const refreshToken = cookies[0].split(';')[0].split('=')[1];
 
       await request(app.getHttpServer())
@@ -253,6 +253,86 @@ describe('auth tests', () => {
         .post('/auth/registration')
         .send(newUser)
         .expect(400);
+    });
+  });
+
+  describe('5. (POST) - REFRESH TOKEN', () => {
+    it('1. Should request new refreshToken, return new accessToken & status code of 200', async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .auth('admin', 'qwerty')
+        .send(newUser)
+        .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      // Extract refreshToken from cookie
+      const cookies = res.headers['set-cookie'];
+      console.log('cookies', cookies);
+      const refreshToken = cookies[0].split(';')[0].split('=')[1];
+      console.log('accessToken', res.body.accessToken);
+      console.log('refreshToken', refreshToken);
+
+      await request(app.getHttpServer())
+        .post('/auth/refresh-token')
+        .set('Authorization', `Bearer ${res.body.accessToken}`)
+        .set('Cookie', `refreshToken=${refreshToken}`)
+        .expect(200);
+    });
+
+    it('2. Should request new refreshToken but request failed as unauthorized user, return status code of 401', async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .auth('admin', 'qwerty')
+        .send(newUser)
+        .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      // Extract refreshToken from cookie
+      const cookies = res.headers['set-cookie'];
+      console.log('cookies', cookies);
+      const refreshToken = cookies[0].split(';')[0].split('=')[1];
+      console.log('accessToken', res.body.accessToken);
+      console.log('refreshToken', refreshToken);
+
+      await request(app.getHttpServer())
+        .post('/auth/refresh-token')
+        .set('Authorization', `Bearer ${res.body.accessToken}+1`)
+        .set('Cookie', `refreshToken=${refreshToken}+1`)
+        .expect(401);
     });
   });
 });
