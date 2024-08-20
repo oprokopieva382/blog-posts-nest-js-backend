@@ -183,7 +183,6 @@ describe('auth tests', () => {
       // Extract refreshToken from cookie
       const cookies = res.headers['set-cookie'];
       const refreshToken = cookies[0].split(';')[0].split('=')[1];
-    
 
       await request(app.getHttpServer())
         .post('/auth/logout')
@@ -224,6 +223,36 @@ describe('auth tests', () => {
         .post('/auth/logout')
         .set('Cookie', `refreshToken=${refreshToken}+1`)
         .expect(401);
+    });
+  });
+
+  describe('4. (POST) - REGISTER USER', () => {
+    it('1. Should register user and return status code of 204', async () => {
+      //register user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/auth/registration')
+        .send(newUser)
+        .expect(204);
+    });
+
+    it("2. Shouldn't register user and return status code of 400 if invalid inputs", async () => {
+      //register user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina',
+      };
+
+      await request(app.getHttpServer())
+        .post('/auth/registration')
+        .send(newUser)
+        .expect(400);
     });
   });
 });
