@@ -284,10 +284,7 @@ describe('auth tests', () => {
 
       // Extract refreshToken from cookie
       const cookies = res.headers['set-cookie'];
-      console.log('cookies', cookies);
       const refreshToken = cookies[0].split(';')[0].split('=')[1];
-      console.log('accessToken', res.body.accessToken);
-      console.log('refreshToken', refreshToken);
 
       await request(app.getHttpServer())
         .post('/auth/refresh-token')
@@ -323,16 +320,63 @@ describe('auth tests', () => {
 
       // Extract refreshToken from cookie
       const cookies = res.headers['set-cookie'];
-      console.log('cookies', cookies);
       const refreshToken = cookies[0].split(';')[0].split('=')[1];
-      console.log('accessToken', res.body.accessToken);
-      console.log('refreshToken', refreshToken);
 
       await request(app.getHttpServer())
         .post('/auth/refresh-token')
         .set('Authorization', `Bearer ${res.body.accessToken}+1`)
         .set('Cookie', `refreshToken=${refreshToken}+1`)
         .expect(401);
+    });
+  });
+
+  describe('6. (POST) - REGISTRATION EMAIL RESENDING', () => {
+    it('1. Should resend email with confirmation link, return status code of 204', async () => {
+      //register user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'TinaYo1297@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/auth/registration')
+        .send(newUser)
+        .expect(204);
+
+      //email to resend
+      const email = {
+        email: 'TinaYo1297@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/auth/registration-email-resending')
+        .send(email)
+        .expect(204);
+    });
+
+    it('2. Should fail the request resend-email with confirmation link, return status code of 400', async () => {
+      //register user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'TinaYo1297@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/auth/registration')
+        .send(newUser)
+        .expect(204);
+
+      //invalid email to resend
+      const email = {
+        email: 'Tina@.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/auth/registration-email-resending')
+        .send(email)
+        .expect(400);
     });
   });
 });
