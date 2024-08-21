@@ -1,41 +1,41 @@
-name: Tests & Vercel Deploy
+# name: Tests & Vercel Deploy
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+# env:
+#   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+#   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-  on:
-  push: # action and branch in gh to start pipeline
-    branches: ['feature/CI_CD']
+#   on:
+#   push: # action and branch in gh to start pipeline
+#     branches: ['feature/CI_CD']
 
-  jobs:
-  tests:
-    name: Tests #action name in pipeline
-    runs-on: ubuntu-latest
+#   jobs:
+#   tests:
+#     name: Tests #action name in pipeline
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3 # repository clone
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3 # repository clone
 
-      - name: Install dependencies
-        run: yarn
+#       - name: Install dependencies
+#         run: yarn
 
-      - name: Run e2e tests
-        run: yarn test:e2e
-        env:
-          ENV: ${{ vars.ENV_GH }} # add env that needs for test
+#       - name: Run e2e tests
+#         run: yarn test:e2e
+#         env:
+#           ENV: ${{ vars.ENV_GH }} # add env that needs for test
 
-  deploy:
-    name: Deploy #action name in pipeline
-    needs: tests # setting job that requires before vercel deploy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+#   deploy:
+#     name: Deploy #action name in pipeline
+#     needs: tests # setting job that requires before vercel deploy
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Install Vercel CLI
+#         run: npm install --global vercel@latest
+#       - name: Pull Vercel Environment Information
+#         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+#       - name: Build Project Artifacts
+#         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+#       - name: Deploy Project Artifacts to Vercel
+#         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}

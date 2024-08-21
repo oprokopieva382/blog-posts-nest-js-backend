@@ -1,16 +1,16 @@
 {
   "version": 2,
-  "name": "express-video-vercel",
+  "name": "nest-vercel",
   "builds": [
     {
-      "src": "src/index.ts",
+      "src": "src/main.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/index.ts"
+      "dest": "src/main.ts"
     }
   ]
 }
