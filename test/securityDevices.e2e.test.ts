@@ -21,7 +21,7 @@ describe('comments tests', () => {
     await app.init();
   });
 
-  afterAll(async () => {
+  afterAll(async () => {  
     await app.close();
   });
 
@@ -108,7 +108,6 @@ describe('comments tests', () => {
         .expect(401);
     });
   });
-
   describe('2. (DELETE) - DELETE ALL USER DEVICES', () => {
     it('1. Should delete devices & return status code 204', async () => {
       //create user
