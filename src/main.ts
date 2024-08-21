@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { applyAppSettings } from './settings/apply-app-settings';
 import { appSettings } from './settings/app-settings';
