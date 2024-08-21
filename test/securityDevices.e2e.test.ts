@@ -5,7 +5,7 @@ import { applyAppSettings } from '../src/settings/apply-app-settings';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 
-describe('auth tests', () => {
+describe('comments tests', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -21,7 +21,7 @@ describe('auth tests', () => {
     await app.init();
   });
 
-  afterAll(async () => {
+  afterAll(async () => {  
     await app.close();
   });
 
@@ -29,8 +29,8 @@ describe('auth tests', () => {
     await request(app.getHttpServer()).delete('/testing/all-data').expect(204);
   });
 
-  describe('1. (POST) - AUTH LOGIN', () => {
-    it('1. Should login user and return status code 200', async () => {
+  describe('1. (GET) - GET USER DEVICES', () => {
+    it('1. Should get devices & return status code 200', async () => {
       //create user
       const newUser = {
         login: 'Tina',
@@ -55,72 +55,21 @@ describe('auth tests', () => {
         .send(loginInput)
         .expect(200);
 
-      expect(res.body).toEqual({
-        accessToken: expect.any(String),
-      });
-    });
-
-    it("2. Shouldn't login user and return status code 401 if password or login is wrong", async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //login user
-      const loginInput = {
-        loginOrEmail: 'Tina',
-        password: 'tina123456789',
-      };
-
-      await request(app.getHttpServer())
-        .post('/auth/login')
-        .send(loginInput)
-        .expect(401);
-    });
-  });
-  describe('2. (GET) - AUTH ME', () => {
-    it('1. Should auth me return status code 200 and object', async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //login user
-      const loginInput = {
-        loginOrEmail: 'Tina',
-        password: 'tina123',
-      };
-
-      const res = await request(app.getHttpServer())
-        .post('/auth/login')
-        .send(loginInput)
-        .expect(200);
-
-      //get accessToken
+      //set accessToken
       const accessToken = res.body.accessToken;
+
+      // Extract refreshToken from cookie
+      const cookies = res.headers['set-cookie'];
+      const refreshToken = cookies[0].split(';')[0].split('=')[1];
+
       await request(app.getHttpServer())
-        .get('/auth/me')
+        .get('/security/devices')
         .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', `refreshToken=${refreshToken}`)
         .expect(200);
     });
 
-    it("2. Shouldn't auth me and return status code 401", async () => {
+    it("2. Shouldn't get devices & return status code 401 if user unauthorized", async () => {
       //create user
       const newUser = {
         login: 'Tina',
@@ -145,90 +94,23 @@ describe('auth tests', () => {
         .send(loginInput)
         .expect(200);
 
-      //get accessToken
+      //set accessToken
       const accessToken = res.body.accessToken;
+
+      // Extract refreshToken from cookie
+      const cookies = res.headers['set-cookie'];
+      const refreshToken = cookies[0].split(';')[0].split('=')[1];
+
       await request(app.getHttpServer())
-        .get('/auth/me')
+        .get('/security/devices')
         .set('Authorization', `Bearer ${accessToken}+1`)
-        .expect(401);
-    });
-  });
-
-  describe('3. (POST) - LOGOUT USER', () => {
-    it('1. Should logout user and return status code of 204', async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //login user
-      const loginInput = {
-        loginOrEmail: 'Tina',
-        password: 'tina123',
-      };
-
-      const res = await request(app.getHttpServer())
-        .post('/auth/login')
-        .send(loginInput)
-        .expect(200);
-
-      // Extract refreshToken from cookie
-      const cookies = res.headers['set-cookie'];
-      const refreshToken = cookies[0].split(';')[0].split('=')[1];
-
-      await request(app.getHttpServer())
-        .post('/auth/logout')
-        .set('Cookie', `refreshToken=${refreshToken}`)
-        .expect(204);
-    });
-
-    it("2. Shouldn't logout user and return status code of 401 if unauthorized", async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .send(newUser)
-        .auth('admin', 'qwerty')
-        .expect(201);
-
-      //login user
-      const loginInput = {
-        loginOrEmail: 'Tina',
-        password: 'tina123',
-      };
-
-      const res = await request(app.getHttpServer())
-        .post('/auth/login')
-        .send(loginInput)
-        .expect(200);
-
-      // Extract refreshToken from cookie
-      const cookies = res.headers['set-cookie'];
-      const refreshToken = cookies[0].split(';')[0].split('=')[1];
-
-      await request(app.getHttpServer())
-        .post('/auth/logout')
         .set('Cookie', `refreshToken=${refreshToken}+1`)
         .expect(401);
     });
   });
-
-  describe('4. (POST) - REGISTER USER', () => {
-    it('1. Should register user and return status code of 204', async () => {
-      //register user
+  describe('2. (DELETE) - DELETE ALL USER DEVICES', () => {
+    it('1. Should delete devices & return status code 204', async () => {
+      //create user
       const newUser = {
         login: 'Tina',
         password: 'tina123',
@@ -236,28 +118,37 @@ describe('auth tests', () => {
       };
 
       await request(app.getHttpServer())
-        .post('/auth/registration')
+        .post('/users')
         .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
+
+      // Extract refreshToken from cookie
+      const cookies = res.headers['set-cookie'];
+      const refreshToken = cookies[0].split(';')[0].split('=')[1];
+
+      await request(app.getHttpServer())
+        .delete('/security/devices')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', `refreshToken=${refreshToken}`)
         .expect(204);
     });
 
-    it("2. Shouldn't register user and return status code of 400 if invalid inputs", async () => {
-      //register user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina',
-      };
-
-      await request(app.getHttpServer())
-        .post('/auth/registration')
-        .send(newUser)
-        .expect(400);
-    });
-  });
-
-  describe('5. (POST) - REFRESH TOKEN', () => {
-    it('1. Should request new refreshToken, return new accessToken & status code of 200', async () => {
+    it("2. Shouldn't delete devices & return status code 401 if user unauthorized", async () => {
       //create user
       const newUser = {
         login: 'Tina',
@@ -267,8 +158,8 @@ describe('auth tests', () => {
 
       await request(app.getHttpServer())
         .post('/users')
-        .auth('admin', 'qwerty')
         .send(newUser)
+        .auth('admin', 'qwerty')
         .expect(201);
 
       //login user
@@ -282,101 +173,237 @@ describe('auth tests', () => {
         .send(loginInput)
         .expect(200);
 
-      // Extract refreshToken from cookie
-      const cookies = res.headers['set-cookie'];
-      const refreshToken = cookies[0].split(';')[0].split('=')[1];
-
-      await request(app.getHttpServer())
-        .post('/auth/refresh-token')
-        .set('Authorization', `Bearer ${res.body.accessToken}`)
-        .set('Cookie', `refreshToken=${refreshToken}`)
-        .expect(200);
-    });
-
-    it('2. Should request new refreshToken but request failed as unauthorized user, return status code of 401', async () => {
-      //create user
-      const newUser = {
-        login: 'Tina',
-        password: 'tina123',
-        email: 'Tina@gmail.com',
-      };
-
-      await request(app.getHttpServer())
-        .post('/users')
-        .auth('admin', 'qwerty')
-        .send(newUser)
-        .expect(201);
-
-      //login user
-      const loginInput = {
-        loginOrEmail: 'Tina',
-        password: 'tina123',
-      };
-
-      const res = await request(app.getHttpServer())
-        .post('/auth/login')
-        .send(loginInput)
-        .expect(200);
+      //set accessToken
+      const accessToken = res.body.accessToken;
 
       // Extract refreshToken from cookie
       const cookies = res.headers['set-cookie'];
       const refreshToken = cookies[0].split(';')[0].split('=')[1];
 
       await request(app.getHttpServer())
-        .post('/auth/refresh-token')
-        .set('Authorization', `Bearer ${res.body.accessToken}+1`)
+        .delete('/security/devices')
+        .set('Authorization', `Bearer ${accessToken}+1`)
         .set('Cookie', `refreshToken=${refreshToken}+1`)
         .expect(401);
     });
   });
-
-  describe('6. (POST) - REGISTRATION EMAIL RESENDING', () => {
-    it('1. Should resend email with confirmation link, return status code of 204', async () => {
-      //register user
+  describe('3. (DELETE) - DELETE USER DEVICE BY ID', () => {
+    it('1. Should delete device by id & return status code 204', async () => {
+      //create user
       const newUser = {
         login: 'Tina',
         password: 'tina123',
-        email: 'TinaYo1297@gmail.com',
+        email: 'Tina@gmail.com',
       };
 
       await request(app.getHttpServer())
-        .post('/auth/registration')
+        .post('/users')
         .send(newUser)
-        .expect(204);
+        .auth('admin', 'qwerty')
+        .expect(201);
 
-      //email to resend
-      const email = {
-        email: 'TinaYo1297@gmail.com',
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
       };
 
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
+
+      // Extract refreshToken from cookie
+      const cookies = res.headers['set-cookie'];
+      const refreshToken = cookies[0].split(';')[0].split('=')[1];
+
+      // Get response with device ID
+      const devicesRes = await request(app.getHttpServer())
+        .get('/security/devices')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', `refreshToken=${refreshToken}`)
+        .expect(200);
+
+      // Get device ID
+      const deviceId = devicesRes.body[0].deviceId;
+
       await request(app.getHttpServer())
-        .post('/auth/registration-email-resending')
-        .send(email)
+        .delete(`/security/devices/${deviceId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', `refreshToken=${refreshToken}`)
         .expect(204);
     });
 
-    it('2. Should fail the request resend-email with confirmation link, return status code of 400', async () => {
-      //register user
+    it("2. Shouldn't delete device by id & return status code 401 if user unauthorized", async () => {
+      //create user
       const newUser = {
         login: 'Tina',
         password: 'tina123',
-        email: 'TinaYo1297@gmail.com',
+        email: 'Tina@gmail.com',
       };
 
       await request(app.getHttpServer())
-        .post('/auth/registration')
+        .post('/users')
         .send(newUser)
-        .expect(204);
+        .auth('admin', 'qwerty')
+        .expect(201);
 
-      //invalid email to resend
-      const email = {
-        email: 'Tina@.com',
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
+
+      // Extract refreshToken from cookie
+      const cookies = res.headers['set-cookie'];
+      const refreshToken = cookies[0].split(';')[0].split('=')[1];
+
+      // Get response with device ID
+      const devicesRes = await request(app.getHttpServer())
+        .get('/security/devices')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', `refreshToken=${refreshToken}`)
+        .expect(200);
+
+      // Get device ID
+      const deviceId = devicesRes.body[0].deviceId;
+
+      await request(app.getHttpServer())
+        .delete(`/security/devices/${deviceId}`)
+        .set('Authorization', `Bearer ${accessToken}+1`)
+        .set('Cookie', `refreshToken=${refreshToken}+1`)
+        .expect(401);
+    });
+
+    it("3. Shouldn't delete device by id & return status code 404 if deviceId is not exist", async () => {
+      //create user
+      const newUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
       };
 
       await request(app.getHttpServer())
-        .post('/auth/registration-email-resending')
-        .send(email)
-        .expect(400);
+        .post('/users')
+        .send(newUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //login user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = res.body.accessToken;
+
+      // Extract refreshToken from cookie
+      const cookies = res.headers['set-cookie'];
+      const refreshToken = cookies[0].split(';')[0].split('=')[1];
+
+      // Incorrect device ID
+      const deviceId = '17abf2ca-fe6d-5361-9701-baa16bd1c3a7';
+
+      await request(app.getHttpServer())
+        .delete(`/security/devices/${deviceId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', `refreshToken=${refreshToken}`)
+        .expect(404);
+    });
+
+    it("4. Shouldn't delete device by id & return status code 403 if try to delete the deviceId of other user", async () => {
+      //create first user
+      const firstUser = {
+        login: 'Tina',
+        password: 'tina123',
+        email: 'Tina@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(firstUser)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      //login first user
+      const loginInput = {
+        loginOrEmail: 'Tina',
+        password: 'tina123',
+      };
+
+      const loginUserOneRes = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInput)
+        .expect(200);
+
+      //set accessToken
+      const accessToken = loginUserOneRes.body.accessToken;
+
+      // Extract refreshToken from cookie
+      const cookies = loginUserOneRes.headers['set-cookie'];
+      const refreshToken = cookies[0].split(';')[0].split('=')[1];
+
+      // Get response with device ID
+      const devicesRes = await request(app.getHttpServer())
+        .get('/security/devices')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', `refreshToken=${refreshToken}`)
+        .expect(200);
+
+      // Get device ID
+      const deviceId = devicesRes.body[0].deviceId;
+
+      // Create second user
+      const userTwo = {
+        login: 'Bobby',
+        password: 'password123',
+        email: 'userbobby78a0@gmail.com',
+      };
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(userTwo)
+        .auth('admin', 'qwerty')
+        .expect(201);
+
+      // Login second user
+      const loginInputTwo = {
+        loginOrEmail: userTwo.login,
+        password: userTwo.password,
+      };
+
+      const loginResTwo = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(loginInputTwo)
+        .expect(200);
+
+      const accessTokenTwo = loginResTwo.body.accessToken;
+      const refreshTokenTwo = loginResTwo.headers['set-cookie'][0]
+        .split(';')[0]
+        .split('=')[1];
+
+      await request(app.getHttpServer())
+        .delete(`/security/devices/${deviceId}`)
+        .set('Authorization', `Bearer ${accessTokenTwo}`)
+        .set('Cookie', `refreshToken=${refreshTokenTwo}`)
+        .expect(403);
     });
   });
 });

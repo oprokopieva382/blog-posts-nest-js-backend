@@ -4,7 +4,6 @@ import { AuthRepository } from '../../auth/auth.repository';
 import {
   ForbiddenException,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 
 export class DeleteDeviceByIdCommand {
